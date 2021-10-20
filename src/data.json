@@ -1,0 +1,23 @@
+{
+  "Servers": {
+    "Nickname": {
+      "IP": "",
+      "Username": "",
+      "Password": "",
+      "PrivateKey-Location": ""
+    },
+    "Nickname2": {
+      "IP": "",
+      "Username": "",
+      "Password": "",
+      "PrivateKey-Location": ""
+    },
+    "Nickname3": {
+      "IP": "",
+      "Username": "",
+      "Password": "",
+      "PrivateKey-Location": ""
+    }
+  },
+  "Actions": {}
+}
