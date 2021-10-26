@@ -5,12 +5,13 @@ import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -21,6 +22,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Iterator;
 
 public class DashboardController {
 
@@ -31,10 +33,12 @@ public class DashboardController {
         vBox.setFillWidth(true);
         API.get().createToolbox(vBox);
         Scene scene = new Scene(vBox);
+        GridPane masterGrid = new GridPane();
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(5, 10, 10,10));
         ColumnConstraints colConstraints = new ColumnConstraints();
         colConstraints.setHgrow(Priority.ALWAYS);
+        masterGrid.getColumnConstraints().add(colConstraints);
 
         // SEARCHBOX
         TextField searchbox = new TextField();
@@ -54,6 +58,12 @@ public class DashboardController {
         createNewSession.getStyleClass().add("dash-createNewSession");
         //createNewSession.addEventFilter(); // TODO
 
+        // GRID DATA
+        grid.getColumnConstraints().add(colConstraints);
+        grid.add(searchbox, 0, 0);
+        grid.add(sep, 1, 0, 1, 1);
+        grid.add(createNewSession, 2, 0);
+
         // USER DATA [parse data.json and put saved sessions here]
         Object obj = null;
         try {
@@ -61,25 +71,45 @@ public class DashboardController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        GridPane serverPane = new GridPane();
+        serverPane.setPadding(new Insets(10, 10, 10, 10));
+        serverPane.setHgap(10);
         if (obj != null) {
             JSONObject jo = (JSONObject) obj;
             JSONArray servers = (JSONArray) jo.get("Servers");
-            servers.forEach(server -> {
+            int colIndex = 0;
+            Iterator<Object> iterator = servers.iterator();
+            while (iterator.hasNext()) {
+                Object server = iterator.next();
+                GridPane pane = new GridPane();
+                pane.setPadding(new Insets(10, 10, 10, 10));
+                pane.setBorder(new Border(new BorderStroke(Color.LIGHTGRAY,
+                        BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
                 JSONObject serverJSON = (JSONObject) server;
                 String nickname = (String) serverJSON.get("Nickname");
+                Label labelNickname = new Label(nickname);
+                pane.add(labelNickname, 1, 0);
+                String logo = (String) serverJSON.get("IconURL");
+                Image img = new Image(logo);
+                ImageView logoView = new ImageView(img);
+                logoView.setFitWidth(30);
+                logoView.setFitHeight(30);
+                pane.add(logoView, 0, 0);
                 String IP = (String) serverJSON.get("IP");
+                Label labelIP = new Label(IP);
+                pane.add(labelIP, 1, 1);
                 String username = (String) serverJSON.get("Username");
                 String password = (String) serverJSON.get("Password");
                 String privateKeyLocation = (String) serverJSON.get("PrivateKey-Location");
-            });
+                serverPane.add(pane, colIndex, 3);
+                colIndex++;
+            }
         }
 
         // GRID DATA
-        grid.getColumnConstraints().add(colConstraints);
-        grid.add(searchbox, 0, 0);
-        grid.add(sep, 1, 0, 1, 1);
-        grid.add(createNewSession, 2, 0);
-        vBox.getChildren().add(grid);
+        masterGrid.add(grid, 0, 0);
+        masterGrid.add(serverPane, 0, 1);
+        vBox.getChildren().add(masterGrid);
 
         // ENDING SET
         primaryStage.setWidth(tk.getScreenSize().getWidth() - (tk.getScreenSize().getWidth() / 3));

@@ -1,23 +1,18 @@
 {
   "Servers": [
     {
-      "Nickname": "1",
-      "IP": "",
-      "Username": "",
+      "Nickname": "Jared Test Server",
+      "IconURL": "https://avatars.githubusercontent.com/u/8027457?v=4",
+      "IP": "161.35.140.15",
+      "Username": "root",
       "Password": "",
       "PrivateKey-Location": ""
     },
     {
-      "Nickname": "2",
-      "IP": "",
-      "Username": "",
-      "Password": "",
-      "PrivateKey-Location": ""
-    },
-    {
-      "Nickname": "3",
-      "IP": "",
-      "Username": "",
+      "Nickname": "Prime Server",
+      "IconURL": "https://i.gyazo.com/952746f6d5d9e95dadd3145d1d12e0a3.png",
+      "IP": "88.214.59.129",
+      "Username": "root",
       "Password": "",
       "PrivateKey-Location": ""
     }
