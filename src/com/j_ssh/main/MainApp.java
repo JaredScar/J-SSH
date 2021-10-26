@@ -8,7 +8,7 @@ public class MainApp extends Application {
     private DashboardController dashController = new DashboardController();
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         this.dashController.changeStage(primaryStage);
     }
 

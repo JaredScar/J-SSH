@@ -1,0 +1,22 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" build-on-make="true" name="J-SSH Testing">
+    <output-path>$PROJECT_DIR$/out/artifacts/J_SSH_Testing</output-path>
+    <properties id="javafx-properties">
+      <options>
+        <option name="appClass" value="com.j_ssh.main.MainApp" />
+        <option name="description" value="" />
+        <option name="htmlPlaceholderId" value="" />
+        <option name="title" value="" />
+        <option name="vendor" value="" />
+        <option name="version" value="" />
+      </options>
+    </properties>
+    <root id="root">
+      <element id="archive" name="J_SSH.jar">
+        <element id="module-output" name="J-SSH" />
+        <element id="library" level="project" name="com.googlecode.json-simple:json-simple:1.1.1" />
+      </element>
+      <element id="file-copy" path="$PROJECT_DIR$/src/data.json" />
+    </root>
+  </artifact>
+</component>
