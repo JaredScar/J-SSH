@@ -1,0 +1,11 @@
+/**
+    Server Dashboard
+ */
+.dash-serverObject {}
+.dash-serverObject:hover {
+    -fx-background-color: #dae7f3;
+    -fx-cursor: hand;
+}
+.serverObject-logo {
+    -fx-background-color: black;
+}

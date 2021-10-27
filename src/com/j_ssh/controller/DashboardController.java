@@ -12,6 +12,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -37,7 +39,10 @@ public class DashboardController {
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(5, 10, 10,10));
         ColumnConstraints colConstraints = new ColumnConstraints();
-        colConstraints.setHgrow(Priority.ALWAYS);
+        colConstraints.setHgrow(Priority.SOMETIMES);
+        RowConstraints rowConstraints = new RowConstraints();
+        rowConstraints.setVgrow(Priority.SOMETIMES);
+        masterGrid.getRowConstraints().add(rowConstraints);
         masterGrid.getColumnConstraints().add(colConstraints);
 
         // SEARCHBOX
@@ -82,22 +87,28 @@ public class DashboardController {
             while (iterator.hasNext()) {
                 Object server = iterator.next();
                 GridPane pane = new GridPane();
-                pane.setPadding(new Insets(10, 10, 10, 10));
+                pane.getStyleClass().add("dash-serverObject");
                 pane.setBorder(new Border(new BorderStroke(Color.LIGHTGRAY,
                         BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
                 JSONObject serverJSON = (JSONObject) server;
                 String nickname = (String) serverJSON.get("Nickname");
+                VBox serverText = new VBox();
                 Label labelNickname = new Label(nickname);
-                pane.add(labelNickname, 1, 0);
+                labelNickname.setFont(Font.font("Roboto", FontWeight.EXTRA_BOLD, 20));
+                serverText.getChildren().add(labelNickname);
                 String logo = (String) serverJSON.get("IconURL");
                 Image img = new Image(logo);
                 ImageView logoView = new ImageView(img);
-                logoView.setFitWidth(30);
-                logoView.setFitHeight(30);
-                pane.add(logoView, 0, 0);
+                logoView.setFitWidth(100);
+                logoView.setFitHeight(100);
+                logoView.setSmooth(true);
+                logoView.getStyleClass().add("serverObject-logo");
+                pane.add(logoView, 0, 0, 1, 2);
                 String IP = (String) serverJSON.get("IP");
                 Label labelIP = new Label(IP);
-                pane.add(labelIP, 1, 1);
+                serverText.setPadding(new Insets(20, 20, 20, 20));
+                serverText.getChildren().add(labelIP);
+                pane.add(serverText, 1, 0);
                 String username = (String) serverJSON.get("Username");
                 String password = (String) serverJSON.get("Password");
                 String privateKeyLocation = (String) serverJSON.get("PrivateKey-Location");
@@ -112,6 +123,7 @@ public class DashboardController {
         vBox.getChildren().add(masterGrid);
 
         // ENDING SET
+        scene.getStylesheets().add("com/j_ssh/view/style.css");
         primaryStage.setWidth(tk.getScreenSize().getWidth() - (tk.getScreenSize().getWidth() / 3));
         primaryStage.setHeight((tk.getScreenSize().getHeight()) - (tk.getScreenSize().getHeight() / 3));
         primaryStage.setScene(scene);
