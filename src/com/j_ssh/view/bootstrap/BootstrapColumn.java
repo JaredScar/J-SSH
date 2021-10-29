@@ -1,7 +1,6 @@
 package com.j_ssh.view.bootstrap;
 
 import javafx.scene.Node;
-import org.apache.commons.math3.util.MathUtils;
 
 public class BootstrapColumn {
 
@@ -19,8 +18,21 @@ public class BootstrapColumn {
         this.content = content;
     }
 
+    public int clamp(int value, int min, int max) {
+
+        if (max < min) throw new IllegalArgumentException("Cannot clamp when max is greater than min");
+
+        if (value > max) {
+            return max;
+        } else if (value < min) {
+            return min;
+        } else {
+            return value;
+        }
+    }
+
     public void setBreakpointColumnWidth(Breakpoint breakPoint, int width) {
-        columnWidths[breakPoint.getValue()] = MathUtils.clamp(width, 1, 12);
+        columnWidths[breakPoint.getValue()] = clamp(width, 1, 12);
     }
 
     public void unsetBreakPoint(Breakpoint breakPoint) {
