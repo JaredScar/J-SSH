@@ -1,5 +1,8 @@
 package com.j_ssh.api;
 
+import com.j_ssh.view.bootstrap.BootstrapColumn;
+import com.j_ssh.view.bootstrap.Breakpoint;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
@@ -36,5 +39,14 @@ public class API {
 
         mbar.getMenus().addAll(mainMenu, sessionMenu, actionMenu);
         vbox.getChildren().add(mbar);
+    }
+    public BootstrapColumn createColumn(Node widget, int xsmall, int small, int medium, int large, int xlarge) {
+        BootstrapColumn col = new BootstrapColumn(widget);
+        col.setBreakpointColumnWidth(Breakpoint.XSMALL, xsmall);
+        col.setBreakpointColumnWidth(Breakpoint.SMALL, small);
+        col.setBreakpointColumnWidth(Breakpoint.MEDIUM, medium);
+        col.setBreakpointColumnWidth(Breakpoint.LARGE, large);
+        col.setBreakpointColumnWidth(Breakpoint.XLARGE, xlarge);
+        return col;
     }
 }
