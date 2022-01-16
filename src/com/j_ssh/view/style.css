@@ -9,3 +9,7 @@
 .serverObject-logo {
     -fx-background-color: black;
 }
+/**
+    SSH Window
+ */
+#terminal {}
