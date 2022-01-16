@@ -1,6 +1,9 @@
 package com.j_ssh.controller;
 
 import com.j_ssh.api.API;
+import com.j_ssh.view.bootstrap.BootstrapColumn;
+import com.j_ssh.view.bootstrap.BootstrapPane;
+import com.j_ssh.view.bootstrap.BootstrapRow;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
@@ -18,12 +21,10 @@ import javafx.stage.Stage;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.awt.*;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.Iterator;
 
 public class DashboardController {
@@ -76,7 +77,7 @@ public class DashboardController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        GridPane serverPane = new GridPane();
+        BootstrapPane serverPane = new BootstrapPane();
         serverPane.setPadding(new Insets(10, 10, 10, 10));
         serverPane.setHgap(10);
         if (obj != null) {
@@ -84,9 +85,11 @@ public class DashboardController {
             JSONArray servers = (JSONArray) jo.get("Servers");
             int colIndex = 0;
             Iterator<Object> iterator = servers.iterator();
+            BootstrapRow bRow = new BootstrapRow();
             while (iterator.hasNext()) {
                 Object server = iterator.next();
                 GridPane pane = new GridPane();
+                pane.setHgap(20);
                 pane.getStyleClass().add("dash-serverObject");
                 pane.setBorder(new Border(new BorderStroke(Color.LIGHTGRAY,
                         BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
@@ -95,6 +98,7 @@ public class DashboardController {
                 VBox serverText = new VBox();
                 Label labelNickname = new Label(nickname);
                 labelNickname.setFont(Font.font("Roboto", FontWeight.EXTRA_BOLD, 20));
+                labelNickname.setWrapText(true);
                 serverText.getChildren().add(labelNickname);
                 String logo = (String) serverJSON.get("IconURL");
                 Image img = new Image(logo);
@@ -106,15 +110,18 @@ public class DashboardController {
                 pane.add(logoView, 0, 0, 1, 2);
                 String IP = (String) serverJSON.get("IP");
                 Label labelIP = new Label(IP);
-                serverText.setPadding(new Insets(20, 20, 20, 20));
+                labelIP.setWrapText(true);
+                //serverText.setPadding(new Insets(20, 20, 20, 20));
                 serverText.getChildren().add(labelIP);
                 pane.add(serverText, 1, 0);
                 String username = (String) serverJSON.get("Username");
                 String password = (String) serverJSON.get("Password");
                 String privateKeyLocation = (String) serverJSON.get("PrivateKey-Location");
-                serverPane.add(pane, colIndex, 3);
+                BootstrapColumn col = API.get().createColumn(pane, 12, 6, 4, 3, 3);
+                bRow.addColumn(col);
                 colIndex++;
             }
+            serverPane.addRow(bRow);
         }
 
         // GRID DATA
