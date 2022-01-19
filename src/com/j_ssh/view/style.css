@@ -1,15 +1,6 @@
 /**
-    Server Dashboard
+ * Terminal
  */
-.dash-serverObject {}
-.dash-serverObject:hover {
-    -fx-background-color: #dae7f3;
-    -fx-cursor: hand;
-}
-.serverObject-logo {
-    -fx-background-color: black;
-}
-/**
-    SSH Window
- */
+#terminal_tabs {}
+#terminal_tab {}
 #terminal {}

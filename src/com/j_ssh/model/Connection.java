@@ -35,7 +35,6 @@ public class Connection {
             Channel channel = session.openChannel("sftp");
             channel.connect();
         } catch (JSchException e1) {
-            //e1.printStackTrace();
             try {
                 FileWriter tmpwriter = new FileWriter("knownHosts.txt",true);
 
@@ -59,11 +58,13 @@ public class Connection {
             Session session = jsch.getSession(this.username, this.host, this.port);
             session.setPassword(this.password);
             session.connect();
-            Channel channel = session.openChannel("shell");
             this.session = session;
-            this.channel = channel;
+
             this.pipe = new PipedOutputStream();
             this.in = new PipedInputStream(this.pipe);
+            this.out = new ByteArrayOutputStream();
+
+            this.channel = this.session.openChannel("shell");
             this.channel.setInputStream(this.in);
             this.channel.setOutputStream(this.out);
             this.channel.connect();
@@ -121,7 +122,7 @@ public class Connection {
     public InputStream getInputStream() {
         return this.in;
     }
-    public OutputStream getOutputStream() {
+    public ByteArrayOutputStream getOutputStream() {
         return this.out;
     }
 }
