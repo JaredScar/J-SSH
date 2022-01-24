@@ -10,15 +10,24 @@ import javafx.stage.Stage;
 import java.awt.*;
 
 public class MainApp extends Application {
-    private TerminalController terminalTroller = new TerminalController();
+    private static MainApp main;
+    private Stage primaryStage;
+    private TerminalController terminalTroller;
+
+    public static MainApp get() {
+        return main;
+    }
+
     @Override
     public void start(Stage primaryStage) {
         // This is the primary stage for the app starting
-        primaryStage.setTitle("J-SSH");
-        Toolkit tk = Toolkit.getDefaultToolkit();
-        primaryStage.setWidth(tk.getScreenSize().getWidth() - (tk.getScreenSize().getWidth() / 3));
-        primaryStage.setHeight((tk.getScreenSize().getHeight()) - (tk.getScreenSize().getHeight() / 3));
-        primaryStage.show();
+        this.primaryStage = primaryStage;
+        main = this;
+        this.terminalTroller = new TerminalController();
+    }
+
+    public Stage getPrimaryStage() {
+        return primaryStage;
     }
 
     public static void main(String[] args) {

@@ -13,17 +13,16 @@ public class TerminalTab extends TextArea {
         this.setWrapText(true);
         new Thread(() -> {
             while (true) {
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                boolean appended = false;
                 String str = "";
                 try {
                     str = connection.getOutputStream().toString("UTF-8");
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
+                if (str.length() > 0)
+                    appended = true;
+                final boolean appendedFinal = appended;
                 final String strFinal = str;
                 Platform.runLater(() -> {
                     try {
@@ -35,8 +34,14 @@ public class TerminalTab extends TextArea {
                         e.printStackTrace();
                     }
                 });
+                try {
+                    Thread.sleep(60);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 Platform.runLater(() -> {
-                    this.setScrollTop(Double.MAX_VALUE);
+                    if (appendedFinal)
+                        this.setScrollTop(Double.MAX_VALUE);
                 });
             }
         }).start();

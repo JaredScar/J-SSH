@@ -1,6 +1,7 @@
 package com.j_ssh.controller;
 
 import com.j_ssh.api.API;
+import com.j_ssh.main.MainApp;
 import com.j_ssh.model.TerminalTab;
 import com.j_ssh.view.bootstrap.BootstrapPane;
 import com.j_ssh.view.bootstrap.BootstrapRow;
@@ -11,6 +12,7 @@ public class TerminalController extends BootstrapPane {
     private TabPane tabs = new TabPane();
     public TerminalController() {
         this.tabs.setId("terminal_tabs");
+        this.tabs.prefHeightProperty().bind(MainApp.get().getPrimaryStage().heightProperty());
         BootstrapRow row = new BootstrapRow();
         row.addColumn(API.get().createColumn(this.tabs, 12, 12, 9, 10, 10));
         this.addRow(row);
