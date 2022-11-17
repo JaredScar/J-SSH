@@ -24,6 +24,20 @@ public class MainApp extends Application {
         this.primaryStage = primaryStage;
         main = this;
         this.terminalTroller = new TerminalController();
+        primaryStage.setTitle("J-SSH");
+        Toolkit tk = Toolkit.getDefaultToolkit();
+        primaryStage.setWidth(tk.getScreenSize().getWidth() - (tk.getScreenSize().getWidth() / 3));
+        primaryStage.setHeight((tk.getScreenSize().getHeight()) - (tk.getScreenSize().getHeight() / 3));
+        Connection conn = new Connection("root", "", "", 22);
+        conn.addKnownHost();
+        conn.connect();
+        terminalTroller.addTerminalTab(new TerminalTab("Jared Test Server", conn));
+        terminalTroller.getStylesheets().add("style.css");
+        Scene scene = new Scene(terminalTroller);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+        primaryStage.centerOnScreen();
+        this.terminalTroller = new TerminalController();
     }
 
     public Stage getPrimaryStage() {

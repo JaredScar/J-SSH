@@ -40,13 +40,25 @@ public class API {
         mbar.getMenus().addAll(mainMenu, sessionMenu, actionMenu);
         vbox.getChildren().add(mbar);
     }
-    public BootstrapColumn createColumn(Node widget, int xsmall, int small, int medium, int large, int xlarge) {
+    public BootstrapColumn createColumn(Node widget, int xSmall) {
+        return createColumn(widget, xSmall, xSmall, xSmall, xSmall, xSmall);
+    }
+    public BootstrapColumn createColumn(Node widget, int xSmall, int small) {
+        return createColumn(widget, xSmall, small, small, small, small);
+    }
+    public BootstrapColumn createColumn(Node widget, int xSmall, int small, int medium) {
+        return createColumn(widget, xSmall, small, medium, medium, medium);
+    }
+    public BootstrapColumn createColumn(Node widget, int xSmall, int small, int medium, int large) {
+        return createColumn(widget, xSmall, small, medium, large, large);
+    }
+    public BootstrapColumn createColumn(Node widget, int xSmall, int small, int medium, int large, int xLarge) {
         BootstrapColumn col = new BootstrapColumn(widget);
-        col.setBreakpointColumnWidth(Breakpoint.XSMALL, xsmall);
+        col.setBreakpointColumnWidth(Breakpoint.XSMALL, xSmall);
         col.setBreakpointColumnWidth(Breakpoint.SMALL, small);
         col.setBreakpointColumnWidth(Breakpoint.MEDIUM, medium);
         col.setBreakpointColumnWidth(Breakpoint.LARGE, large);
-        col.setBreakpointColumnWidth(Breakpoint.XLARGE, xlarge);
+        col.setBreakpointColumnWidth(Breakpoint.XLARGE, xLarge);
         return col;
     }
 }

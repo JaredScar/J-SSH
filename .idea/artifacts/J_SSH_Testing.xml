@@ -14,7 +14,6 @@
     <root id="root">
       <element id="archive" name="J_SSH.jar">
         <element id="module-output" name="J-SSH" />
-        <element id="library" level="project" name="com.googlecode.json-simple:json-simple:1.1.1" />
       </element>
       <element id="file-copy" path="$PROJECT_DIR$/src/data.json" />
       <element id="file-copy" path="$PROJECT_DIR$/src/com/j_ssh/view/style.css" />
