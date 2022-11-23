@@ -16,6 +16,9 @@ public class TerminalTab extends TextArea {
                 boolean appended = false;
                 String str = "";
                 try {
+                    if (connection.getOutputStream() == null) {
+                        break;
+                    }
                     str = connection.getOutputStream().toString("UTF-8");
                 } catch (Exception ex) {
                     ex.printStackTrace();

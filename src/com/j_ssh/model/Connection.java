@@ -35,7 +35,9 @@ public class Connection {
             Channel channel = session.openChannel("sftp");
             channel.connect();
         } catch (JSchException e1) {
+            e1.printStackTrace();
             try {
+                if (session == null || session.getHostKey() == null) return false;
                 FileWriter tmpwriter = new FileWriter("knownHosts.txt",true);
 
                 tmpwriter.append(this.host + " ssh-rsa " + session.getHostKey().getKey() + "\n");

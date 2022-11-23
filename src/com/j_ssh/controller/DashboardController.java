@@ -25,6 +25,8 @@ public class DashboardController extends BootstrapPane {
             String privateKeyLocation = serverObj.optString("PrivateKey-Location", "");
         }
         // TODO Add the servers to the icon row
+        searchRow.addColumn(searchCol);
+        searchRow.addColumn(newSessCol);
         this.addRow(searchRow);
         this.addRow(iconRow);
     }
