@@ -3,9 +3,12 @@ package com.j_ssh.model;
 import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 
+import java.io.IOException;
+
 public class TerminalTab extends TextArea {
     private String nickname;
     private Connection connection;
+    private String commandStr = "";
     public TerminalTab(String nickname, Connection connection) {
         this.nickname = nickname;
         this.connection = connection;
@@ -49,7 +52,9 @@ public class TerminalTab extends TextArea {
             }
         }).start();
     }
-    public void sendCommand(String cmd) {}
+    public void sendCommand(String cmd) {
+        connection.sendCommand(cmd);
+    }
     public void close() {}
 
     public String getNickname() {

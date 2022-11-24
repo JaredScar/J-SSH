@@ -29,6 +29,9 @@ public class TerminalController extends BootstrapPane {
         Tab newTab = new Tab(nickname, tab);
         newTab.setId("terminal_tab");
         this.tabs.getTabs().add(newTab);
+        newTab.setOnClosed((event -> tab.close()));
     }
-    public void closeTerminalTab(TerminalTab tab) {}
+    public void closeTerminalTab(TerminalTab tab) {
+        tab.close();
+    }
 }
