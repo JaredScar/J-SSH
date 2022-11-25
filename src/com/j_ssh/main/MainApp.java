@@ -1,5 +1,6 @@
 package com.j_ssh.main;
 
+import com.j_ssh.controller.DashboardController;
 import com.j_ssh.controller.TerminalController;
 import com.j_ssh.model.Connection;
 import com.j_ssh.model.TerminalTab;
@@ -28,12 +29,14 @@ public class MainApp extends Application {
         Toolkit tk = Toolkit.getDefaultToolkit();
         primaryStage.setWidth(tk.getScreenSize().getWidth() - (tk.getScreenSize().getWidth() / 3));
         primaryStage.setHeight((tk.getScreenSize().getHeight()) - (tk.getScreenSize().getHeight() / 3));
+        /** /
         Connection conn = null;
         conn.addKnownHost();
         conn.connect();
         terminalTroller.addTerminalTab(new TerminalTab("Jared Test Server", conn));
         terminalTroller.getStylesheets().add("style.css");
-        Scene scene = new Scene(terminalTroller);
+        /**/
+        Scene scene = new Scene(new DashboardController());
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.centerOnScreen();

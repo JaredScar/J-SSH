@@ -12,7 +12,7 @@ public class DataManager {
     private JSONObject data;
     public DataManager() {
         try {
-            this.data = new JSONObject(new String(Files.readAllBytes(Paths.get(""))));
+            this.data = new JSONObject(new String(Files.readAllBytes(Paths.get("data.json"))));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
