@@ -7,8 +7,12 @@ import com.j_ssh.model.TerminalTab;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.json.JSONObject;
 
 import java.awt.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class MainApp extends Application {
     private static MainApp main;
@@ -20,7 +24,7 @@ public class MainApp extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IOException {
         // This is the primary stage for the app starting
         this.primaryStage = primaryStage;
         main = this;
@@ -29,8 +33,9 @@ public class MainApp extends Application {
         Toolkit tk = Toolkit.getDefaultToolkit();
         primaryStage.setWidth(tk.getScreenSize().getWidth() - (tk.getScreenSize().getWidth() / 3));
         primaryStage.setHeight((tk.getScreenSize().getHeight()) - (tk.getScreenSize().getHeight() / 3));
-        /** /
         Connection conn = null;
+        JSONObject configJSON = new JSONObject(new String(Files.readAllBytes(Paths.get("config.json"))));
+        conn = new Connection(configJSON.optString("Username", ""), configJSON.optString("Host", ""), configJSON.optString("Password", ""), configJSON.optInt("Port", 22));
         conn.addKnownHost();
         conn.connect();
         terminalTroller.addTerminalTab(new TerminalTab("Jared Test Server", conn));
