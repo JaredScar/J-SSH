@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 public class DashboardController extends BootstrapPane {
     public DashboardController() {
+        BootstrapRow menuRow = new BootstrapRow();
         BootstrapRow searchRow = new BootstrapRow();
         BootstrapColumn searchCol = API.get().createColumn(new BootstrapPane(), 10);
         BootstrapColumn newSessCol = API.get().createColumn(new BootstrapPane(), 2);
@@ -58,11 +59,14 @@ public class DashboardController extends BootstrapPane {
 
 
 
-            serverCol = API.get().createColumn(serverContainer, 3);
+            serverCol = API.get().createColumn(serverContainer, 12, 6, 4, 3, 2, 2);
             iconRow.addColumn(serverCol);
         }
         searchRow.addColumn(searchCol);
         searchRow.addColumn(newSessCol);
+        BootstrapColumn menuCol = API.get().createColumn(API.get().createToolbox(), 12);
+        menuRow.addColumn(menuCol);
+        this.addRow(menuRow);
         this.addRow(searchRow);
         this.addRow(iconRow);
     }

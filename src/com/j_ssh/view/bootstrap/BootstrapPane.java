@@ -20,11 +20,13 @@ public class BootstrapPane extends GridPane {
 
     private void setWidthEventHandlers() {
         this.widthProperty().addListener((observable, oldValue, newValue) -> {
-            Breakpoint newBreakpoint = Breakpoint.XSMALL;
+            Breakpoint newBreakpoint = Breakpoint.XXSMALL;
+            if (newValue.doubleValue() > 376) newBreakpoint = Breakpoint.XSMALL;
             if (newValue.doubleValue() > 576) newBreakpoint = Breakpoint.SMALL;
             if (newValue.doubleValue() > 768) newBreakpoint = Breakpoint.MEDIUM;
             if (newValue.doubleValue() > 992) newBreakpoint = Breakpoint.LARGE;
             if (newValue.doubleValue() > 1200) newBreakpoint = Breakpoint.XLARGE;
+            if (newValue.doubleValue() > 1500) newBreakpoint = Breakpoint.XXLARGE;
 
             if (newBreakpoint != currentWindowSize) {
                 currentWindowSize = newBreakpoint;

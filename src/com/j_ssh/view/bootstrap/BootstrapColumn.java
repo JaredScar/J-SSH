@@ -7,11 +7,13 @@ public class BootstrapColumn {
     private final Node content;
 
     int[] columnWidths = new int[]{
-            1,  //XS (default)
+            1,
+            -1,  //XS (default)
             -1, //Sm
             -1, //Md
             -1, //Lg
-            -1  //XL
+            -1,  //XL
+            -1
     };
 
     public BootstrapColumn(Node content) {
@@ -41,11 +43,13 @@ public class BootstrapColumn {
 
     public void unsetAllBreakPoints() {
         this.columnWidths = new int[]{
-                1,  //XS (default)
+                1,
+                -1,  //XS (default)
                 -1, //Sm
                 -1, //Md
                 -1, //Lg
-                -1  //XL
+                -1,  //XL
+                -1
         };
     }
 

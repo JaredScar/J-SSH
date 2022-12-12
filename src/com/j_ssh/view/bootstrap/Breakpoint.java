@@ -1,11 +1,13 @@
 package com.j_ssh.view.bootstrap;
 
 public enum Breakpoint {
-    XSMALL(0),
-    SMALL(1),
-    MEDIUM(2),
-    LARGE(3),
-    XLARGE(4);
+    XXSMALL(0),
+    XSMALL(1),
+    SMALL(2),
+    MEDIUM(3),
+    LARGE(4),
+    XLARGE(5),
+    XXLARGE(6);
     private int value;
     Breakpoint(int value) {
         this.value = value;

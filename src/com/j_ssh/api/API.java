@@ -11,7 +11,8 @@ public class API {
     public static API get() {
         return api;
     }
-    public void createToolbox(VBox vbox) {
+    public VBox createToolbox() {
+        VBox vBox = new VBox();
         MenuBar mbar = new MenuBar();
 
         // Main Menu
@@ -38,27 +39,36 @@ public class API {
         actionMenu.getItems().addAll(actionItems);
 
         mbar.getMenus().addAll(mainMenu, sessionMenu, actionMenu);
-        vbox.getChildren().add(mbar);
+        vBox.getChildren().add(mbar);
+        return vBox;
     }
-    public BootstrapColumn createColumn(Node widget, int xSmall) {
-        return createColumn(widget, xSmall, xSmall, xSmall, xSmall, xSmall);
+    public BootstrapColumn createColumn(Node widget, int xxSmall) {
+        return createColumn(widget, xxSmall, xxSmall, xxSmall, xxSmall, xxSmall, xxSmall, xxSmall);
     }
-    public BootstrapColumn createColumn(Node widget, int xSmall, int small) {
-        return createColumn(widget, xSmall, small, small, small, small);
+    public BootstrapColumn createColumn(Node widget, int xxSmall, int xSmall) {
+        return createColumn(widget, xxSmall, xSmall, xSmall, xSmall, xSmall, xSmall, xSmall);
     }
-    public BootstrapColumn createColumn(Node widget, int xSmall, int small, int medium) {
-        return createColumn(widget, xSmall, small, medium, medium, medium);
+    public BootstrapColumn createColumn(Node widget, int xxSmall, int xSmall, int small) {
+        return createColumn(widget, xxSmall, xSmall, small, small, small, small, small);
     }
-    public BootstrapColumn createColumn(Node widget, int xSmall, int small, int medium, int large) {
-        return createColumn(widget, xSmall, small, medium, large, large);
+    public BootstrapColumn createColumn(Node widget, int xxSmall, int xSmall, int small, int medium) {
+        return createColumn(widget, xxSmall, xSmall, small, medium, medium, medium, medium);
     }
-    public BootstrapColumn createColumn(Node widget, int xSmall, int small, int medium, int large, int xLarge) {
+    public BootstrapColumn createColumn(Node widget, int xxSmall, int xSmall, int small, int medium, int large) {
+        return createColumn(widget, xxSmall, xSmall, small, medium, large, large, large);
+    }
+    public BootstrapColumn createColumn(Node widget, int xxSmall, int xSmall, int small, int medium, int large, int xLarge) {
+        return createColumn(widget, xxSmall, xSmall, small, medium, large, xLarge, xLarge);
+    }
+    public BootstrapColumn createColumn(Node widget, int xxSmall, int xSmall, int small, int medium, int large, int xLarge, int xxLarge) {
         BootstrapColumn col = new BootstrapColumn(widget);
+        col.setBreakpointColumnWidth(Breakpoint.XXSMALL, xxSmall);
         col.setBreakpointColumnWidth(Breakpoint.XSMALL, xSmall);
         col.setBreakpointColumnWidth(Breakpoint.SMALL, small);
         col.setBreakpointColumnWidth(Breakpoint.MEDIUM, medium);
         col.setBreakpointColumnWidth(Breakpoint.LARGE, large);
         col.setBreakpointColumnWidth(Breakpoint.XLARGE, xLarge);
+        col.setBreakpointColumnWidth(Breakpoint.XXLARGE, xxLarge);
         return col;
     }
 }
