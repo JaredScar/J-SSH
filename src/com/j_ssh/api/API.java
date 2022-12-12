@@ -1,6 +1,7 @@
 package com.j_ssh.api;
 
 import com.j_ssh.view.bootstrap.BootstrapColumn;
+import com.j_ssh.view.bootstrap.BootstrapRow;
 import com.j_ssh.view.bootstrap.Breakpoint;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -11,7 +12,7 @@ public class API {
     public static API get() {
         return api;
     }
-    public VBox createToolbox() {
+    public BootstrapRow createToolbox() {
         VBox vBox = new VBox();
         MenuBar mbar = new MenuBar();
 
@@ -39,8 +40,12 @@ public class API {
         actionMenu.getItems().addAll(actionItems);
 
         mbar.getMenus().addAll(mainMenu, sessionMenu, actionMenu);
+        mbar.getStyleClass().add("global-menu-bar");
         vBox.getChildren().add(mbar);
-        return vBox;
+        BootstrapRow bootstrapRow = new BootstrapRow();
+        BootstrapColumn col = createColumn(vBox, 12);
+        bootstrapRow.addColumn(col);
+        return bootstrapRow;
     }
     public BootstrapColumn createColumn(Node widget, int xxSmall) {
         return createColumn(widget, xxSmall, xxSmall, xxSmall, xxSmall, xxSmall, xxSmall, xxSmall);

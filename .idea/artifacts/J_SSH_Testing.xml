@@ -16,7 +16,7 @@
         <element id="module-output" name="J-SSH" />
       </element>
       <element id="file-copy" path="$PROJECT_DIR$/src/data.json" />
-      <element id="file-copy" path="$PROJECT_DIR$/src/com/j_ssh/view/style.css" />
+      <element id="file-copy" path="$PROJECT_DIR$/src/com/j_ssh/view/styles/global.css" />
       <element id="library" level="project" name="jcraft.jsch" />
       <element id="library" level="project" name="json" />
       <element id="file-copy" path="$PROJECT_DIR$/src/config.json" />

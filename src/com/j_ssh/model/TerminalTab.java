@@ -12,7 +12,7 @@ public class TerminalTab extends TextArea {
     public TerminalTab(String nickname, Connection connection) {
         this.nickname = nickname;
         this.connection = connection;
-        this.setId("terminal");
+        this.getStyleClass().add("terminal");
         this.setWrapText(true);
         new Thread(() -> {
             while (true) {

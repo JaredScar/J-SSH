@@ -15,6 +15,9 @@ public class TerminalController extends BootstrapPane {
         this.tabs.prefHeightProperty().bind(MainApp.get().getPrimaryStage().heightProperty());
         BootstrapRow row = new BootstrapRow();
         row.addColumn(API.get().createColumn(this.tabs, 12, 12, 9, 10, 10));
+
+        BootstrapRow menuRow = API.get().createToolbox();
+        this.addRow(menuRow);
         this.addRow(row);
     }
     public void addTerminalTab(TerminalTab tab) {
@@ -27,7 +30,7 @@ public class TerminalController extends BootstrapPane {
             }
         }
         Tab newTab = new Tab(nickname, tab);
-        newTab.setId("terminal_tab");
+        newTab.getStyleClass().add("terminal_tab");
         this.tabs.getTabs().add(newTab);
         newTab.setOnClosed((event -> tab.close()));
     }

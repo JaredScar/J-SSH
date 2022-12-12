@@ -39,7 +39,7 @@ public class MainApp extends Application {
         conn.addKnownHost();
         conn.connect();
         terminalTroller.addTerminalTab(new TerminalTab("Jared Test Server", conn));
-        terminalTroller.getStylesheets().add("style.css");
+        terminalTroller.getStylesheets().add("global.css");
         /**/
         Scene scene = new Scene(new DashboardController());
         primaryStage.setScene(scene);
