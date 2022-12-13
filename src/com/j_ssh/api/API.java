@@ -3,6 +3,9 @@ package com.j_ssh.api;
 import com.j_ssh.view.bootstrap.BootstrapColumn;
 import com.j_ssh.view.bootstrap.BootstrapRow;
 import com.j_ssh.view.bootstrap.Breakpoint;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -19,7 +22,12 @@ public class API {
         // Main Menu
         Menu mainMenu = new Menu("J-SSH");
         MenuItem[] mainItems = {new MenuItem("About"), new MenuItem("Help")};
-        //mainItems[0].addEventHandler(); // TODO Add event handler for About
+        mainItems[0].addEventHandler(EventType.ROOT, new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                PopupHandler.triggerAboutPopup();
+            }
+        }); // TODO Add event handler for About
         //mainItems[1].addEventHandler(); // TODO Add event handler for Help
         mainMenu.getItems().addAll(mainItems);
 
