@@ -1,14 +1,18 @@
 package com.j_ssh.api;
 
-import com.j_ssh.model.DataManager;
+import com.j_ssh.model.managers.DataManager;
+import com.j_ssh.model.ServerData;
+import com.j_ssh.model.TriggerData;
 import javafx.scene.control.Alert;
 
 public class PopupHandler {
     private static DataManager dataManager = DataManager.get();
     public static void createSessionPopup() {}
     public static void editSessionPopup() {}
+    public static void saveSessionData(ServerData serverData) {}
     public static void createActionPopup() {}
     public static void editActionPopup() {}
+    public static void saveActionData(TriggerData triggerData) {}
     public static void triggerActionPopup() {}
     public static void triggerAboutPopup() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

@@ -17,5 +17,20 @@
       "PrivateKey-Location": ""
     }
   ],
-  "Actions": {}
+  "Actions": [
+    {
+      "Name": "Git Pull [Samples]",
+      "Commands": [
+        "cd /var/www/html",
+        "git pull origin dev"
+      ]
+    },
+    {
+      "Name": "Git Pull [Sweeps]",
+      "Commands": [
+        "cd /var/www/html",
+        "git pull origin dev"
+      ]
+    }
+  ]
 }

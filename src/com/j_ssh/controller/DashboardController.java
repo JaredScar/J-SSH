@@ -1,7 +1,7 @@
 package com.j_ssh.controller;
 
 import com.j_ssh.api.API;
-import com.j_ssh.model.DataManager;
+import com.j_ssh.model.managers.DataManager;
 import com.j_ssh.view.bootstrap.BootstrapColumn;
 import com.j_ssh.view.bootstrap.BootstrapPane;
 import com.j_ssh.view.bootstrap.BootstrapRow;
