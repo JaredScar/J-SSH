@@ -1,7 +1,7 @@
 package com.j_ssh.model.managers;
 
-import com.j_ssh.model.Connection;
-import com.j_ssh.model.TerminalTab;
+import com.j_ssh.model.objects.Connection;
+import com.j_ssh.components.TerminalTab;
 
 import java.util.Collection;
 import java.util.HashMap;

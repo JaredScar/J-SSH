@@ -2,8 +2,8 @@ package com.j_ssh.main;
 
 import com.j_ssh.controller.DashboardController;
 import com.j_ssh.controller.TerminalController;
-import com.j_ssh.model.Connection;
-import com.j_ssh.model.TerminalTab;
+import com.j_ssh.model.objects.Connection;
+import com.j_ssh.components.TerminalTab;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

@@ -1,9 +1,8 @@
-package com.j_ssh.model;
+package com.j_ssh.components;
 
+import com.j_ssh.model.objects.Connection;
 import javafx.application.Platform;
 import javafx.scene.control.TextArea;
-
-import java.io.IOException;
 
 public class TerminalTab extends TextArea {
     private String nickname;

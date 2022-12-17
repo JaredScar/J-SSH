@@ -2,7 +2,7 @@ package com.j_ssh.controller;
 
 import com.j_ssh.api.API;
 import com.j_ssh.main.MainApp;
-import com.j_ssh.model.TerminalTab;
+import com.j_ssh.components.TerminalTab;
 import com.j_ssh.view.bootstrap.BootstrapPane;
 import com.j_ssh.view.bootstrap.BootstrapRow;
 import javafx.scene.control.Tab;

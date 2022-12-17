@@ -22,7 +22,7 @@ public class DataManager {
         return dm;
     }
 
-    public void reloadData() {
+    private void reloadData() {
         try {
             this.data = new JSONObject(new String(Files.readAllBytes(Paths.get("data.json"))));
         } catch (IOException e) {

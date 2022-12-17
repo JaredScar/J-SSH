@@ -1,4 +1,4 @@
-package com.j_ssh.model;
+package com.j_ssh.model.objects;
 
 import com.jcraft.jsch.*;
 

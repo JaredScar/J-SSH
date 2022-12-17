@@ -1,10 +1,12 @@
-package com.j_ssh.model;
+package com.j_ssh.model.objects;
 
 import com.j_ssh.model.managers.DataManager;
 import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.List;
 
 public class ServerData {
     @Getter
@@ -44,7 +46,8 @@ public class ServerData {
         JSONArray serversData = DataManager.get().getServersData();
         if (this.index == -1) {
             // New entry
-            // TODO Add to serversData
+            List<Object> servers = serversData.toList();
+            servers.add(this.serializeJSON());
         } else {
             // Place it in this slot
             serversData.put(this.index, this.serializeJSON());

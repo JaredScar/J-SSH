@@ -1,6 +1,6 @@
 package com.j_ssh.model.managers;
 
-import com.j_ssh.model.TerminalTab;
+import com.j_ssh.components.TerminalTab;
 
 import java.util.ArrayList;
 import java.util.List;
