@@ -31,7 +31,21 @@ public class ServerData {
     @Setter
     private String privateKeyLocation = "";
 
-    public static ServerData fromJSON(JSONObject json) {}
+    public static ServerData fromJSON(int index, JSONObject json) {
+        ServerData serverData = fromJSON(json);
+        serverData.setIndex(index);
+        return serverData;
+    }
+
+    public static ServerData fromJSON(JSONObject json) {
+        String nickname = json.getString("Nickname");
+        String iconURL = json.getString("IconURL");
+        String ip = json.getString("IP");
+        String username = json.getString("Username");
+        String password = json.getString("Password");
+        String privateKeyLoc = json.getString("PrivateKey-Location");
+        return new ServerData(-1, nickname, iconURL, ip, username, password, privateKeyLoc);
+    }
 
     public ServerData(int index, String nickname, String iconURL, String ip, String username, String password, String privateKeyLocation) {
         this.index = index;

@@ -27,12 +27,31 @@ public class TriggerData {
     // Server Index, Action Index
     private HashMap<Integer, Integer> triggers;
 
-    public static TriggerData fromJSON(JSONObject json) {}
+    public static TriggerData fromJSON(int index, JSONObject json) {
+        TriggerData triggerData = fromJSON(json);
+        triggerData.setIndex(index);
+        return triggerData;
+    }
 
-    public TriggerData(int index, String name, String description) {
+    public static TriggerData fromJSON(JSONObject json) {
+        String name = json.getString("Name");
+        String description = json.getString("Description");
+        JSONArray trigs = json.getJSONArray("Triggers");
+        HashMap<Integer, Integer> triggs = new HashMap<>();
+        for (int i = 0; i < trigs.length(); i++) {
+            JSONObject trig = trigs.getJSONObject(i);
+            int serverInd = trig.getInt("Server");
+            int actionInd = trig.getInt("Action");
+            triggs.put(serverInd, actionInd);
+        }
+        return new TriggerData(-1, name, description, triggs);
+    }
+
+    public TriggerData(int index, String name, String description, HashMap<Integer, Integer> triggers) {
         this.index = index;
         this.name = name;
         this.description = description;
+        this.triggers = triggers;
     }
 
     public JSONObject serializeJSON() {
