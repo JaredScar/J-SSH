@@ -49,6 +49,9 @@ public class DataManager {
     public JSONArray getServersData() {
         return this.data.optJSONArray("Servers");
     }
+    public JSONArray getTriggersData() {
+        return this.data.optJSONArray("Triggers");
+    }
     public JSONArray getActionsData() {
         return this.data.optJSONArray("Actions");
     }

@@ -12,13 +12,21 @@ import java.util.List;
 public class ActionData {
     @Getter
     @Setter
-    private int index;
+    private int index = -1;
     @Getter
     @Setter
     private String name;
     @Getter
     @Setter
     private ArrayList<String> commands;
+
+    public static ActionData fromJSON(JSONObject json) {}
+
+    public ActionData(int index, String name, ArrayList<String> commands) {
+        this.index = index;
+        this.name = name;
+        this.commands = commands;
+    }
 
     public void addCommand(String command) {
         this.commands.add(command);
@@ -30,7 +38,7 @@ public class ActionData {
 
     public JSONObject serializeJSON() {
         JSONObject obj = new JSONObject();
-        obj.put("Nickname", name);
+        obj.put("Nickname", this.name);
         obj.put("Commands", this.commands);
         return obj;
     }

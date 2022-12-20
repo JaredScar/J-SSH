@@ -31,6 +31,18 @@ public class ServerData {
     @Setter
     private String privateKeyLocation = "";
 
+    public static ServerData fromJSON(JSONObject json) {}
+
+    public ServerData(int index, String nickname, String iconURL, String ip, String username, String password, String privateKeyLocation) {
+        this.index = index;
+        this.nickname = nickname;
+        this.iconURL = iconURL;
+        this.ip = ip;
+        this.username = username;
+        this.password = password;
+        this.privateKeyLocation = privateKeyLocation;
+    }
+
     public JSONObject serializeJSON() {
         JSONObject obj = new JSONObject();
         obj.put("Nickname", nickname);

@@ -17,6 +17,22 @@
       "PrivateKey-Location": ""
     }
   ],
+  "Triggers": [
+    {
+      "Name": "Basic Trigger",
+      "Description": "This is a basic trigger to give an example of their configuration...",
+      "Triggers": [
+        {
+          "Server": 0,
+          "Action": 0
+        },
+        {
+          "Server": 1,
+          "Action": 0
+        }
+      ]
+    }
+  ],
   "Actions": [
     {
       "Name": "Git Pull [Samples]",
