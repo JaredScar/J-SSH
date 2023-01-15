@@ -4,9 +4,12 @@ import com.j_ssh.controller.DashboardController;
 import com.j_ssh.controller.TerminalController;
 import com.j_ssh.model.objects.Connection;
 import com.j_ssh.components.TerminalTab;
+import com.j_ssh.model.objects.JScene;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import lombok.Getter;
+import lombok.Setter;
 import org.json.JSONObject;
 
 import java.awt.*;
@@ -16,8 +19,23 @@ import java.nio.file.Paths;
 
 public class MainApp extends Application {
     private static MainApp main;
+
+    @Getter
     private Stage primaryStage;
-    private TerminalController terminalTroller;
+
+    @Getter
+    @Setter
+    private DashboardController dashboardController;
+    @Getter
+    @Setter
+    private Scene dashboardScene;
+
+    @Getter
+    @Setter
+    private TerminalController terminalController;
+    @Getter
+    @Setter
+    private Scene terminalScene;
 
     public static MainApp get() {
         return main;
@@ -28,7 +46,7 @@ public class MainApp extends Application {
         // This is the primary stage for the app starting
         this.primaryStage = primaryStage;
         main = this;
-        this.terminalTroller = new TerminalController();
+        this.terminalController = new TerminalController();
         primaryStage.setTitle("J-SSH");
         Toolkit tk = Toolkit.getDefaultToolkit();
         primaryStage.setWidth(tk.getScreenSize().getWidth() - (tk.getScreenSize().getWidth() / 3));
@@ -42,15 +60,29 @@ public class MainApp extends Application {
         terminalTroller.addTerminalTab(new TerminalTab("Jared Test Server", conn));
         terminalTroller.getStylesheets().add("global.css");
         /**/
-        Scene scene = new Scene(new DashboardController());
+        this.dashboardController = new DashboardController();
+        Scene scene = new Scene(dashboardController);
+        this.dashboardScene = scene;
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.centerOnScreen();
-        this.terminalTroller = new TerminalController();
+        this.terminalController = new TerminalController();
+        scene = new Scene(this.terminalController);
+        this.terminalScene = scene;
     }
 
-    public Stage getPrimaryStage() {
-        return primaryStage;
+    public void changeScene(JScene scene) {
+        Scene fxScene = null;
+        switch (scene) {
+            case TERMINAL:
+                fxScene = this.getTerminalScene();
+                this.getPrimaryStage().setScene(fxScene);
+                break;
+            case DASHBOARD:
+                fxScene = this.getDashboardScene();
+                this.getPrimaryStage().setScene(fxScene);
+                break;
+        }
     }
 
     public static void main(String[] args) {
