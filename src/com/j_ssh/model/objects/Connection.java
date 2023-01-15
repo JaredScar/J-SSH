@@ -1,5 +1,6 @@
 package com.j_ssh.model.objects;
 
+import com.j_ssh.api.AlertHandler;
 import com.jcraft.jsch.*;
 
 import java.io.*;
@@ -72,6 +73,7 @@ public class Connection {
             this.channel.connect();
         } catch (JSchException | IOException e) {
             this.error = e.getMessage();
+            AlertHandler.triggerExceptionAlert("Connection Error", "Error Encountered", e);
             return false;
         }
         return true;
@@ -82,6 +84,7 @@ public class Connection {
             this.pipe.write((cmd + "\n").getBytes());
         } catch (IOException e) {
             this.error = e.getMessage();
+            AlertHandler.triggerExceptionAlert("Connection Error", "Error Encountered", e);
             return false;
         }
         return true;

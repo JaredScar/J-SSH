@@ -1,5 +1,6 @@
 package com.j_ssh.model.managers;
 
+import com.j_ssh.api.AlertHandler;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -15,6 +16,7 @@ public class DataManager {
         try {
             this.data = new JSONObject(new String(Files.readAllBytes(Paths.get("data.json"))));
         } catch (IOException e) {
+            AlertHandler.triggerExceptionAlert("DataManager Error", "Error Encountered", e);
             e.printStackTrace();
         }
     }
@@ -26,6 +28,7 @@ public class DataManager {
         try {
             this.data = new JSONObject(new String(Files.readAllBytes(Paths.get("data.json"))));
         } catch (IOException e) {
+            AlertHandler.triggerExceptionAlert("DataManager Error", "Error Encountered", e);
             e.printStackTrace();
         }
     }
@@ -37,6 +40,7 @@ public class DataManager {
             writer.flush();
             writer.close();
         } catch (IOException e) {
+            AlertHandler.triggerExceptionAlert("DataManager Error", "Error Encountered", e);
             e.printStackTrace();
         }
         reloadData();

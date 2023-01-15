@@ -33,6 +33,7 @@ public class MainApp extends Application {
         Toolkit tk = Toolkit.getDefaultToolkit();
         primaryStage.setWidth(tk.getScreenSize().getWidth() - (tk.getScreenSize().getWidth() / 3));
         primaryStage.setHeight((tk.getScreenSize().getHeight()) - (tk.getScreenSize().getHeight() / 3));
+        /** /
         Connection conn = null;
         JSONObject configJSON = new JSONObject(new String(Files.readAllBytes(Paths.get("config.json"))));
         conn = new Connection(configJSON.optString("Username", ""), configJSON.optString("Host", ""), configJSON.optString("Password", ""), configJSON.optInt("Port", 22));
