@@ -1,7 +1,7 @@
 package com.j_ssh.controller;
 
 import com.j_ssh.api.API;
-import com.j_ssh.components.TerminalTab;
+import com.j_ssh.components.TerminalTabComponent;
 import com.j_ssh.main.MainApp;
 import com.j_ssh.model.managers.DataManager;
 import com.j_ssh.model.objects.Connection;
@@ -9,13 +9,11 @@ import com.j_ssh.model.objects.JScene;
 import com.j_ssh.view.bootstrap.BootstrapColumn;
 import com.j_ssh.view.bootstrap.BootstrapPane;
 import com.j_ssh.view.bootstrap.BootstrapRow;
-import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -80,7 +78,7 @@ public class DashboardController extends BootstrapPane {
                 Connection servConn = new Connection(username, ip, password, 22);
                 servConn.addKnownHost();
                 servConn.connect();
-                TerminalTab termTab = new TerminalTab(nickname, servConn);
+                TerminalTabComponent termTab = new TerminalTabComponent(nickname, servConn);
                 MainApp.get().getTerminalController().addTerminalTab(termTab);
                 MainApp.get().changeScene(JScene.TERMINAL);
             });

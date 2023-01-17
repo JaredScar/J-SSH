@@ -71,6 +71,9 @@ public class API {
         bootstrapRow.addColumn(col);
         return bootstrapRow;
     }
+
+    public BootstrapRow createFooter() {}
+
     public BootstrapColumn createColumn(Node widget, int xxSmall) {
         return createColumn(widget, xxSmall, xxSmall, xxSmall, xxSmall, xxSmall, xxSmall, xxSmall);
     }

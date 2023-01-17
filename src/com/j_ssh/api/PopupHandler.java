@@ -5,7 +5,9 @@ import com.j_ssh.model.objects.ServerData;
 import com.j_ssh.model.objects.ActionData;
 import com.j_ssh.model.objects.TriggerData;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class PopupHandler {
@@ -19,7 +21,14 @@ public class PopupHandler {
     public static void createActionPopup() {}
     public static void editActionPopup() {}
     public static void saveActionData(ActionData actionData) {}
-    public static void confirmOrCancelDialog(Consumer<Boolean> resultCallback) {}
+    public static void confirmOrCancelDialog(String title, String header, String content, Consumer<Boolean> resultCallback) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        Optional<ButtonType> result = alert.showAndWait();
+        result.ifPresent(buttonType -> resultCallback.accept(buttonType == ButtonType.OK));
+    }
     public static void triggerAboutPopup() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("About J-SSH");

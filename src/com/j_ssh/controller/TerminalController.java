@@ -2,7 +2,7 @@ package com.j_ssh.controller;
 
 import com.j_ssh.api.API;
 import com.j_ssh.main.MainApp;
-import com.j_ssh.components.TerminalTab;
+import com.j_ssh.components.TerminalTabComponent;
 import com.j_ssh.view.bootstrap.BootstrapPane;
 import com.j_ssh.view.bootstrap.BootstrapRow;
 import javafx.scene.control.Tab;
@@ -20,7 +20,7 @@ public class TerminalController extends BootstrapPane {
         this.addRow(menuRow);
         this.addRow(row);
     }
-    public void addTerminalTab(TerminalTab tab) {
+    public void addTerminalTab(TerminalTabComponent tab) {
         String nickname = tab.getNickname();
         int count = 1;
         for (Tab existingTab : this.tabs.getTabs()) {
@@ -34,7 +34,7 @@ public class TerminalController extends BootstrapPane {
         this.tabs.getTabs().add(newTab);
         newTab.setOnClosed((event -> tab.close()));
     }
-    public void closeTerminalTab(TerminalTab tab) {
+    public void closeTerminalTab(TerminalTabComponent tab) {
         tab.close();
     }
 }

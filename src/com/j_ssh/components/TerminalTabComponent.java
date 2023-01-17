@@ -4,11 +4,11 @@ import com.j_ssh.model.objects.Connection;
 import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 
-public class TerminalTab extends TextArea {
+public class TerminalTabComponent extends TextArea {
     private String nickname;
     private Connection connection;
     private String commandStr = "";
-    public TerminalTab(String nickname, Connection connection) {
+    public TerminalTabComponent(String nickname, Connection connection) {
         this.nickname = nickname;
         this.connection = connection;
         this.getStyleClass().add("terminal");
