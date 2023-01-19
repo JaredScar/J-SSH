@@ -3,6 +3,7 @@ package com.j_ssh.controller;
 import com.j_ssh.api.API;
 import com.j_ssh.components.TerminalTabComponent;
 import com.j_ssh.main.MainApp;
+import com.j_ssh.model.managers.AsyncManager;
 import com.j_ssh.model.managers.DataManager;
 import com.j_ssh.model.objects.Connection;
 import com.j_ssh.model.objects.JScene;
@@ -78,7 +79,7 @@ public class DashboardController extends BootstrapPane {
             serverCol.getContent().setOnMouseClicked(event -> {
                 // We want to set them in a loading screen until we connect or not
                 MainApp.get().changeScene(JScene.LOADING);
-                new Thread(() -> {
+                Thread thread = new Thread(() -> {
                     Connection servConn = new Connection(username, ip, password, 22);
                     servConn.addKnownHost();
                     Platform.runLater(() -> {
@@ -91,7 +92,8 @@ public class DashboardController extends BootstrapPane {
                             MainApp.get().changeScene(JScene.DASHBOARD);
                         }
                     });
-                }).start();
+                });
+                AsyncManager.get().addThread(thread);
             });
             iconRow.addColumn(serverCol);
         }
