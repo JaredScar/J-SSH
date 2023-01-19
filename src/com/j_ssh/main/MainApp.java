@@ -1,6 +1,7 @@
 package com.j_ssh.main;
 
 import com.j_ssh.controller.DashboardController;
+import com.j_ssh.controller.LoadingController;
 import com.j_ssh.controller.SettingsController;
 import com.j_ssh.controller.TerminalController;
 import com.j_ssh.model.objects.JScene;
@@ -40,6 +41,13 @@ public class MainApp extends Application {
     @Setter
     private Scene settingsScene;
 
+    @Getter
+    @Setter
+    private LoadingController loadingController;
+    @Getter
+    @Setter
+    private Scene loadingScene;
+
     public static MainApp get() {
         return main;
     }
@@ -65,6 +73,19 @@ public class MainApp extends Application {
         this.terminalController.getStylesheets().add("global.css");
         scene = new Scene(this.terminalController);
         this.terminalScene = scene;
+        this.loadingController = new LoadingController();
+        this.loadingController.getStylesheets().add("global.css");
+        scene = new Scene(this.loadingController);
+        this.loadingScene = scene;
+    }
+
+    public double getScreenWidth() {
+        Toolkit tk = Toolkit.getDefaultToolkit();
+        return tk.getScreenSize().getWidth();
+    }
+    public double getScreenHeight() {
+        Toolkit tk = Toolkit.getDefaultToolkit();
+        return tk.getScreenSize().getHeight();
     }
 
     public void changeScene(JScene scene) {
@@ -79,6 +100,12 @@ public class MainApp extends Application {
                 this.getPrimaryStage().setScene(fxScene);
                 break;
             case SETTINGS:
+                fxScene = this.getSettingsScene();
+                this.getPrimaryStage().setScene(fxScene);
+                break;
+            case LOADING:
+                fxScene = this.getLoadingScene();
+                this.getPrimaryStage().setScene(fxScene);
                 break;
         }
     }

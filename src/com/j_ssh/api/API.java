@@ -13,6 +13,8 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 
+import java.util.concurrent.Callable;
+
 public class API {
     public static API api = new API();
     public static API get() {
@@ -72,7 +74,9 @@ public class API {
         return bootstrapRow;
     }
 
-    public BootstrapRow createFooter() {}
+    public BootstrapRow createFooter() {
+        return null;
+    }
 
     public BootstrapColumn createColumn(Node widget, int xxSmall) {
         return createColumn(widget, xxSmall, xxSmall, xxSmall, xxSmall, xxSmall, xxSmall, xxSmall);

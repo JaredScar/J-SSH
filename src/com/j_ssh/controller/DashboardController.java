@@ -9,6 +9,7 @@ import com.j_ssh.model.objects.JScene;
 import com.j_ssh.view.bootstrap.BootstrapColumn;
 import com.j_ssh.view.bootstrap.BootstrapPane;
 import com.j_ssh.view.bootstrap.BootstrapRow;
+import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -75,12 +76,22 @@ public class DashboardController extends BootstrapPane {
 
             serverCol = API.get().createColumn(serverContainer, 12, 6, 4, 3, 2, 2);
             serverCol.getContent().setOnMouseClicked(event -> {
-                Connection servConn = new Connection(username, ip, password, 22);
-                servConn.addKnownHost();
-                servConn.connect();
-                TerminalTabComponent termTab = new TerminalTabComponent(nickname, servConn);
-                MainApp.get().getTerminalController().addTerminalTab(termTab);
-                MainApp.get().changeScene(JScene.TERMINAL);
+                // We want to set them in a loading screen until we connect or not
+                MainApp.get().changeScene(JScene.LOADING);
+                new Thread(() -> {
+                    Connection servConn = new Connection(username, ip, password, 22);
+                    servConn.addKnownHost();
+                    Platform.runLater(() -> {
+                        boolean connected = servConn.connect();
+                        if (connected) {
+                            TerminalTabComponent termTab = new TerminalTabComponent(nickname, servConn);
+                            MainApp.get().getTerminalController().addTerminalTab(termTab);
+                            MainApp.get().changeScene(JScene.TERMINAL);
+                        } else {
+                            MainApp.get().changeScene(JScene.DASHBOARD);
+                        }
+                    });
+                }).start();
             });
             iconRow.addColumn(serverCol);
         }
