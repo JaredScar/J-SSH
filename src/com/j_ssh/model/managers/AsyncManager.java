@@ -14,5 +14,6 @@ public class AsyncManager {
 
     public void addThread(Thread thread) {
         this.activeThreads.add(thread);
+        thread.start();
     }
 }
