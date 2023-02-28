@@ -27,13 +27,12 @@ public class API {
         // Main Menu
         Menu mainMenu = new Menu("J-SSH");
         MenuItem[] mainItems = {new MenuItem("About"), new MenuItem("Help")};
-        mainItems[0].addEventHandler(EventType.ROOT, new EventHandler<Event>() {
-            @Override
-            public void handle(Event event) {
-                PopupHandler.triggerAboutPopup();
-            }
-        }); // TODO Add event handler for About
-        //mainItems[1].addEventHandler(); // TODO Add event handler for Help
+        mainItems[0].addEventHandler(EventType.ROOT, event -> {
+            PopupHandler.triggerAboutPopup();
+        });
+        mainItems[1].addEventHandler(EventType.ROOT, event -> {
+            PopupHandler.triggerHelpPopup();
+        });
         mainMenu.getItems().addAll(mainItems);
 
         // Session Menu
@@ -61,7 +60,7 @@ public class API {
             PopupHandler.editSessionPopup();
         });
         actionItems[2].addEventHandler(EventType.ROOT, event -> {
-            // TODO Add event handler for Trigger Action (opens popup for triggering an action)
+            PopupHandler.triggerActionPopup();
         });
         actionMenu.getItems().addAll(actionItems);
 

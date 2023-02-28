@@ -15,6 +15,7 @@ public class PopupHandler {
     public static void createSessionPopup() {}
     public static void editSessionPopup() {}
     public static void saveSessionData(ServerData serverData) {}
+    public static void triggerActionPopup() {}
     public static void createTriggerPopup() {}
     public static void editTriggerPopup() {}
     public static void saveTriggerData(TriggerData triggerData) {}
