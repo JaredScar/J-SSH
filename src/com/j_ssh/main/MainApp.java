@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 
 public class MainApp extends Application {
@@ -62,19 +63,29 @@ public class MainApp extends Application {
         Toolkit tk = Toolkit.getDefaultToolkit();
         primaryStage.setWidth(tk.getScreenSize().getWidth() - (tk.getScreenSize().getWidth() / 3));
         primaryStage.setHeight((tk.getScreenSize().getHeight()) - (tk.getScreenSize().getHeight() / 3));
+        File cssFile = new File("global.css");
+        String globalCssPath = null;
+        if (cssFile.exists()) {
+            globalCssPath = cssFile.toURI().toString();
+        } else {
+            System.out.println("CSS file not found: " + cssFile.getAbsolutePath());
+        }
         this.dashboardController = new DashboardController();
-        this.dashboardController.getStylesheets().add("global.css");
+        if (globalCssPath != null)
+            this.dashboardController.getStylesheets().add(globalCssPath);
         Scene scene = new Scene(dashboardController);
         this.dashboardScene = scene;
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.centerOnScreen();
         this.terminalController = new TerminalController();
-        this.terminalController.getStylesheets().add("global.css");
+        if (globalCssPath != null)
+            this.terminalController.getStylesheets().add(globalCssPath);
         scene = new Scene(this.terminalController);
         this.terminalScene = scene;
         this.loadingController = new LoadingController();
-        this.loadingController.getStylesheets().add("global.css");
+        if (globalCssPath != null)
+            this.loadingController.getStylesheets().add(globalCssPath);
         scene = new Scene(this.loadingController);
         this.loadingScene = scene;
     }
