@@ -1,6 +1,6 @@
 <component name="libraryTable">
   <library name="jcraft.jsch" type="repository">
-    <properties maven-id="com.jcraft:jsch:0.1.55" />
+    <properties maven-id="com.jcraft:jsch:RELEASE" />
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/com/jcraft/jsch/0.1.55/jsch-0.1.55.jar!/" />
     </CLASSES>

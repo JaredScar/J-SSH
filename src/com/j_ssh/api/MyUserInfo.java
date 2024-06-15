@@ -41,7 +41,7 @@ public class MyUserInfo implements UserInfo, UIKeyboardInteractive {
 
     @Override
     public boolean promptPassword(String message) {
-        return true;//showPasswordDialog(message);
+        return showPasswordDialog(message);
     }
 
     @Override
@@ -64,6 +64,11 @@ public class MyUserInfo implements UserInfo, UIKeyboardInteractive {
             result[0] = alert.showAndWait().orElse(ButtonType.NO) == ButtonType.YES;
             latch.countDown();
         });
+        try {
+            latch.await();  // Wait for the dialog to be closed
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return result[0];
     }
 
@@ -80,8 +85,8 @@ public class MyUserInfo implements UserInfo, UIKeyboardInteractive {
                 result[0] = dialog.showAndWait().isPresent();
                 if (result[0]) {
                     passwd = dialog.getEditor().getText();
-                    latch.countDown();
                 }
+                latch.countDown();
             });
             try {
                 latch.await();  // Wait for the dialog to be closed
@@ -139,7 +144,6 @@ public class MyUserInfo implements UserInfo, UIKeyboardInteractive {
                 for (int i = 0; i < prompt.length; i++) {
                     response[0][i] = fields[i].getText();
                 }
-                System.out.println("[DEBUG] " + response[0][0]);
                 latch.countDown();
                 stage.close();
             });

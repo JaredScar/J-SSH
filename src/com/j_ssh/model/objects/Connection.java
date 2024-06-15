@@ -32,11 +32,12 @@ public class Connection {
             JSch ssh = new JSch();
             ssh.setKnownHosts("knownHosts.txt");
             session = ssh.getSession(this.username, this.host,22);
-            session.setConfig(
-                    "PreferredAuthentications", "publickey,keyboard-interactive,password");
             MyUserInfo ui = new MyUserInfo();
             ui.setPassword(this.password);
             session.setUserInfo(ui);
+            session.setConfig(
+                    "PreferredAuthentications", "password,keyboard-interactive");
+            session.setPassword(this.password);
 
             session.connect();
             Channel channel = session.openChannel("sftp");
@@ -45,12 +46,14 @@ public class Connection {
             e1.printStackTrace();
             try {
                 if (session == null || session.getHostKey() == null) return false;
-                FileWriter tmpwriter = new FileWriter("knownHosts.txt",true);
+                String hostKeyEntry = this.host + " ssh-rsa " + session.getHostKey().getKey();
+                if (!this.isHostKeyPresent("knownHosts.txt", hostKeyEntry)) {
+                    FileWriter tmpwriter = new FileWriter("knownHosts.txt", true);
+                    tmpwriter.append(hostKeyEntry).append("\n");
 
-                tmpwriter.append(this.host + " ssh-rsa " + session.getHostKey().getKey() + "\n");
-
-                tmpwriter.flush();
-                tmpwriter.close();
+                    tmpwriter.flush();
+                    tmpwriter.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
                 return false;
@@ -58,6 +61,20 @@ public class Connection {
         }
         session.disconnect();
         return true;
+    }
+
+    private boolean isHostKeyPresent(String knownHostsFile, String hostKeyEntry) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(knownHostsFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.equals(hostKeyEntry)) {
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public boolean connect() {
