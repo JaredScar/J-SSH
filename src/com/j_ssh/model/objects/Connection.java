@@ -1,6 +1,7 @@
 package com.j_ssh.model.objects;
 
 import com.j_ssh.api.AlertHandler;
+import com.j_ssh.api.MyUserInfo;
 import com.jcraft.jsch.*;
 
 import java.io.*;
@@ -22,6 +23,7 @@ public class Connection {
         this.host = host;
         this.password = password;
         this.port = port;
+        JSch.setLogger(new MyLogger());
     }
 
     public boolean addKnownHost() {
@@ -30,7 +32,11 @@ public class Connection {
             JSch ssh = new JSch();
             ssh.setKnownHosts("knownHosts.txt");
             session = ssh.getSession(this.username, this.host,22);
-            session.setPassword(this.password);
+            session.setConfig(
+                    "PreferredAuthentications", "publickey,keyboard-interactive,password");
+            MyUserInfo ui = new MyUserInfo();
+            ui.setPassword(this.password);
+            session.setUserInfo(ui);
 
             session.connect();
             Channel channel = session.openChannel("sftp");
@@ -129,5 +135,24 @@ public class Connection {
     }
     public ByteArrayOutputStream getOutputStream() {
         return this.out;
+    }
+    private static class MyLogger implements com.jcraft.jsch.Logger {
+        static java.util.Hashtable<Integer, String> name = new java.util.Hashtable<>();
+        static {
+            name.put(DEBUG, "DEBUG: ");
+            name.put(INFO, "INFO: ");
+            name.put(WARN, "WARN: ");
+            name.put(ERROR, "ERROR: ");
+            name.put(FATAL, "FATAL: ");
+        }
+
+        public boolean isEnabled(int level) {
+            return true;
+        }
+
+        public void log(int level, String message) {
+            System.out.print(name.get(level));
+            System.out.println(message);
+        }
     }
 }
