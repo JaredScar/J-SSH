@@ -4,7 +4,7 @@
     <root id="root">
       <element id="file-copy" path="$PROJECT_DIR$/src/config.json" />
       <element id="file-copy" path="$PROJECT_DIR$/src/data.json" />
-      <element id="file-copy" path="$PROJECT_DIR$/src/com/j_ssh/view/styles/global.css" />
+      <element id="file-copy" path="$PROJECT_DIR$/src/main/java/com/j_ssh/view/styles/global.css" />
     </root>
   </artifact>
 </component>

@@ -84,4 +84,76 @@ public enum Colors {
     public String toString() {
         return code;
     }
+
+    public static String getColorCode(Colors color) {
+        switch (color) {
+            case BLACK:
+            case BLACK_BOLD:
+            case BLACK_UNDERLINED:
+            case BLACK_BACKGROUND:
+            case BLACK_BRIGHT:
+            case BLACK_BOLD_BRIGHT:
+            case BLACK_BACKGROUND_BRIGHT:
+                return "#000000";
+            case RED:
+            case RED_BOLD:
+            case RED_UNDERLINED:
+            case RED_BACKGROUND:
+            case RED_BRIGHT:
+            case RED_BOLD_BRIGHT:
+            case RED_BACKGROUND_BRIGHT:
+                return "#FF0000";
+            case GREEN:
+            case GREEN_BOLD:
+            case GREEN_UNDERLINED:
+            case GREEN_BACKGROUND:
+            case GREEN_BRIGHT:
+            case GREEN_BOLD_BRIGHT:
+            case GREEN_BACKGROUND_BRIGHT:
+                return "#00FF00";
+            case YELLOW:
+            case YELLOW_BOLD:
+            case YELLOW_UNDERLINED:
+            case YELLOW_BACKGROUND:
+            case YELLOW_BRIGHT:
+            case YELLOW_BOLD_BRIGHT:
+            case YELLOW_BACKGROUND_BRIGHT:
+                return "#FFFF00";
+            case BLUE:
+            case BLUE_BOLD:
+            case BLUE_UNDERLINED:
+            case BLUE_BACKGROUND:
+            case BLUE_BRIGHT:
+            case BLUE_BOLD_BRIGHT:
+            case BLUE_BACKGROUND_BRIGHT:
+                return "#0000FF";
+            case MAGENTA:
+            case MAGENTA_BOLD:
+            case MAGENTA_UNDERLINED:
+            case MAGENTA_BACKGROUND:
+            case MAGENTA_BRIGHT:
+            case MAGENTA_BOLD_BRIGHT:
+            case MAGENTA_BACKGROUND_BRIGHT:
+                return "#FF00FF";
+            case CYAN:
+            case CYAN_BOLD:
+            case CYAN_UNDERLINED:
+            case CYAN_BACKGROUND:
+            case CYAN_BRIGHT:
+            case CYAN_BOLD_BRIGHT:
+            case CYAN_BACKGROUND_BRIGHT:
+                return "#00FFFF";
+            case WHITE:
+            case WHITE_BOLD:
+            case WHITE_UNDERLINED:
+            case WHITE_BACKGROUND:
+            case WHITE_BRIGHT:
+            case WHITE_BOLD_BRIGHT:
+            case WHITE_BACKGROUND_BRIGHT:
+                return "#FFFFFF";
+            case RESET:
+            default:
+                return "#000000";
+        }
+    }
 }

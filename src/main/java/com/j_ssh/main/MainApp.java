@@ -13,7 +13,6 @@ import lombok.Setter;
 
 import java.awt.*;
 import java.io.File;
-import java.io.IOException;
 
 public class MainApp extends Application {
     private static MainApp main;

@@ -3,16 +3,23 @@ package com.j_ssh.model.objects;
 import com.j_ssh.api.AlertHandler;
 import com.j_ssh.api.MyUserInfo;
 import com.jcraft.jsch.*;
+import lombok.Getter;
 
 import java.io.*;
 
 public class Connection {
+    @Getter
     private String username;
+    @Getter
     private String host;
+    @Getter
     private String password;
+    @Getter
     private int port;
 
+    @Getter
     private Session session;
+    @Getter
     private Channel channel;
     private PipedOutputStream pipe = new PipedOutputStream();
     private InputStream in;
@@ -129,24 +136,6 @@ public class Connection {
         return this.error;
     }
 
-    public String getUsername() {
-        return this.username;
-    }
-    public String getPassword() {
-        return this.password;
-    }
-    public String getHost() {
-        return this.host;
-    }
-    public int getPort() {
-        return this.port;
-    }
-    public Session getSession() {
-        return this.session;
-    }
-    public Channel getChannel() {
-        return this.channel;
-    }
     public InputStream getInputStream() {
         return this.in;
     }
