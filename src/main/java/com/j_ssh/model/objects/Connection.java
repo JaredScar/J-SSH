@@ -96,12 +96,21 @@ public class Connection {
             this.pipe = new PipedOutputStream();
             this.in = new PipedInputStream(this.pipe);
             this.out = new ByteArrayOutputStream();
+        } catch (JSchException | IOException e) {
+            this.error = e.getMessage();
+            AlertHandler.triggerExceptionAlert("Connection Error", "Error Encountered", e);
+            return false;
+        }
+        return true;
+    }
 
+    public boolean start() {
+        try {
             this.channel = this.session.openChannel("shell");
             this.channel.setInputStream(this.in);
             this.channel.setOutputStream(this.out);
             this.channel.connect();
-        } catch (JSchException | IOException e) {
+        } catch (JSchException e) {
             this.error = e.getMessage();
             AlertHandler.triggerExceptionAlert("Connection Error", "Error Encountered", e);
             return false;
@@ -111,7 +120,7 @@ public class Connection {
 
     public boolean sendCommand(String cmd) {
         try {
-            this.pipe.write((cmd + "\n").getBytes());
+            this.pipe.write((cmd).getBytes());
         } catch (IOException e) {
             this.error = e.getMessage();
             AlertHandler.triggerExceptionAlert("Connection Error", "Error Encountered", e);

@@ -9,8 +9,10 @@ import javafx.scene.web.WebView;
 import lombok.Getter;
 import netscape.javascript.JSObject;
 
-import java.io.File;
+import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 
 public class TerminalTabComponent extends BorderPane {
     @Getter
@@ -19,21 +21,27 @@ public class TerminalTabComponent extends BorderPane {
     private Connection connection;
 
     private WebView webView;
+    private boolean terminalReady = false;
 
     public TerminalTabComponent(String nickname, Connection connection) {
         this.nickname = nickname;
         this.connection = connection;
         this.getStyleClass().add("terminal");
-        WebView webView = new WebView();
-        this.webView = webView;
-        WebEngine webEngine = webView.getEngine();
+        this.webView = new WebView();
+        WebEngine webEngine = this.webView.getEngine();
+        connection.start();
 
         webEngine.setJavaScriptEnabled(true);
+        TerminalBridge bridge = new TerminalBridge();
         /**/
         webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("[SUCCESS] WebEngine is ready...");
-            JSObject window = (JSObject) webEngine.executeScript("window");
-            window.setMember("java", new TerminalBridge());
+            if (!this.terminalReady && newValue == Worker.State.SUCCEEDED) {
+                System.out.println("[SUCCESS] WebEngine is ready...");
+                JSObject window = (JSObject) webEngine.executeScript("window");
+                window.setMember("java", bridge);
+                startOutputThread(bridge);
+                this.terminalReady = true;
+            }
         });
         webEngine.setOnError(errorEvent -> {
             System.err.println("WebView error: " + errorEvent.getMessage());
@@ -47,8 +55,30 @@ public class TerminalTabComponent extends BorderPane {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        this.setCenter(this.webView);
+    }
 
-        this.setCenter(webView);
+    private void startOutputThread(TerminalBridge bridge) {
+        Thread outputThread = new Thread(() -> {
+            try {
+                while (true) {
+                    byte[] buffer;
+                    if (this.terminalReady) {
+                        synchronized (connection.getOutputStream()) {
+                            buffer = connection.getOutputStream().toByteArray();
+                            connection.getOutputStream().reset(); // Clear the output stream after reading
+                        }
+                        String output = new String(buffer, "UTF-8");
+                        if (!output.isEmpty()) {
+                            bridge.sendOutputToTerminal(output);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        outputThread.start();
     }
 
     public void sendCommand(String cmd) {
@@ -62,16 +92,18 @@ public class TerminalTabComponent extends BorderPane {
 
     public class TerminalBridge {
         public void receiveInput(String input) {
-            System.out.println("[DEBUG] Received input: " + input);
             // Handle input here and send responses back to the terminal
             sendOutputToTerminal(input);
+            if (input.contains("\n"))
+                sendOutputToTerminal(input);
         }
 
         public void sendOutputToTerminal(String output) {
             Platform.runLater(() -> {
-                webView.getEngine().executeScript("term.write('" + output.replace("\n", "\\n").replace("\r", "\\r") + "')");
+                System.out.println("[DEBUG] Output=> " + output);
+                JSObject terminal = (JSObject) webView.getEngine().executeScript("term");
+                terminal.call("write", output);
             });
         }
     }
-
 }

@@ -21,6 +21,12 @@
             <artifactId>jsch</artifactId>
             <version>0.1.55</version>
         </dependency>
+        <!-- Jadaptive Terminal -->
+        <dependency>
+            <groupId>com.sshtools</groupId>
+            <artifactId>terminal-javafx</artifactId>
+            <version>3.0.0-SNAPSHOT</version>
+        </dependency>
 
         <!-- Lombok Dependency -->
         <dependency>
@@ -64,6 +70,20 @@
             <version>${javafx.version}</version>
         </dependency>
     </dependencies>
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
+            <id>sshtools</id>
+            <name>sshtools</name>
+            <url>http://artifactory.javassh.com/public-snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
     <build>
         <resources>
             <resource>
@@ -82,6 +102,11 @@
                     <source>22</source>
                     <target>22</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.2.0</version>
             </plugin>
             <!-- Other plugins -->
             <plugin>

@@ -21,7 +21,7 @@
 <div id="terminal-container"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xterm/5.5.0/xterm.js" integrity="sha512-Gujw5GajF5is3nMoGv9X+tCMqePLL/60qvAv1LofUZTV9jK8ENbM9L+maGmOsNzuZaiuyc/fpph1KT9uR5w3CQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-    const term = new Terminal();
+    let term = new Terminal();
     term.open(document.getElementById('terminal-container'));
 
     window.sendInputToJava = function (input) {
