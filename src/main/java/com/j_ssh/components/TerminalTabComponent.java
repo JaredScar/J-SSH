@@ -33,7 +33,6 @@ public class TerminalTabComponent extends BorderPane {
 
         webEngine.setJavaScriptEnabled(true);
         TerminalBridge bridge = new TerminalBridge();
-        /**/
         webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
             if (!this.terminalReady && newValue == Worker.State.SUCCEEDED) {
                 System.out.println("[SUCCESS] WebEngine is ready...");
@@ -47,7 +46,6 @@ public class TerminalTabComponent extends BorderPane {
             System.err.println("WebView error: " + errorEvent.getMessage());
             // Handle error event
         });
-        /**/
         File htmlFile = new File("terminal.html");
         try {
             String htmlFilePath = htmlFile.toURI().toString();
@@ -91,16 +89,39 @@ public class TerminalTabComponent extends BorderPane {
     }
 
     public class TerminalBridge {
+        @Getter
+        private String currentStr = "";
+
         public void receiveInput(String input) {
             // Handle input here and send responses back to the terminal
-            sendOutputToTerminal(input);
-            if (input.contains("\n"))
-                sendOutputToTerminal(input);
+            switch (input) {
+                case "\u0008": // Backspace
+                case "\u007f": // Delete
+                    if (!this.currentStr.isEmpty()) {
+                        this.currentStr = this.currentStr.substring(0, this.currentStr.length() - 1);
+                        sendOutputToTerminal("\b \b"); // Send backspace sequence to terminal
+                    }
+                    break;
+                case "\t": // Tab
+                    sendCommand(this.currentStr + "\t"); // Send tab to terminal
+                    this.currentStr = "";
+                    break;
+                case "\n": // Newline
+                case "\r":
+                case "\r\n":
+                    sendCommand(this.currentStr + input);
+                    this.currentStr = "";
+                    break;
+                default:
+                    System.out.println("[DEBUG] input sent to terminal => " + input);
+                    this.currentStr += input;
+                    sendOutputToTerminal(input);
+                    break;
+            }
         }
 
         public void sendOutputToTerminal(String output) {
             Platform.runLater(() -> {
-                System.out.println("[DEBUG] Output=> " + output);
                 JSObject terminal = (JSObject) webView.getEngine().executeScript("term");
                 terminal.call("write", output);
             });
