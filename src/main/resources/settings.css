@@ -1,8 +1,8 @@
-/* Modern Settings Styling */
+/* Modern Settings Styling - Based on j-ssh-client mockup */
 .settings-container {
-    -fx-background-color: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
-    -fx-padding: 20px;
-    -fx-spacing: 20px;
+    -fx-background-color: #1f2937;
+    -fx-padding: 24px;
+    -fx-spacing: 24px;
 }
 
 .settings-title {
@@ -10,16 +10,16 @@
     -fx-font-weight: 700;
     -fx-text-fill: #ffffff;
     -fx-padding: 0 0 20px 0;
-    -fx-effect: dropshadow(gaussian, rgba(0, 120, 212, 0.5), 8, 0, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.5), 8, 0, 0, 4);
 }
 
 .settings-section {
-    -fx-background-color: #2d2d2d;
-    -fx-border-color: #555555;
+    -fx-background-color: #374151;
+    -fx-border-color: #374151;
     -fx-border-radius: 12px;
     -fx-background-radius: 12px;
-    -fx-padding: 20px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 8, 0, 0, 4);
+    -fx-padding: 24px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 2);
     -fx-spacing: 16px;
 }
 
@@ -28,7 +28,7 @@
     -fx-font-weight: 600;
     -fx-text-fill: #ffffff;
     -fx-padding: 0 0 16px 0;
-    -fx-border-color: #0078d4;
+    -fx-border-color: #8b5cf6;
     -fx-border-width: 0 0 2px 0;
     -fx-border-radius: 0 0 4px 4px;
     -fx-background-radius: 0 0 4px 4px;
@@ -47,70 +47,70 @@
 
 .settings-description {
     -fx-font-size: 12px;
-    -fx-text-fill: #888888;
+    -fx-text-fill: #9ca3af;
     -fx-padding: 0 0 12px 0;
 }
 
 .settings-input {
-    -fx-background-color: #3c3c3c;
+    -fx-background-color: #374151;
     -fx-text-fill: #ffffff;
-    -fx-border-color: #555555;
-    -fx-border-radius: 6px;
-    -fx-background-radius: 6px;
-    -fx-padding: 10px 12px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 4, 0, 0, 2);
+    -fx-border-color: #374151;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 12px 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 2, 0, 0, 1);
 }
 
 .settings-input:focused {
-    -fx-border-color: #0078d4;
-    -fx-effect: dropshadow(gaussian, rgba(0, 120, 212, 0.4), 6, 0, 0, 3);
+    -fx-border-color: #8b5cf6;
+    -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.2), 4, 0, 0, 2);
 }
 
 .settings-input:hover {
-    -fx-border-color: #666666;
+    -fx-border-color: #4b5563;
 }
 
 .settings-toggle {
-    -fx-background-color: #3c3c3c;
-    -fx-border-color: #555555;
-    -fx-border-radius: 6px;
-    -fx-background-radius: 6px;
+    -fx-background-color: #374151;
+    -fx-border-color: #374151;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
     -fx-padding: 8px 12px;
     -fx-cursor: hand;
 }
 
 .settings-toggle:selected {
-    -fx-background-color: #0078d4;
-    -fx-border-color: #0078d4;
+    -fx-background-color: #8b5cf6;
+    -fx-border-color: #8b5cf6;
 }
 
 .settings-toggle:hover {
-    -fx-background-color: #4a4a4a;
+    -fx-background-color: #4b5563;
 }
 
 .settings-toggle:selected:hover {
-    -fx-background-color: #106ebe;
+    -fx-background-color: #7c3aed;
 }
 
 .settings-button {
-    -fx-background-color: linear-gradient(to bottom, #0078d4 0%, #106ebe 100%);
-    -fx-text-fill: white;
+    -fx-background-color: #8b5cf6;
+    -fx-text-fill: #ffffff;
     -fx-font-weight: 600;
     -fx-padding: 12px 24px;
     -fx-background-radius: 8px;
     -fx-border-radius: 8px;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0, 120, 212, 0.3), 6, 0, 0, 3);
+    -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.3), 6, 0, 0, 3);
 }
 
 .settings-button:hover {
-    -fx-background-color: linear-gradient(to bottom, #106ebe 0%, #005a9e 100%);
-    -fx-effect: dropshadow(gaussian, rgba(0, 120, 212, 0.5), 8, 0, 0, 4);
+    -fx-background-color: #7c3aed;
+    -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.4), 8, 0, 0, 4);
 }
 
 .settings-button:pressed {
-    -fx-background-color: linear-gradient(to bottom, #005a9e 0%, #004578 100%);
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 2, 0, 0, 1);
+    -fx-background-color: #6d28d9;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 2, 0, 0, 1);
 }
 
 .settings-button.secondary {

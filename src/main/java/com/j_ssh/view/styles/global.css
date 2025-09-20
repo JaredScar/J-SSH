@@ -1,47 +1,116 @@
-/* J-SSH Modern Design System */
+/* J-SSH Modern Design System - Based on j-ssh-client mockup */
 
 /* Root Variables */
 .root {
-    -fx-font-family: "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-family: "Geist", "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
     -fx-font-size: 14px;
-    -fx-base: #1e1e1e;
-    -fx-background: #1e1e1e;
-    -fx-control-inner-background: #2d2d2d;
-    -fx-control-inner-background-alt: #3c3c3c;
-    -fx-accent: #0078d4;
-    -fx-focus-color: #0078d4;
-    -fx-faint-focus-color: rgba(0, 120, 212, 0.2);
-    -fx-selection-bar: #0078d4;
-    -fx-selection-bar-non-focused: #404040;
+    -fx-base: #1f2937;
+    -fx-background: #1f2937;
+    -fx-control-inner-background: #374151;
+    -fx-control-inner-background-alt: #4b5563;
+    -fx-accent: #8b5cf6;
+    -fx-focus-color: #8b5cf6;
+    -fx-faint-focus-color: rgba(139, 92, 246, 0.2);
+    -fx-selection-bar: #8b5cf6;
+    -fx-selection-bar-non-focused: #4b5563;
 }
 
-/* Color Palette */
+/* Color Palette - Based on j-ssh-client design tokens */
 :root {
-    --primary-color: #0078d4;
-    --primary-hover: #106ebe;
-    --primary-active: #005a9e;
-    --secondary-color: #6c757d;
-    --secondary-hover: #5a6268;
-    --success-color: #28a745;
-    --success-hover: #218838;
-    --danger-color: #dc3545;
-    --danger-hover: #c82333;
-    --warning-color: #ffc107;
-    --warning-hover: #e0a800;
-    --info-color: #17a2b8;
-    --info-hover: #138496;
+    /* Primary Colors */
+    --background: #ffffff;
+    --foreground: #1f2937;
+    --card: #f1f5f9;
+    --card-foreground: #1f2937;
+    --popover: #ffffff;
+    --popover-foreground: #1f2937;
+    --primary: #1f2937;
+    --primary-foreground: #ffffff;
+    --secondary: #8b5cf6;
+    --secondary-foreground: #ffffff;
+    --muted: #6b7280;
+    --muted-foreground: #ffffff;
+    --accent: #8b5cf6;
+    --accent-foreground: #ffffff;
+    --destructive: #ea580c;
+    --destructive-foreground: #ffffff;
+    --border: #d1d5db;
+    --input: #f1f5f9;
+    --ring: #8b5cf6;
     
-    --bg-primary: #1e1e1e;
-    --bg-secondary: #2d2d2d;
-    --bg-tertiary: #3c3c3c;
-    --bg-quaternary: #4a4a4a;
+    /* Dark Mode Colors */
+    --background-dark: #1f2937;
+    --foreground-dark: #ffffff;
+    --card-dark: #374151;
+    --card-foreground-dark: #ffffff;
+    --popover-dark: #1f2937;
+    --popover-foreground-dark: #ffffff;
+    --primary-dark: #ffffff;
+    --primary-foreground-dark: #1f2937;
+    --secondary-dark: #8b5cf6;
+    --secondary-foreground-dark: #ffffff;
+    --muted-dark: #6b7280;
+    --muted-foreground-dark: #ffffff;
+    --accent-dark: #8b5cf6;
+    --accent-foreground-dark: #ffffff;
+    --destructive-dark: #ea580c;
+    --destructive-foreground-dark: #ffffff;
+    --border-dark: #374151;
+    --input-dark: #374151;
+    --ring-dark: #8b5cf6;
+    
+    /* Sidebar Colors */
+    --sidebar: #f1f5f9;
+    --sidebar-foreground: #1f2937;
+    --sidebar-primary: #8b5cf6;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #ea580c;
+    --sidebar-accent-foreground: #ffffff;
+    --sidebar-border: #d1d5db;
+    --sidebar-ring: #8b5cf6;
+    
+    --sidebar-dark: #1f2937;
+    --sidebar-foreground-dark: #ffffff;
+    --sidebar-primary-dark: #8b5cf6;
+    --sidebar-primary-foreground-dark: #ffffff;
+    --sidebar-accent-dark: #ea580c;
+    --sidebar-accent-foreground-dark: #ffffff;
+    --sidebar-border-dark: #374151;
+    --sidebar-ring-dark: #8b5cf6;
+    
+    /* Chart Colors */
+    --chart-1: #4f46e5;
+    --chart-2: #6b7280;
+    --chart-3: #8b5cf6;
+    --chart-4: #ea580c;
+    --chart-5: #f97316;
+    
+    /* Legacy compatibility */
+    --primary-color: #8b5cf6;
+    --primary-hover: #7c3aed;
+    --primary-active: #6d28d9;
+    --secondary-color: #6b7280;
+    --secondary-hover: #4b5563;
+    --success-color: #10b981;
+    --success-hover: #059669;
+    --danger-color: #ef4444;
+    --danger-hover: #dc2626;
+    --warning-color: #f59e0b;
+    --warning-hover: #d97706;
+    --info-color: #3b82f6;
+    --info-hover: #2563eb;
+    
+    --bg-primary: #1f2937;
+    --bg-secondary: #374151;
+    --bg-tertiary: #4b5563;
+    --bg-quaternary: #6b7280;
     
     --text-primary: #ffffff;
-    --text-secondary: #cccccc;
-    --text-muted: #888888;
+    --text-secondary: #d1d5db;
+    --text-muted: #9ca3af;
     
-    --border-color: #555555;
-    --border-hover: #666666;
+    --border-color: #374151;
+    --border-hover: #4b5563;
     
     --shadow-light: rgba(0, 0, 0, 0.1);
     --shadow-medium: rgba(0, 0, 0, 0.2);
