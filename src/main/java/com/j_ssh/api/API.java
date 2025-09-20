@@ -57,7 +57,7 @@ public class API {
             PopupHandler.createActionPopup();
         });
         actionItems[1].addEventHandler(EventType.ROOT, event -> {
-            PopupHandler.editSessionPopup();
+            MainApp.get().changeScene(JScene.ACTIONS);
         });
         actionItems[2].addEventHandler(EventType.ROOT, event -> {
             PopupHandler.triggerActionPopup();

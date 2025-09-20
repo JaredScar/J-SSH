@@ -19,9 +19,17 @@ public class PopupHandler {
     public static void createTriggerPopup() {}
     public static void editTriggerPopup() {}
     public static void saveTriggerData(TriggerData triggerData) {}
-    public static void createActionPopup() {}
-    public static void editActionPopup() {}
-    public static void saveActionData(ActionData actionData) {}
+    public static void createActionPopup() {
+        // Navigate to actions management page
+        com.j_ssh.main.MainApp.get().changeScene(com.j_ssh.model.objects.JScene.ACTIONS);
+    }
+    public static void editActionPopup() {
+        // Navigate to actions management page
+        com.j_ssh.main.MainApp.get().changeScene(com.j_ssh.model.objects.JScene.ACTIONS);
+    }
+    public static void saveActionData(ActionData actionData) {
+        actionData.saveData();
+    }
     public static void confirmOrCancelDialog(String title, String header, String content, Consumer<Boolean> resultCallback) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(title);

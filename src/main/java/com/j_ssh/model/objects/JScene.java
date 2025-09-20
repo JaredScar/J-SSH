@@ -4,5 +4,6 @@ public enum JScene {
     DASHBOARD,
     TERMINAL,
     SETTINGS,
-    LOADING
+    LOADING,
+    ACTIONS
 }

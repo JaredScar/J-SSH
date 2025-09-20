@@ -1,5 +1,6 @@
 package com.j_ssh.main;
 
+import com.j_ssh.controller.ButtonController;
 import com.j_ssh.controller.DashboardController;
 import com.j_ssh.controller.LoadingController;
 import com.j_ssh.controller.SettingsController;
@@ -48,6 +49,13 @@ public class MainApp extends Application {
     @Setter
     private Scene loadingScene;
 
+    @Getter
+    @Setter
+    private ButtonController buttonController;
+    @Getter
+    @Setter
+    private Scene actionsScene;
+
     public static MainApp get() {
         return main;
     }
@@ -80,6 +88,8 @@ public class MainApp extends Application {
         this.terminalController = new TerminalController();
         if (globalCssPath != null)
             this.terminalController.getStylesheets().add(globalCssPath);
+        // Add action buttons CSS for terminal
+        this.terminalController.getStylesheets().add(getClass().getResource("/action-buttons.css").toString());
         scene = new Scene(this.terminalController);
         this.terminalScene = scene;
         this.loadingController = new LoadingController();
@@ -87,6 +97,14 @@ public class MainApp extends Application {
             this.loadingController.getStylesheets().add(globalCssPath);
         scene = new Scene(this.loadingController);
         this.loadingScene = scene;
+        
+        this.buttonController = new ButtonController();
+        if (globalCssPath != null)
+            this.buttonController.getStylesheets().add(globalCssPath);
+        // Add action buttons CSS
+        this.buttonController.getStylesheets().add(getClass().getResource("/action-buttons.css").toString());
+        scene = new Scene(this.buttonController);
+        this.actionsScene = scene;
     }
 
     public double getScreenWidth() {
@@ -115,6 +133,10 @@ public class MainApp extends Application {
                 break;
             case LOADING:
                 fxScene = this.getLoadingScene();
+                this.getPrimaryStage().setScene(fxScene);
+                break;
+            case ACTIONS:
+                fxScene = this.getActionsScene();
                 this.getPrimaryStage().setScene(fxScene);
                 break;
         }
