@@ -3,6 +3,8 @@
 .terminal {
   -fx-text-fill: green;
   -fx-min-height: 100%;
+  -fx-pref-height: 100%;
+  -fx-max-height: 100%;
 }
 .terminal .content {
   -fx-background-color: black;

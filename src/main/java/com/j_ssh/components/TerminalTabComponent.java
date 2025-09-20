@@ -28,6 +28,11 @@ public class TerminalTabComponent extends BorderPane {
         this.connection = connection;
         this.getStyleClass().add("terminal");
         this.webView = new WebView();
+        
+        // Make WebView take up full height
+        this.webView.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        this.webView.setMinSize(0, 0);
+        
         WebEngine webEngine = this.webView.getEngine();
         connection.start();
 
@@ -78,11 +83,14 @@ public class TerminalTabComponent extends BorderPane {
                             bridge.sendOutputToTerminal(output);
                         }
                     }
+                    // Small delay to prevent excessive CPU usage
+                    Thread.sleep(10);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
+        outputThread.setDaemon(true); // Make it a daemon thread
         outputThread.start();
     }
 
@@ -106,29 +114,29 @@ public class TerminalTabComponent extends BorderPane {
         private String currentStr = "";
 
         public void receiveInput(String input) {
-            // Handle input here and send responses back to the terminal
+            // Handle input here and send to SSH connection
             switch (input) {
                 case "\u0008": // Backspace
                 case "\u007f": // Delete
                     if (!this.currentStr.isEmpty()) {
                         this.currentStr = this.currentStr.substring(0, this.currentStr.length() - 1);
-                        sendOutputToTerminal("\b \b"); // Send backspace sequence to terminal
                     }
+                    sendCommand(input); // Send backspace to SSH server
                     break;
                 case "\t": // Tab
-                    sendCommand(this.currentStr + "\t"); // Send tab to terminal
+                    sendCommand(this.currentStr + input); // Send current string + tab to SSH server
                     this.currentStr = "";
                     break;
                 case "\n": // Newline
                 case "\r":
                 case "\r\n":
-                    sendCommand(this.currentStr + input);
+                    sendCommand(this.currentStr + input); // Send current string + newline to SSH server
                     this.currentStr = "";
                     break;
                 default:
-                    System.out.println("[DEBUG] input sent to terminal => " + input);
+                    System.out.println("[DEBUG] input sent to SSH => " + input);
                     this.currentStr += input;
-                    sendOutputToTerminal(input);
+                    sendCommand(input); // Send character to SSH server
                     break;
             }
         }
