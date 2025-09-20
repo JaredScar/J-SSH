@@ -42,7 +42,7 @@ public class API {
             PopupHandler.createSessionPopup();
         });
         sessionItems[1].addEventHandler(EventType.ROOT, event -> {
-            PopupHandler.editSessionPopup();
+            MainApp.get().changeScene(JScene.SESSIONS);
         });
         sessionItems[2].addEventHandler(EventType.ROOT, event -> {
             // We want to change to the dashboard screen for them to open a new session
@@ -64,7 +64,21 @@ public class API {
         });
         actionMenu.getItems().addAll(actionItems);
 
-        mbar.getMenus().addAll(mainMenu, sessionMenu, actionMenu);
+        // Trigger Menu
+        Menu triggerMenu = new Menu("Triggers");
+        MenuItem[] triggerItems = {new MenuItem("Create New Trigger"), new MenuItem("Edit Triggers"), new MenuItem("Trigger Action")};
+        triggerItems[0].addEventHandler(EventType.ROOT, event -> {
+            PopupHandler.createTriggerPopup();
+        });
+        triggerItems[1].addEventHandler(EventType.ROOT, event -> {
+            MainApp.get().changeScene(JScene.TRIGGERS);
+        });
+        triggerItems[2].addEventHandler(EventType.ROOT, event -> {
+            PopupHandler.triggerActionPopup();
+        });
+        triggerMenu.getItems().addAll(triggerItems);
+
+        mbar.getMenus().addAll(mainMenu, sessionMenu, actionMenu, triggerMenu);
         mbar.getStyleClass().add("global-menu-bar");
         vBox.getChildren().add(mbar);
         BootstrapRow bootstrapRow = new BootstrapRow();

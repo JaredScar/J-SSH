@@ -5,5 +5,7 @@ public enum JScene {
     TERMINAL,
     SETTINGS,
     LOADING,
-    ACTIONS
+    ACTIONS,
+    SESSIONS,
+    TRIGGERS
 }

@@ -3,8 +3,10 @@ package com.j_ssh.main;
 import com.j_ssh.controller.ButtonController;
 import com.j_ssh.controller.DashboardController;
 import com.j_ssh.controller.LoadingController;
+import com.j_ssh.controller.SessionController;
 import com.j_ssh.controller.SettingsController;
 import com.j_ssh.controller.TerminalController;
+import com.j_ssh.controller.TriggerController;
 import com.j_ssh.model.objects.JScene;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -56,6 +58,20 @@ public class MainApp extends Application {
     @Setter
     private Scene actionsScene;
 
+    @Getter
+    @Setter
+    private SessionController sessionController;
+    @Getter
+    @Setter
+    private Scene sessionsScene;
+
+    @Getter
+    @Setter
+    private TriggerController triggerController;
+    @Getter
+    @Setter
+    private Scene triggersScene;
+
     public static MainApp get() {
         return main;
     }
@@ -105,6 +121,18 @@ public class MainApp extends Application {
         this.buttonController.getStylesheets().add(getClass().getResource("/action-buttons.css").toString());
         scene = new Scene(this.buttonController);
         this.actionsScene = scene;
+        
+        this.sessionController = new SessionController();
+        if (globalCssPath != null)
+            this.sessionController.getStylesheets().add(globalCssPath);
+        scene = new Scene(this.sessionController);
+        this.sessionsScene = scene;
+        
+        this.triggerController = new TriggerController();
+        if (globalCssPath != null)
+            this.triggerController.getStylesheets().add(globalCssPath);
+        scene = new Scene(this.triggerController);
+        this.triggersScene = scene;
     }
 
     public double getScreenWidth() {
@@ -137,6 +165,14 @@ public class MainApp extends Application {
                 break;
             case ACTIONS:
                 fxScene = this.getActionsScene();
+                this.getPrimaryStage().setScene(fxScene);
+                break;
+            case SESSIONS:
+                fxScene = this.getSessionsScene();
+                this.getPrimaryStage().setScene(fxScene);
+                break;
+            case TRIGGERS:
+                fxScene = this.getTriggersScene();
                 this.getPrimaryStage().setScene(fxScene);
                 break;
         }

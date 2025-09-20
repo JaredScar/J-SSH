@@ -12,13 +12,32 @@ import java.util.function.Consumer;
 
 public class PopupHandler {
     private static DataManager dataManager = DataManager.get();
-    public static void createSessionPopup() {}
-    public static void editSessionPopup() {}
-    public static void saveSessionData(ServerData serverData) {}
-    public static void triggerActionPopup() {}
-    public static void createTriggerPopup() {}
-    public static void editTriggerPopup() {}
-    public static void saveTriggerData(TriggerData triggerData) {}
+    public static void createSessionPopup() {
+        // Navigate to sessions management page
+        com.j_ssh.main.MainApp.get().changeScene(com.j_ssh.model.objects.JScene.SESSIONS);
+    }
+    public static void editSessionPopup() {
+        // Navigate to sessions management page
+        com.j_ssh.main.MainApp.get().changeScene(com.j_ssh.model.objects.JScene.SESSIONS);
+    }
+    public static void saveSessionData(ServerData serverData) {
+        serverData.saveData();
+    }
+    public static void triggerActionPopup() {
+        // Navigate to triggers management page
+        com.j_ssh.main.MainApp.get().changeScene(com.j_ssh.model.objects.JScene.TRIGGERS);
+    }
+    public static void createTriggerPopup() {
+        // Navigate to triggers management page
+        com.j_ssh.main.MainApp.get().changeScene(com.j_ssh.model.objects.JScene.TRIGGERS);
+    }
+    public static void editTriggerPopup() {
+        // Navigate to triggers management page
+        com.j_ssh.main.MainApp.get().changeScene(com.j_ssh.model.objects.JScene.TRIGGERS);
+    }
+    public static void saveTriggerData(TriggerData triggerData) {
+        triggerData.saveData();
+    }
     public static void createActionPopup() {
         // Navigate to actions management page
         com.j_ssh.main.MainApp.get().changeScene(com.j_ssh.model.objects.JScene.ACTIONS);
@@ -46,5 +65,40 @@ public class PopupHandler {
 
         alert.showAndWait();
     }
-    public static void triggerHelpPopup() {}
+    public static void triggerHelpPopup() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("J-SSH Help");
+        alert.setHeaderText("J-SSH User Guide");
+        
+        StringBuilder helpText = new StringBuilder();
+        helpText.append("Welcome to J-SSH! Here's how to use the application:\n\n");
+        
+        helpText.append("📋 SESSIONS:\n");
+        helpText.append("• Create New Session: Add SSH server connections with credentials\n");
+        helpText.append("• Edit Sessions: Modify existing server configurations\n");
+        helpText.append("• Open Session: Connect to a server and open terminal\n\n");
+        
+        helpText.append("⚡ ACTIONS:\n");
+        helpText.append("• Create New Action: Define command sequences to execute\n");
+        helpText.append("• Edit Actions: Modify existing command sequences\n");
+        helpText.append("• Trigger Action: Execute actions on connected terminals\n\n");
+        
+        helpText.append("🔗 TRIGGERS:\n");
+        helpText.append("• Create New Trigger: Set up automated actions across multiple servers\n");
+        helpText.append("• Edit Triggers: Modify trigger configurations\n");
+        helpText.append("• Trigger Action: Execute triggers manually\n\n");
+        
+        helpText.append("💡 TIPS:\n");
+        helpText.append("• Use the action buttons in the terminal sidebar for quick command execution\n");
+        helpText.append("• Actions can contain multiple commands that execute sequentially\n");
+        helpText.append("• Triggers allow you to run the same action on multiple servers simultaneously\n");
+        helpText.append("• All data is automatically saved to data.json\n\n");
+        
+        helpText.append("🆘 SUPPORT:\n");
+        helpText.append("For additional help, check the About section or contact support.");
+        
+        alert.setContentText(helpText.toString());
+        alert.getDialogPane().setPrefWidth(600);
+        alert.showAndWait();
+    }
 }
