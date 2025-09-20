@@ -92,7 +92,13 @@ public class TerminalTabComponent extends BorderPane {
     }
 
     public void close() {
-        // Implement the close logic if needed
+        try {
+            if (connection != null && connection.isConnected()) {
+                connection.disconnect();
+            }
+        } catch (Exception e) {
+            System.err.println("Error closing connection: " + e.getMessage());
+        }
     }
 
     public class TerminalBridge {
@@ -129,8 +135,14 @@ public class TerminalTabComponent extends BorderPane {
 
         public void sendOutputToTerminal(String output) {
             Platform.runLater(() -> {
-                JSObject terminal = (JSObject) webView.getEngine().executeScript("term");
-                terminal.call("write", output);
+                try {
+                    JSObject terminal = (JSObject) webView.getEngine().executeScript("term");
+                    if (terminal != null) {
+                        terminal.call("write", output);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error sending output to terminal: " + e.getMessage());
+                }
             });
         }
     }
