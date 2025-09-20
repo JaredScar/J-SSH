@@ -1,0 +1,74 @@
+/* Modern Loading Screen Styling */
+.loading-container {
+    -fx-background-color: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+    -fx-alignment: center;
+    -fx-spacing: 20px;
+}
+
+.loading-title {
+    -fx-font-size: 32px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #ffffff;
+    -fx-effect: dropshadow(gaussian, rgba(0, 120, 212, 0.5), 8, 0, 0, 4);
+}
+
+.loading-subtitle {
+    -fx-font-size: 16px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #cccccc;
+    -fx-padding: 0 0 20px 0;
+}
+
+.loading-spinner {
+    -fx-background-color: transparent;
+    -fx-border-color: #0078d4;
+    -fx-border-width: 3px;
+    -fx-border-radius: 50%;
+    -fx-background-radius: 50%;
+    -fx-pref-width: 60px;
+    -fx-pref-height: 60px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 120, 212, 0.6), 12, 0, 0, 6);
+}
+
+.loading-progress {
+    -fx-background-color: #3c3c3c;
+    -fx-border-color: #555555;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-pref-width: 300px;
+    -fx-pref-height: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 4, 0, 0, 2);
+}
+
+.loading-progress .bar {
+    -fx-background-color: linear-gradient(to right, #0078d4 0%, #106ebe 100%);
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+}
+
+.loading-status {
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #888888;
+    -fx-padding: 10px 0 0 0;
+}
+
+/* Animation keyframes */
+@keyframes spin {
+    from { -fx-rotate: 0deg; }
+    to { -fx-rotate: 360deg; }
+}
+
+@keyframes pulse {
+    0% { -fx-opacity: 1; }
+    50% { -fx-opacity: 0.5; }
+    100% { -fx-opacity: 1; }
+}
+
+.loading-spinner.animated {
+    animation: spin 1s linear infinite;
+}
+
+.loading-title.animated {
+    animation: pulse 2s ease-in-out infinite;
+}

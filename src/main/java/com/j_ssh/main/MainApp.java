@@ -96,6 +96,8 @@ public class MainApp extends Application {
         this.dashboardController = new DashboardController();
         if (globalCssPath != null)
             this.dashboardController.getStylesheets().add(globalCssPath);
+        // Add dashboard CSS
+        this.dashboardController.getStylesheets().add(getClass().getResource("/dashboard.css").toString());
         Scene scene = new Scene(dashboardController);
         this.dashboardScene = scene;
         primaryStage.setScene(scene);
@@ -111,6 +113,8 @@ public class MainApp extends Application {
         this.loadingController = new LoadingController();
         if (globalCssPath != null)
             this.loadingController.getStylesheets().add(globalCssPath);
+        // Add loading CSS
+        this.loadingController.getStylesheets().add(getClass().getResource("/loading.css").toString());
         scene = new Scene(this.loadingController);
         this.loadingScene = scene;
         
@@ -125,14 +129,26 @@ public class MainApp extends Application {
         this.sessionController = new SessionController();
         if (globalCssPath != null)
             this.sessionController.getStylesheets().add(globalCssPath);
+        // Add action buttons CSS for sessions
+        this.sessionController.getStylesheets().add(getClass().getResource("/action-buttons.css").toString());
         scene = new Scene(this.sessionController);
         this.sessionsScene = scene;
         
         this.triggerController = new TriggerController();
         if (globalCssPath != null)
             this.triggerController.getStylesheets().add(globalCssPath);
+        // Add action buttons CSS for triggers
+        this.triggerController.getStylesheets().add(getClass().getResource("/action-buttons.css").toString());
         scene = new Scene(this.triggerController);
         this.triggersScene = scene;
+        
+        this.settingsController = new SettingsController();
+        if (globalCssPath != null)
+            this.settingsController.getStylesheets().add(globalCssPath);
+        // Add settings CSS
+        this.settingsController.getStylesheets().add(getClass().getResource("/settings.css").toString());
+        scene = new Scene(this.settingsController);
+        this.settingsScene = scene;
     }
 
     public double getScreenWidth() {
