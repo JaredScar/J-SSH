@@ -46,10 +46,17 @@ public class TerminalTabComponent extends BorderPane {
             System.err.println("WebView error: " + errorEvent.getMessage());
             // Handle error event
         });
-        File htmlFile = new File("terminal.html");
         try {
-            String htmlFilePath = htmlFile.toURI().toString();
-            webEngine.load(htmlFilePath);
+            // Load the HTML file from resources
+            URL htmlUrl = getClass().getResource("/terminal.html");
+            if (htmlUrl != null) {
+                webEngine.load(htmlUrl.toString());
+            } else {
+                // Fallback to loading from current directory
+                File htmlFile = new File("terminal.html");
+                String htmlFilePath = htmlFile.toURI().toString();
+                webEngine.load(htmlFilePath);
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
