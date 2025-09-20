@@ -27,6 +27,10 @@ public class ButtonController extends BootstrapPane {
     }
     
     private void initializeComponents() {
+        // Add menu bar for navigation
+        BootstrapRow menuRow = API.get().createToolbox();
+        this.addRow(menuRow);
+        
         // Create toolbar
         BootstrapRow toolbarRow = createToolbar();
         

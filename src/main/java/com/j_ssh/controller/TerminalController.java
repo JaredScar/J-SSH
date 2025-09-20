@@ -62,9 +62,10 @@ public class TerminalController extends BootstrapPane {
     }
     
     private void loadActionButtons() {
-        // Clear existing buttons (except title and separator)
+        // Clear existing buttons and refresh button (keep title and separator)
         actionButtonsPanel.getChildren().removeIf(node -> 
-            node instanceof ActionableButtonComponent);
+            node instanceof ActionableButtonComponent || 
+            (node instanceof Button && ((Button) node).getText().equals("Refresh Actions")));
         
         // Load actions and create buttons
         List<ActionData> actions = actionManager.getAllActions();

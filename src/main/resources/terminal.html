@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Terminal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/xterm/5.5.0/xterm.css" integrity="sha512-AbNrj/oSHJaILgcdnkYm+DQ08SqVbZ8jlkJbFyyS1WDcAaXAcAfxJnCH69el7oVgTwVwyA5u5T+RdFyUykrV3Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background-color: #1e1e1e;
+        }
+        #terminal-container {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        .xterm {
+            height: 100% !important;
+            width: 100% !important;
+        }
+        .xterm-viewport {
+            height: 100% !important;
+        }
+    </style>
+</head>
+<body>
+<div id="terminal-container"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xterm/5.5.0/xterm.js" integrity="sha512-Gujw5GajF5is3nMoGv9X+tCMqePLL/60qvAv1LofUZTV9jK8ENbM9L+maGmOsNzuZaiuyc/fpph1KT9uR5w3CQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    let term = new Terminal({
+        cursorBlink: true,
+        fontSize: 14,
+        fontFamily: 'Consolas, "Courier New", monospace',
+        theme: {
+            background: '#1e1e1e',
+            foreground: '#ffffff',
+            cursor: '#ffffff',
+            selection: '#264f78'
+        },
+        disableStdin: false,
+        cursorStyle: 'block',
+        scrollback: 1000,
+        convertEol: true
+    });
+    
+    term.open(document.getElementById('terminal-container'));
+
+    window.sendInputToJava = function (input) {
+        term.write(input);
+    };
+    
+    document.addEventListener("DOMContentLoaded", function (event) {
+        term.onData(e => {
+            if (window.java && window.java.receiveInput) {
+                try {
+                    window.java.receiveInput(e);
+                } catch (error) {
+                    console.error('Error sending input to Java:', error);
+                }
+            }
+        });
+        
+        // Handle terminal resize
+        window.addEventListener('resize', function() {
+            term.fit();
+        });
+        
+        // Initial fit
+        setTimeout(() => term.fit(), 100);
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="J-SSH Application" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.j_ssh.main.MainApp" />
+    <option name="VM_PARAMETERS" value="--module-path &quot;C:\Users\Axeex\IdeaProjects\J-SSH\javafx\javafx-sdk-25\lib&quot; --add-modules javafx.controls,javafx.fxml,javafx.web" />
+    <option name="PROGRAM_PARAMETERS" value="" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+    <option name="ALTERNATIVE_JRE_PATH" value="" />
+    <option name="ENABLE_SWING_INSPECTOR" value="false" />
+    <option name="ENV_VARIABLES">
+      <map />
+    </option>
+    <option name="PASS_PARENT_ENVS" value="true" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

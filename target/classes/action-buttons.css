@@ -1,0 +1,97 @@
+/* Action Buttons Panel */
+.action-buttons-panel {
+    -fx-background-color: #f5f5f5;
+    -fx-border-color: #ddd;
+    -fx-border-width: 0 1 0 0;
+    -fx-padding: 10;
+}
+
+.action-panel-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+    -fx-padding: 0 0 10 0;
+}
+
+/* Action Button Styling */
+.action-button {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 12;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+
+.action-button:hover {
+    -fx-background-color: #0056b3;
+}
+
+.action-button:pressed {
+    -fx-background-color: #004085;
+}
+
+/* Button Panel Styling */
+.btn-primary {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #0056b3;
+}
+
+.btn-secondary {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #545b62;
+}
+
+.btn-danger {
+    -fx-background-color: #dc3545;
+    -fx-text-fill: white;
+}
+
+.btn-danger:hover {
+    -fx-background-color: #c82333;
+}
+
+.btn-info {
+    -fx-background-color: #17a2b8;
+    -fx-text-fill: white;
+}
+
+.btn-info:hover {
+    -fx-background-color: #138496;
+}
+
+/* Table Styling */
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+}
+
+.table-view .column-header {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #ddd;
+    -fx-font-weight: bold;
+}
+
+.table-view .table-cell {
+    -fx-border-color: transparent;
+    -fx-padding: 8;
+}
+
+.table-view .table-row-cell:selected {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+}
+
+.table-view .table-row-cell:hover {
+    -fx-background-color: #f8f9fa;
+}
