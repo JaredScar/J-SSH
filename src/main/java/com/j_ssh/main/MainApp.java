@@ -159,6 +159,42 @@ public class MainApp extends Application {
         Toolkit tk = Toolkit.getDefaultToolkit();
         return tk.getScreenSize().getHeight();
     }
+    
+    public Scene getTerminalScene() {
+        return this.terminalScene;
+    }
+    
+    public Scene getDashboardScene() {
+        return this.dashboardScene;
+    }
+    
+    public Scene getSessionsScene() {
+        return this.sessionsScene;
+    }
+    
+    public Scene getActionsScene() {
+        return this.actionsScene;
+    }
+    
+    public Scene getTriggersScene() {
+        return this.triggersScene;
+    }
+    
+    public Scene getSettingsScene() {
+        return this.settingsScene;
+    }
+    
+    public Scene getLoadingScene() {
+        return this.loadingScene;
+    }
+    
+    public Stage getPrimaryStage() {
+        return this.primaryStage;
+    }
+    
+    public TerminalController getTerminalController() {
+        return this.terminalController;
+    }
 
     public void changeScene(JScene scene) {
         Scene fxScene = null;
@@ -186,6 +222,10 @@ public class MainApp extends Application {
             case SESSIONS:
                 fxScene = this.getSessionsScene();
                 this.getPrimaryStage().setScene(fxScene);
+                // Refresh connection statuses when switching to sessions view
+                if (this.sessionController != null) {
+                    this.sessionController.onViewActivated();
+                }
                 break;
             case TRIGGERS:
                 fxScene = this.getTriggersScene();

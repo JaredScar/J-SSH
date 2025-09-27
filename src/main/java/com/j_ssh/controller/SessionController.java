@@ -1,28 +1,39 @@
 package com.j_ssh.controller;
 
 import com.j_ssh.api.API;
+import com.j_ssh.components.TerminalTabComponent;
+import com.j_ssh.main.MainApp;
+import com.j_ssh.model.managers.AsyncManager;
+import com.j_ssh.model.managers.ConnectionManager;
 import com.j_ssh.model.managers.SessionManager;
+import com.j_ssh.model.objects.Connection;
+import com.j_ssh.model.objects.JScene;
 import com.j_ssh.model.objects.ServerData;
 import com.j_ssh.view.bootstrap.BootstrapRow;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SessionController extends com.j_ssh.view.bootstrap.BootstrapPane {
     private FlowPane sessionsGrid;
     private SessionManager sessionManager;
+    private ConnectionManager connectionManager;
     private TextField searchField;
     private Label sessionCountLabel;
+    private Map<ServerData, Label> statusLabels = new HashMap<>();
+    private Map<ServerData, Button> connectButtons = new HashMap<>();
 
     public SessionController() {
         this.sessionManager = SessionManager.get();
+        this.connectionManager = ConnectionManager.get();
         initializeComponents();
         loadSessions();
     }
@@ -118,6 +129,9 @@ public class SessionController extends com.j_ssh.view.bootstrap.BootstrapPane {
 
     private void loadSessions() {
         sessionsGrid.getChildren().clear();
+        statusLabels.clear();
+        connectButtons.clear();
+        
         List<ServerData> sessions = sessionManager.getAllSessions();
         
         if (sessions.isEmpty()) {
@@ -213,12 +227,24 @@ public class SessionController extends com.j_ssh.view.bootstrap.BootstrapPane {
         
         sessionInfo.getChildren().addAll(nameLabel, addressLabel);
         
-        // Status indicator (mock - you can implement real connection status)
-        Label statusLabel = new Label("Disconnected");
-        statusLabel.getStyleClass().add("session-status");
-        statusLabel.getStyleClass().add("status-disconnected");
+        // Status indicator with icon
+        HBox statusContainer = new HBox();
+        statusContainer.setAlignment(Pos.CENTER);
+        statusContainer.setSpacing(6);
         
-        header.getChildren().addAll(iconContainer, sessionInfo, new Region(), statusLabel);
+        Label statusIcon = new Label();
+        statusIcon.getStyleClass().add("session-status-icon");
+        
+        Label statusLabel = new Label();
+        statusLabel.getStyleClass().add("session-status");
+        
+        updateConnectionStatus(session, statusIcon, statusLabel);
+        statusContainer.getChildren().addAll(statusIcon, statusLabel);
+        
+        // Store references for updates
+        statusLabels.put(session, statusLabel);
+        
+        header.getChildren().addAll(iconContainer, sessionInfo, new Region(), statusContainer);
         HBox.setHgrow(header.getChildren().get(2), Priority.ALWAYS);
         
         // Connection details
@@ -245,9 +271,13 @@ public class SessionController extends com.j_ssh.view.bootstrap.BootstrapPane {
         actions.setSpacing(8);
         actions.setAlignment(Pos.CENTER_LEFT);
         
-        Button connectButton = new Button("Connect");
+        Button connectButton = new Button();
         connectButton.getStyleClass().add("session-connect-btn");
-        connectButton.setOnAction(e -> connectToSession(session));
+        updateConnectButton(session, connectButton);
+        connectButton.setOnAction(e -> toggleConnection(session));
+        
+        // Store reference for updates
+        connectButtons.put(session, connectButton);
         
         Button editButton = new Button("✏");
         editButton.getStyleClass().add("session-action-btn");
@@ -297,9 +327,140 @@ public class SessionController extends com.j_ssh.view.bootstrap.BootstrapPane {
         }
     }
     
+    private void updateConnectionStatus(ServerData session, Label statusIcon, Label statusLabel) {
+        boolean isConnected = connectionManager.isServerConnected(session);
+        
+        if (isConnected) {
+            statusIcon.setText("●");
+            statusIcon.getStyleClass().removeAll("status-disconnected-icon", "status-connecting-icon");
+            statusIcon.getStyleClass().add("status-connected-icon");
+            statusLabel.setText("Connected");
+            statusLabel.getStyleClass().removeAll("status-disconnected", "status-connecting");
+            statusLabel.getStyleClass().add("status-connected");
+        } else {
+            statusIcon.setText("●");
+            statusIcon.getStyleClass().removeAll("status-connected-icon", "status-connecting-icon");
+            statusIcon.getStyleClass().add("status-disconnected-icon");
+            statusLabel.setText("Disconnected");
+            statusLabel.getStyleClass().removeAll("status-connected", "status-connecting");
+            statusLabel.getStyleClass().add("status-disconnected");
+        }
+    }
+    
+    private void updateConnectButton(ServerData session, Button connectButton) {
+        boolean isConnected = connectionManager.isServerConnected(session);
+        
+        if (isConnected) {
+            connectButton.setText("Disconnect");
+            connectButton.getStyleClass().removeAll("session-connect-btn");
+            connectButton.getStyleClass().add("session-disconnect-btn");
+        } else {
+            connectButton.setText("▶ Connect");
+            connectButton.getStyleClass().removeAll("session-disconnect-btn");
+            connectButton.getStyleClass().add("session-connect-btn");
+        }
+    }
+    
+    private void toggleConnection(ServerData session) {
+        boolean isConnected = connectionManager.isServerConnected(session);
+        
+        if (isConnected) {
+            disconnectFromSession(session);
+        } else {
+            connectToSession(session);
+        }
+    }
+    
     private void connectToSession(ServerData session) {
-        // Implement connection logic here
         System.out.println("Connecting to: " + session.getNickname());
+        
+        // Update UI to show connecting state
+        Button connectButton = connectButtons.get(session);
+        Label statusLabel = statusLabels.get(session);
+        
+        if (connectButton != null) {
+            connectButton.setText("Connecting...");
+            connectButton.setDisable(true);
+        }
+        
+        if (statusLabel != null) {
+            statusLabel.setText("Connecting");
+            statusLabel.getStyleClass().removeAll("status-connected", "status-disconnected");
+            statusLabel.getStyleClass().add("status-connecting");
+        }
+        
+        // Show loading screen and connect in background
+        MainApp.get().changeScene(JScene.LOADING);
+        
+        Thread connectionThread = new Thread(() -> {
+            Connection connection = new Connection(session.getUsername(), session.getIp(), session.getPassword(), 22);
+            connection.addKnownHost();
+            
+            Platform.runLater(() -> {
+                boolean connected = connection.connect();
+                if (connected && connection.start()) {
+                    // Connection successful
+                    TerminalTabComponent termTab = new TerminalTabComponent(session.getNickname(), connection);
+                    connectionManager.addConnection(termTab, connection);
+                    MainApp.get().getTerminalController().addTerminalTab(termTab);
+                    MainApp.get().changeScene(JScene.TERMINAL);
+                } else {
+                    // Connection failed - return to sessions page and update UI
+                    Platform.runLater(() -> {
+                        MainApp.get().changeScene(JScene.SESSIONS);
+                        refreshConnectionStatus(session);
+                        
+                        // Show error alert
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Connection Failed");
+                        alert.setHeaderText("Failed to connect to " + session.getNickname());
+                        alert.setContentText(connection.error() != null ? connection.error() : "Unknown connection error");
+                        alert.showAndWait();
+                    });
+                }
+            });
+        });
+        
+        AsyncManager.get().addThread(connectionThread);
+    }
+    
+    private void disconnectFromSession(ServerData session) {
+        Connection connection = connectionManager.getServerConnection(session);
+        if (connection != null && connection.isConnected()) {
+            connection.disconnect();
+        }
+        
+        refreshConnectionStatus(session);
+    }
+    
+    private void refreshConnectionStatus(ServerData session) {
+        Button connectButton = connectButtons.get(session);
+        Label statusLabel = statusLabels.get(session);
+        
+        if (connectButton != null) {
+            connectButton.setDisable(false);
+            updateConnectButton(session, connectButton);
+        }
+        
+        if (statusLabel != null) {
+            // Find the status icon (previous sibling in the status container)
+            HBox statusContainer = (HBox) statusLabel.getParent();
+            if (statusContainer != null && statusContainer.getChildren().size() >= 2) {
+                Label statusIcon = (Label) statusContainer.getChildren().get(0);
+                updateConnectionStatus(session, statusIcon, statusLabel);
+            }
+        }
+    }
+    
+    public void refreshAllConnectionStatuses() {
+        for (ServerData session : statusLabels.keySet()) {
+            refreshConnectionStatus(session);
+        }
+    }
+    
+    // Method to be called when returning to sessions view to refresh all statuses
+    public void onViewActivated() {
+        refreshAllConnectionStatuses();
     }
     
     private void editSession(ServerData session) {

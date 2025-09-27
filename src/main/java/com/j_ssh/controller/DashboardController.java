@@ -4,6 +4,7 @@ import com.j_ssh.api.API;
 import com.j_ssh.components.TerminalTabComponent;
 import com.j_ssh.main.MainApp;
 import com.j_ssh.model.managers.AsyncManager;
+import com.j_ssh.model.managers.ConnectionManager;
 import com.j_ssh.model.managers.DataManager;
 import com.j_ssh.model.objects.Connection;
 import com.j_ssh.model.objects.JScene;
@@ -84,8 +85,9 @@ public class DashboardController extends BootstrapPane {
                     servConn.addKnownHost();
                     Platform.runLater(() -> {
                         boolean connected = servConn.connect();
-                        if (connected) {
+                        if (connected && servConn.start()) {
                             TerminalTabComponent termTab = new TerminalTabComponent(nickname, servConn);
+                            ConnectionManager.get().addConnection(termTab, servConn);
                             MainApp.get().getTerminalController().addTerminalTab(termTab);
                             MainApp.get().changeScene(JScene.TERMINAL);
                         } else {

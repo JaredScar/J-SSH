@@ -2,8 +2,8 @@ package com.j_ssh.controller;
 
 import com.j_ssh.api.API;
 import com.j_ssh.components.TerminalTabComponent;
-import com.j_ssh.main.MainApp;
 import com.j_ssh.model.managers.ActionManager;
+import com.j_ssh.model.managers.ConnectionManager;
 import com.j_ssh.model.objects.ActionData;
 import com.j_ssh.view.bootstrap.BootstrapColumn;
 import com.j_ssh.view.bootstrap.BootstrapPane;
@@ -197,7 +197,10 @@ public class TerminalController extends BootstrapPane {
         Tab newTab = new Tab(nickname, tab);
         newTab.getStyleClass().add("terminal_tab");
         this.tabs.getTabs().add(newTab);
-        newTab.setOnClosed((event -> tab.close()));
+        newTab.setOnClosed((event -> {
+            ConnectionManager.get().removeConnection(tab);
+            tab.close();
+        }));
     }
     public void closeTerminalTab(TerminalTabComponent tab) {
         tab.close();

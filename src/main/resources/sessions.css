@@ -153,7 +153,24 @@
     -fx-padding: 0;
 }
 
-/* Status Labels */
+/* Status Labels and Icons */
+.session-status-icon {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.status-connected-icon {
+    -fx-text-fill: #10b981;
+}
+
+.status-disconnected-icon {
+    -fx-text-fill: #6b7280;
+}
+
+.status-connecting-icon {
+    -fx-text-fill: #f59e0b;
+}
+
 .session-status {
     -fx-font-size: 12px;
     -fx-font-weight: 500;
@@ -213,6 +230,28 @@
 
 .session-connect-btn:pressed {
     -fx-background-color: #6d28d9;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 1, 0, 0, 0);
+}
+
+.session-disconnect-btn {
+    -fx-background-color: #dc2626;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: 600;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+    -fx-cursor: hand;
+    -fx-font-size: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.3), 3, 0, 0, 1);
+}
+
+.session-disconnect-btn:hover {
+    -fx-background-color: #b91c1c;
+    -fx-effect: dropshadow(gaussian, rgba(220, 38, 38, 0.4), 4, 0, 0, 2);
+}
+
+.session-disconnect-btn:pressed {
+    -fx-background-color: #991b1b;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 1, 0, 0, 0);
 }
 
