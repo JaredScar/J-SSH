@@ -45,8 +45,8 @@ public class API {
             MainApp.get().changeScene(JScene.SESSIONS);
         });
         sessionItems[2].addEventHandler(EventType.ROOT, event -> {
-            // We want to change to the dashboard screen for them to open a new session
-            MainApp.get().changeScene(JScene.DASHBOARD);
+            // Navigate to the sessions management page to select and connect to a session
+            MainApp.get().changeScene(JScene.SESSIONS);
         });
         sessionMenu.getItems().addAll(sessionItems);
 
