@@ -129,8 +129,8 @@ public class MainApp extends Application {
         this.sessionController = new SessionController();
         if (globalCssPath != null)
             this.sessionController.getStylesheets().add(globalCssPath);
-        // Add action buttons CSS for sessions
-        this.sessionController.getStylesheets().add(getClass().getResource("/action-buttons.css").toString());
+        // Add modern sessions CSS
+        this.sessionController.getStylesheets().add(getClass().getResource("/sessions.css").toString());
         scene = new Scene(this.sessionController);
         this.sessionsScene = scene;
         

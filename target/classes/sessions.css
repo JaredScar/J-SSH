@@ -1,0 +1,363 @@
+/* Modern Sessions Page Styling - Based on j-ssh-client mockup */
+
+/* Main Container */
+.sessions-container {
+    -fx-background-color: #1f2937;
+    -fx-padding: 0;
+    -fx-spacing: 0;
+}
+
+/* Header Section */
+.sessions-header {
+    -fx-background-color: #1f2937;
+    -fx-padding: 24px 24px 0 24px;
+}
+
+.sessions-title {
+    -fx-font-size: 32px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 0 0 8px 0;
+}
+
+.sessions-subtitle {
+    -fx-font-size: 16px;
+    -fx-font-weight: 400;
+    -fx-text-fill: #9ca3af;
+    -fx-padding: 0 0 24px 0;
+}
+
+/* Search and Action Bar */
+.sessions-search {
+    -fx-background-color: #374151;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #374151;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 12px 16px;
+    -fx-font-size: 14px;
+    -fx-pref-width: 300px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 2, 0, 0, 1);
+}
+
+.sessions-search:focused {
+    -fx-border-color: #8b5cf6;
+    -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.2), 4, 0, 0, 2);
+}
+
+.sessions-search .text {
+    -fx-fill: #ffffff;
+}
+
+.sessions-count {
+    -fx-font-size: 14px;
+    -fx-text-fill: #9ca3af;
+    -fx-font-weight: 500;
+}
+
+.sessions-add-btn {
+    -fx-background-color: #8b5cf6;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: 600;
+    -fx-padding: 12px 20px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.3), 4, 0, 0, 2);
+    -fx-font-size: 14px;
+}
+
+.sessions-add-btn:hover {
+    -fx-background-color: #7c3aed;
+    -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.4), 6, 0, 0, 3);
+}
+
+.sessions-add-btn:pressed {
+    -fx-background-color: #6d28d9;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 2, 0, 0, 1);
+}
+
+/* Grid Container */
+.sessions-grid-container {
+    -fx-background-color: #1f2937;
+    -fx-padding: 24px;
+}
+
+.sessions-grid {
+    -fx-background-color: transparent;
+    -fx-hgap: 20;
+    -fx-vgap: 20;
+}
+
+/* Session Cards */
+.session-card {
+    -fx-background-color: #374151;
+    -fx-border-color: #374151;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-padding: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 2);
+    -fx-cursor: hand;
+    -fx-spacing: 16px;
+    -fx-pref-width: 280px;
+    -fx-min-height: 180px;
+}
+
+.session-card:hover {
+    -fx-background-color: #4b5563;
+    -fx-border-color: #8b5cf6;
+    -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.2), 8, 0, 0, 4);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.session-card:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* Session Card Icon */
+.session-icon-container {
+    -fx-background-color: #4b5563;
+    -fx-border-color: #6b7280;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-pref-width: 40px;
+    -fx-pref-height: 40px;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-max-width: 40px;
+    -fx-max-height: 40px;
+    -fx-alignment: center;
+}
+
+.default-server-icon {
+    -fx-background-color: #6b7280;
+    -fx-text-fill: #d1d5db;
+    -fx-font-size: 18px;
+    -fx-alignment: center;
+}
+
+/* Session Card Text */
+.session-name {
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 0;
+}
+
+.session-address {
+    -fx-font-size: 14px;
+    -fx-font-weight: 400;
+    -fx-text-fill: #d1d5db;
+    -fx-padding: 0;
+}
+
+/* Status Labels */
+.session-status {
+    -fx-font-size: 12px;
+    -fx-font-weight: 500;
+    -fx-padding: 4px 8px;
+    -fx-background-radius: 12px;
+    -fx-border-radius: 12px;
+}
+
+.status-connected {
+    -fx-background-color: #10b981;
+    -fx-text-fill: #ffffff;
+}
+
+.status-disconnected {
+    -fx-background-color: #6b7280;
+    -fx-text-fill: #ffffff;
+}
+
+.status-connecting {
+    -fx-background-color: #f59e0b;
+    -fx-text-fill: #ffffff;
+}
+
+/* Session Details */
+.session-details {
+    -fx-spacing: 8px;
+}
+
+.session-detail-icon {
+    -fx-font-size: 12px;
+    -fx-text-fill: #9ca3af;
+}
+
+.session-detail-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: #9ca3af;
+    -fx-font-weight: 400;
+}
+
+/* Action Buttons */
+.session-connect-btn {
+    -fx-background-color: #8b5cf6;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: 600;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+    -fx-cursor: hand;
+    -fx-font-size: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.3), 3, 0, 0, 1);
+}
+
+.session-connect-btn:hover {
+    -fx-background-color: #7c3aed;
+    -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.4), 4, 0, 0, 2);
+}
+
+.session-connect-btn:pressed {
+    -fx-background-color: #6d28d9;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 1, 0, 0, 0);
+}
+
+.session-action-btn {
+    -fx-background-color: #4b5563;
+    -fx-text-fill: #d1d5db;
+    -fx-font-weight: 500;
+    -fx-padding: 8px 10px;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+    -fx-cursor: hand;
+    -fx-font-size: 12px;
+    -fx-min-width: 32px;
+    -fx-pref-width: 32px;
+    -fx-max-width: 32px;
+}
+
+.session-action-btn:hover {
+    -fx-background-color: #6b7280;
+    -fx-text-fill: #ffffff;
+}
+
+.session-delete-btn:hover {
+    -fx-background-color: #dc2626;
+    -fx-text-fill: #ffffff;
+}
+
+/* Empty State */
+.sessions-empty-state {
+    -fx-alignment: center;
+    -fx-spacing: 20px;
+    -fx-padding: 60px 40px;
+    -fx-pref-height: 300px;
+}
+
+.empty-state-icon {
+    -fx-font-size: 64px;
+    -fx-text-fill: #6b7280;
+}
+
+.empty-state-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #ffffff;
+}
+
+.empty-state-subtitle {
+    -fx-font-size: 16px;
+    -fx-text-fill: #9ca3af;
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+}
+
+.empty-state-btn {
+    -fx-background-color: #8b5cf6;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: 600;
+    -fx-padding: 12px 24px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.3), 6, 0, 0, 3);
+}
+
+.empty-state-btn:hover {
+    -fx-background-color: #7c3aed;
+    -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.4), 8, 0, 0, 4);
+}
+
+/* Session Dialog Styling */
+.session-dialog {
+    -fx-background-color: #374151;
+    -fx-spacing: 16px;
+    -fx-padding: 20px;
+}
+
+.session-dialog-pane {
+    -fx-background-color: #374151;
+}
+
+.session-dialog-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 0 0 4px 0;
+}
+
+.session-dialog-field {
+    -fx-background-color: #4b5563;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #6b7280;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 10px 12px;
+    -fx-font-size: 14px;
+}
+
+.session-dialog-field:focused {
+    -fx-border-color: #8b5cf6;
+    -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.2), 3, 0, 0, 1);
+}
+
+.session-dialog-field .text {
+    -fx-fill: #ffffff;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sessions-header {
+        -fx-padding: 16px 16px 0 16px;
+    }
+    
+    .sessions-title {
+        -fx-font-size: 24px;
+    }
+    
+    .sessions-grid-container {
+        -fx-padding: 16px;
+    }
+    
+    .sessions-grid {
+        -fx-hgap: 16px;
+        -fx-vgap: 16px;
+    }
+    
+    .session-card {
+        -fx-padding: 16px;
+        -fx-pref-width: 260px;
+        -fx-min-height: 160px;
+    }
+    
+    .sessions-search {
+        -fx-pref-width: 250px;
+    }
+}
+
+/* Animation Transitions */
+.session-card {
+    -fx-transition: -fx-scale-x 0.2s ease-in-out, 
+                    -fx-scale-y 0.2s ease-in-out,
+                    -fx-background-color 0.2s ease-in-out,
+                    -fx-border-color 0.2s ease-in-out;
+}
+
+.sessions-add-btn, .session-connect-btn, .session-action-btn, .empty-state-btn {
+    -fx-transition: -fx-background-color 0.2s ease-in-out,
+                    -fx-effect 0.2s ease-in-out;
+}

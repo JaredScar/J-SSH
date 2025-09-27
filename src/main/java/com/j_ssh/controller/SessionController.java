@@ -4,16 +4,22 @@ import com.j_ssh.api.API;
 import com.j_ssh.model.managers.SessionManager;
 import com.j_ssh.model.objects.ServerData;
 import com.j_ssh.view.bootstrap.BootstrapRow;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 import java.util.List;
 
 public class SessionController extends com.j_ssh.view.bootstrap.BootstrapPane {
-    private TableView<ServerData> sessionsTable;
+    private FlowPane sessionsGrid;
     private SessionManager sessionManager;
+    private TextField searchField;
+    private Label sessionCountLabel;
 
     public SessionController() {
         this.sessionManager = SessionManager.get();
@@ -26,79 +32,306 @@ public class SessionController extends com.j_ssh.view.bootstrap.BootstrapPane {
         BootstrapRow menuRow = API.get().createToolbox();
         this.addRow(menuRow);
 
-        // Create toolbar
-        BootstrapRow toolbarRow = createToolbar();
+        // Create header section
+        BootstrapRow headerRow = createHeaderSection();
 
-        // Create sessions table
-        BootstrapRow tableRow = createSessionsTable();
+        // Create sessions grid
+        BootstrapRow gridRow = createSessionsGrid();
 
         // Add rows to the main pane
-        this.addRow(toolbarRow);
-        this.addRow(tableRow);
+        this.addRow(headerRow);
+        this.addRow(gridRow);
+        
+        // Apply modern styling
+        this.getStyleClass().add("sessions-container");
     }
 
-    private BootstrapRow createToolbar() {
+    private BootstrapRow createHeaderSection() {
         BootstrapRow row = new BootstrapRow();
-
-        // Create buttons
-        Button addButton = new Button("Add Session");
-        addButton.getStyleClass().add("btn-primary");
+        
+        VBox headerContainer = new VBox();
+        headerContainer.getStyleClass().add("sessions-header");
+        headerContainer.setSpacing(20);
+        headerContainer.setPadding(new Insets(24, 24, 0, 24));
+        
+        // Title and subtitle
+        VBox titleSection = new VBox();
+        titleSection.setSpacing(8);
+        
+        Label titleLabel = new Label("SSH Sessions");
+        titleLabel.getStyleClass().add("sessions-title");
+        
+        Label subtitleLabel = new Label("Manage your server connections");
+        subtitleLabel.getStyleClass().add("sessions-subtitle");
+        
+        titleSection.getChildren().addAll(titleLabel, subtitleLabel);
+        
+        // Search and action bar
+        HBox actionBar = new HBox();
+        actionBar.setSpacing(16);
+        actionBar.setAlignment(Pos.CENTER_LEFT);
+        
+        // Search field
+        searchField = new TextField();
+        searchField.setPromptText("Search sessions...");
+        searchField.getStyleClass().add("sessions-search");
+        searchField.setPrefWidth(300);
+        searchField.textProperty().addListener((obs, oldVal, newVal) -> filterSessions(newVal));
+        
+        // Session count label
+        sessionCountLabel = new Label();
+        sessionCountLabel.getStyleClass().add("sessions-count");
+        
+        // Add session button
+        Button addButton = new Button("+ Add Session");
+        addButton.getStyleClass().add("sessions-add-btn");
         addButton.setOnAction(e -> showAddSessionDialog());
-
-        Button editButton = new Button("Edit Session");
-        editButton.getStyleClass().add("btn-secondary");
-        editButton.setOnAction(e -> editSelectedSession());
-
-        Button deleteButton = new Button("Delete Session");
-        deleteButton.getStyleClass().add("btn-danger");
-        deleteButton.setOnAction(e -> deleteSelectedSession());
-
-        Button refreshButton = new Button("Refresh");
-        refreshButton.getStyleClass().add("btn-info");
-        refreshButton.setOnAction(e -> loadSessions());
-
-        // Add buttons to row
-        row.addColumn(API.get().createColumn(addButton, 3));
-        row.addColumn(API.get().createColumn(editButton, 3));
-        row.addColumn(API.get().createColumn(deleteButton, 3));
-        row.addColumn(API.get().createColumn(refreshButton, 3));
-
+        
+        actionBar.getChildren().addAll(searchField, sessionCountLabel, new Region(), addButton);
+        HBox.setHgrow(actionBar.getChildren().get(2), Priority.ALWAYS);
+        
+        headerContainer.getChildren().addAll(titleSection, actionBar);
+        
+        row.addColumn(API.get().createColumn(headerContainer, 12));
         return row;
     }
 
-    private BootstrapRow createSessionsTable() {
+    private BootstrapRow createSessionsGrid() {
         BootstrapRow row = new BootstrapRow();
-
-        sessionsTable = new TableView<>();
-        sessionsTable.setPrefHeight(400);
-
-        // Create columns
-        TableColumn<ServerData, String> nicknameColumn = new TableColumn<>("Nickname");
-        nicknameColumn.setCellValueFactory(new PropertyValueFactory<>("nickname"));
-
-        TableColumn<ServerData, String> ipColumn = new TableColumn<>("IP Address");
-        ipColumn.setCellValueFactory(new PropertyValueFactory<>("ip"));
-
-        TableColumn<ServerData, String> usernameColumn = new TableColumn<>("Username");
-        usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
-
-        TableColumn<ServerData, String> authColumn = new TableColumn<>("Authentication");
-        authColumn.setCellValueFactory(cellData -> {
-            ServerData session = cellData.getValue();
-            String auth = session.getPassword().isEmpty() ? "Private Key" : "Password";
-            return new javafx.beans.property.SimpleStringProperty(auth);
-        });
-
-        sessionsTable.getColumns().addAll(nicknameColumn, ipColumn, usernameColumn, authColumn);
-
-        row.addColumn(API.get().createColumn(sessionsTable, 12));
+        
+        VBox gridContainer = new VBox();
+        gridContainer.getStyleClass().add("sessions-grid-container");
+        gridContainer.setPadding(new Insets(24));
+        
+        // Create sessions grid
+        sessionsGrid = new FlowPane();
+        sessionsGrid.getStyleClass().add("sessions-grid");
+        sessionsGrid.setHgap(20);
+        sessionsGrid.setVgap(20);
+        sessionsGrid.setPrefWrapLength(0);
+        
+        gridContainer.getChildren().add(sessionsGrid);
+        
+        row.addColumn(API.get().createColumn(gridContainer, 12));
         return row;
     }
 
     private void loadSessions() {
-        sessionsTable.getItems().clear();
+        sessionsGrid.getChildren().clear();
         List<ServerData> sessions = sessionManager.getAllSessions();
-        sessionsTable.getItems().addAll(sessions);
+        
+        if (sessions.isEmpty()) {
+            showEmptyState();
+        } else {
+            for (ServerData session : sessions) {
+                VBox sessionCard = createSessionCard(session);
+                sessionsGrid.getChildren().add(sessionCard);
+            }
+        }
+        
+        updateSessionCount(sessions.size());
+    }
+    
+    private void filterSessions(String searchText) {
+        sessionsGrid.getChildren().clear();
+        List<ServerData> sessions = sessionManager.getAllSessions();
+        
+        if (searchText == null || searchText.trim().isEmpty()) {
+            loadSessions();
+            return;
+        }
+        
+        String lowerSearchText = searchText.toLowerCase();
+        List<ServerData> filteredSessions = sessions.stream()
+            .filter(session -> 
+                session.getNickname().toLowerCase().contains(lowerSearchText) ||
+                session.getIp().toLowerCase().contains(lowerSearchText) ||
+                session.getUsername().toLowerCase().contains(lowerSearchText)
+            )
+            .collect(java.util.stream.Collectors.toList());
+        
+        if (filteredSessions.isEmpty()) {
+            showEmptyState();
+        } else {
+            for (ServerData session : filteredSessions) {
+                VBox sessionCard = createSessionCard(session);
+                sessionsGrid.getChildren().add(sessionCard);
+            }
+        }
+        
+        updateSessionCount(filteredSessions.size());
+    }
+    
+    private VBox createSessionCard(ServerData session) {
+        VBox card = new VBox();
+        card.getStyleClass().add("session-card");
+        card.setSpacing(16);
+        card.setPrefWidth(280);
+        card.setMinHeight(180);
+        
+        // Header with icon and status
+        HBox header = new HBox();
+        header.setAlignment(Pos.CENTER_LEFT);
+        header.setSpacing(12);
+        
+        // Server icon
+        VBox iconContainer = new VBox();
+        iconContainer.getStyleClass().add("session-icon-container");
+        iconContainer.setAlignment(Pos.CENTER);
+        iconContainer.setPrefSize(40, 40);
+        iconContainer.setMinSize(40, 40);
+        iconContainer.setMaxSize(40, 40);
+        
+        ImageView serverIcon = new ImageView();
+        serverIcon.setFitWidth(24);
+        serverIcon.setFitHeight(24);
+        serverIcon.setPreserveRatio(true);
+        
+        // Try to load custom icon, fallback to default
+        try {
+            if (session.getIconURL() != null && !session.getIconURL().isEmpty()) {
+                serverIcon.setImage(new Image(session.getIconURL()));
+            } else {
+                // Use default server icon (you might want to add a default icon resource)
+                serverIcon.getStyleClass().add("default-server-icon");
+            }
+        } catch (Exception e) {
+            serverIcon.getStyleClass().add("default-server-icon");
+        }
+        
+        iconContainer.getChildren().add(serverIcon);
+        
+        // Session info
+        VBox sessionInfo = new VBox();
+        sessionInfo.setSpacing(4);
+        
+        Label nameLabel = new Label(session.getNickname());
+        nameLabel.getStyleClass().add("session-name");
+        
+        Label addressLabel = new Label(session.getUsername() + "@" + session.getIp());
+        addressLabel.getStyleClass().add("session-address");
+        
+        sessionInfo.getChildren().addAll(nameLabel, addressLabel);
+        
+        // Status indicator (mock - you can implement real connection status)
+        Label statusLabel = new Label("Disconnected");
+        statusLabel.getStyleClass().add("session-status");
+        statusLabel.getStyleClass().add("status-disconnected");
+        
+        header.getChildren().addAll(iconContainer, sessionInfo, new Region(), statusLabel);
+        HBox.setHgrow(header.getChildren().get(2), Priority.ALWAYS);
+        
+        // Connection details
+        VBox details = new VBox();
+        details.setSpacing(8);
+        details.getStyleClass().add("session-details");
+        
+        HBox lastUsedRow = new HBox();
+        lastUsedRow.setAlignment(Pos.CENTER_LEFT);
+        lastUsedRow.setSpacing(8);
+        
+        Label clockIcon = new Label("🕒");
+        clockIcon.getStyleClass().add("session-detail-icon");
+        
+        Label lastUsedLabel = new Label("Last used: 2 hours ago"); // Mock data
+        lastUsedLabel.getStyleClass().add("session-detail-text");
+        
+        lastUsedRow.getChildren().addAll(clockIcon, lastUsedLabel);
+        
+        details.getChildren().add(lastUsedRow);
+        
+        // Action buttons
+        HBox actions = new HBox();
+        actions.setSpacing(8);
+        actions.setAlignment(Pos.CENTER_LEFT);
+        
+        Button connectButton = new Button("Connect");
+        connectButton.getStyleClass().add("session-connect-btn");
+        connectButton.setOnAction(e -> connectToSession(session));
+        
+        Button editButton = new Button("✏");
+        editButton.getStyleClass().add("session-action-btn");
+        editButton.setOnAction(e -> editSession(session));
+        
+        Button deleteButton = new Button("🗑");
+        deleteButton.getStyleClass().add("session-action-btn");
+        deleteButton.getStyleClass().add("session-delete-btn");
+        deleteButton.setOnAction(e -> deleteSession(session));
+        
+        actions.getChildren().addAll(connectButton, new Region(), editButton, deleteButton);
+        HBox.setHgrow(actions.getChildren().get(1), Priority.ALWAYS);
+        
+        card.getChildren().addAll(header, details, actions);
+        
+        return card;
+    }
+    
+    private void showEmptyState() {
+        VBox emptyState = new VBox();
+        emptyState.getStyleClass().add("sessions-empty-state");
+        emptyState.setAlignment(Pos.CENTER);
+        emptyState.setSpacing(20);
+        emptyState.setPrefHeight(300);
+        
+        Label iconLabel = new Label("🖥");
+        iconLabel.getStyleClass().add("empty-state-icon");
+        
+        Label titleLabel = new Label("No sessions found");
+        titleLabel.getStyleClass().add("empty-state-title");
+        
+        Label subtitleLabel = new Label("Get started by adding your first SSH session");
+        subtitleLabel.getStyleClass().add("empty-state-subtitle");
+        
+        Button addButton = new Button("+ Add Session");
+        addButton.getStyleClass().add("empty-state-btn");
+        addButton.setOnAction(e -> showAddSessionDialog());
+        
+        emptyState.getChildren().addAll(iconLabel, titleLabel, subtitleLabel, addButton);
+        
+        sessionsGrid.getChildren().add(emptyState);
+    }
+    
+    private void updateSessionCount(int count) {
+        if (sessionCountLabel != null) {
+            sessionCountLabel.setText(count + " session" + (count != 1 ? "s" : ""));
+        }
+    }
+    
+    private void connectToSession(ServerData session) {
+        // Implement connection logic here
+        System.out.println("Connecting to: " + session.getNickname());
+    }
+    
+    private void editSession(ServerData session) {
+        SessionDialog dialog = new SessionDialog("Edit Session", session);
+        dialog.showAndWait().ifPresent(sessionData -> {
+            if (sessionData != null) {
+                sessionManager.updateSession(
+                    session.getIndex(),
+                    sessionData.getNickname(),
+                    sessionData.getIconURL(),
+                    sessionData.getIp(),
+                    sessionData.getUsername(),
+                    sessionData.getPassword(),
+                    sessionData.getPrivateKeyLocation()
+                );
+                loadSessions();
+            }
+        });
+    }
+    
+    private void deleteSession(ServerData session) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete Session");
+        alert.setHeaderText("Are you sure you want to delete this session?");
+        alert.setContentText("Session: " + session.getNickname() + " (" + session.getIp() + ")");
+        
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                sessionManager.deleteSession(session.getIndex());
+                loadSessions();
+            }
+        });
     }
 
     private void showAddSessionDialog() {
@@ -116,48 +349,6 @@ public class SessionController extends com.j_ssh.view.bootstrap.BootstrapPane {
                 loadSessions();
             }
         });
-    }
-
-    private void editSelectedSession() {
-        ServerData selectedSession = sessionsTable.getSelectionModel().getSelectedItem();
-        if (selectedSession != null) {
-            SessionDialog dialog = new SessionDialog("Edit Session", selectedSession);
-            dialog.showAndWait().ifPresent(sessionData -> {
-                if (sessionData != null) {
-                    sessionManager.updateSession(
-                        selectedSession.getIndex(),
-                        sessionData.getNickname(),
-                        sessionData.getIconURL(),
-                        sessionData.getIp(),
-                        sessionData.getUsername(),
-                        sessionData.getPassword(),
-                        sessionData.getPrivateKeyLocation()
-                    );
-                    loadSessions();
-                }
-            });
-        } else {
-            showAlert("No Selection", "Please select a session to edit.");
-        }
-    }
-
-    private void deleteSelectedSession() {
-        ServerData selectedSession = sessionsTable.getSelectionModel().getSelectedItem();
-        if (selectedSession != null) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Delete Session");
-            alert.setHeaderText("Are you sure you want to delete this session?");
-            alert.setContentText("Session: " + selectedSession.getNickname() + " (" + selectedSession.getIp() + ")");
-            
-            alert.showAndWait().ifPresent(response -> {
-                if (response == ButtonType.OK) {
-                    sessionManager.deleteSession(selectedSession.getIndex());
-                    loadSessions();
-                }
-            });
-        } else {
-            showAlert("No Selection", "Please select a session to delete.");
-        }
     }
 
     private void showAlert(String title, String message) {
@@ -181,43 +372,45 @@ public class SessionController extends com.j_ssh.view.bootstrap.BootstrapPane {
             setTitle(title);
             setHeaderText(title);
             
-            // Create form
-            GridPane grid = new GridPane();
-            grid.setHgap(10);
-            grid.setVgap(10);
+            // Create form with modern styling
+            VBox formContainer = new VBox();
+            formContainer.setSpacing(16);
+            formContainer.setPadding(new Insets(20));
+            formContainer.getStyleClass().add("session-dialog");
+            
+            // Create form fields
+            nicknameField = createStyledTextField("My Server");
+            iconURLField = createStyledTextField("https://example.com/icon.png");
+            ipField = createStyledTextField("192.168.1.100");
+            usernameField = createStyledTextField("root");
+            passwordField = createStyledPasswordField();
+            privateKeyField = createStyledTextField("/path/to/private/key");
 
-            nicknameField = new TextField();
-            iconURLField = new TextField();
-            ipField = new TextField();
-            usernameField = new TextField();
-            passwordField = new PasswordField();
-            privateKeyField = new TextField();
-
-            grid.add(new Label("Nickname:"), 0, 0);
-            grid.add(nicknameField, 1, 0);
-            grid.add(new Label("Icon URL:"), 0, 1);
-            grid.add(iconURLField, 1, 1);
-            grid.add(new Label("IP Address:"), 0, 2);
-            grid.add(ipField, 1, 2);
-            grid.add(new Label("Username:"), 0, 3);
-            grid.add(usernameField, 1, 3);
-            grid.add(new Label("Password:"), 0, 4);
-            grid.add(passwordField, 1, 4);
-            grid.add(new Label("Private Key Path:"), 0, 5);
-            grid.add(privateKeyField, 1, 5);
+            // Add labeled fields
+            formContainer.getChildren().addAll(
+                createFieldGroup("Nickname", nicknameField),
+                createFieldGroup("Icon URL (Optional)", iconURLField),
+                createFieldGroup("Host/IP Address", ipField),
+                createFieldGroup("Username", usernameField),
+                createFieldGroup("Password", passwordField),
+                createFieldGroup("Private Key Path (Optional)", privateKeyField)
+            );
 
             // Pre-fill fields if editing
             if (existingSession != null) {
                 nicknameField.setText(existingSession.getNickname());
-                iconURLField.setText(existingSession.getIconURL());
+                iconURLField.setText(existingSession.getIconURL() != null ? existingSession.getIconURL() : "");
                 ipField.setText(existingSession.getIp());
                 usernameField.setText(existingSession.getUsername());
                 passwordField.setText(existingSession.getPassword());
-                privateKeyField.setText(existingSession.getPrivateKeyLocation());
+                privateKeyField.setText(existingSession.getPrivateKeyLocation() != null ? existingSession.getPrivateKeyLocation() : "");
             }
 
-            getDialogPane().setContent(grid);
+            getDialogPane().setContent(formContainer);
             getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+            
+            // Style the dialog buttons
+            getDialogPane().getStyleClass().add("session-dialog-pane");
 
             setResultConverter(dialogButton -> {
                 if (dialogButton == ButtonType.OK) {
@@ -233,6 +426,31 @@ public class SessionController extends com.j_ssh.view.bootstrap.BootstrapPane {
                 }
                 return null;
             });
+        }
+        
+        private TextField createStyledTextField(String promptText) {
+            TextField field = new TextField();
+            field.setPromptText(promptText);
+            field.getStyleClass().add("session-dialog-field");
+            return field;
+        }
+        
+        private PasswordField createStyledPasswordField() {
+            PasswordField field = new PasswordField();
+            field.setPromptText("••••••••");
+            field.getStyleClass().add("session-dialog-field");
+            return field;
+        }
+        
+        private VBox createFieldGroup(String labelText, Control field) {
+            VBox group = new VBox();
+            group.setSpacing(6);
+            
+            Label label = new Label(labelText);
+            label.getStyleClass().add("session-dialog-label");
+            
+            group.getChildren().addAll(label, field);
+            return group;
         }
     }
 }
