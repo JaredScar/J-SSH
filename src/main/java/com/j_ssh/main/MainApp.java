@@ -106,8 +106,8 @@ public class MainApp extends Application {
         this.terminalController = new TerminalController();
         if (globalCssPath != null)
             this.terminalController.getStylesheets().add(globalCssPath);
-        // Add action buttons CSS for terminal
-        this.terminalController.getStylesheets().add(getClass().getResource("/action-buttons.css").toString());
+        // Add modern terminal CSS
+        this.terminalController.getStylesheets().add(getClass().getResource("/terminal.css").toString());
         scene = new Scene(this.terminalController);
         this.terminalScene = scene;
         this.loadingController = new LoadingController();
@@ -121,8 +121,8 @@ public class MainApp extends Application {
         this.buttonController = new ButtonController();
         if (globalCssPath != null)
             this.buttonController.getStylesheets().add(globalCssPath);
-        // Add action buttons CSS
-        this.buttonController.getStylesheets().add(getClass().getResource("/action-buttons.css").toString());
+        // Add modern actions CSS
+        this.buttonController.getStylesheets().add(getClass().getResource("/actions.css").toString());
         scene = new Scene(this.buttonController);
         this.actionsScene = scene;
         
@@ -137,8 +137,8 @@ public class MainApp extends Application {
         this.triggerController = new TriggerController();
         if (globalCssPath != null)
             this.triggerController.getStylesheets().add(globalCssPath);
-        // Add action buttons CSS for triggers
-        this.triggerController.getStylesheets().add(getClass().getResource("/action-buttons.css").toString());
+        // Add modern triggers CSS
+        this.triggerController.getStylesheets().add(getClass().getResource("/triggers.css").toString());
         scene = new Scene(this.triggerController);
         this.triggersScene = scene;
         

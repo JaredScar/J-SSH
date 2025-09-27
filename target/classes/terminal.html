@@ -11,48 +11,59 @@
             height: 100vh;
             width: 100vw;
             overflow: hidden;
-            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
-            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            background: #000000;
+            font-family: 'Geist Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
         }
         #terminal-container {
             width: 100%;
             height: 100%;
-            padding: 0;
+            padding: 16px;
             margin: 0;
-            border-radius: 0 0 8px 8px;
+            background: #000000;
+            border-radius: 0 0 12px 12px;
             overflow: hidden;
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+            box-sizing: border-box;
         }
         .xterm {
             height: 100% !important;
             width: 100% !important;
-            padding: 16px;
-            box-sizing: border-box;
+            background: #000000 !important;
         }
         .xterm-viewport {
             height: 100% !important;
-            border-radius: 0 0 8px 8px;
+            background: #000000 !important;
+            border-radius: 0 0 12px 12px;
         }
         .xterm-screen {
-            border-radius: 0 0 8px 8px;
+            background: #000000 !important;
+            border-radius: 0 0 12px 12px;
         }
-        /* Custom scrollbar styling */
+        /* Modern scrollbar styling matching the design */
         .xterm-viewport::-webkit-scrollbar {
             width: 8px;
         }
         .xterm-viewport::-webkit-scrollbar-track {
-            background: #2d2d2d;
+            background: #1f1f1f;
             border-radius: 4px;
         }
         .xterm-viewport::-webkit-scrollbar-thumb {
-            background: #4a4a4a;
+            background: #6b7280;
             border-radius: 4px;
+            transition: background 0.2s ease;
         }
         .xterm-viewport::-webkit-scrollbar-thumb:hover {
-            background: #666666;
+            background: #8b5cf6;
         }
         .xterm-viewport::-webkit-scrollbar-thumb:active {
-            background: #0078d4;
+            background: #7c3aed;
+        }
+        /* Terminal cursor styling */
+        .xterm-cursor-layer .xterm-cursor {
+            background: #10b981 !important;
+        }
+        /* Selection styling */
+        .xterm .xterm-selection div {
+            background-color: rgba(139, 92, 246, 0.3) !important;
         }
     </style>
 </head>
@@ -63,34 +74,35 @@
     let term = new Terminal({
         cursorBlink: true,
         fontSize: 14,
-        fontFamily: 'Consolas, "Courier New", monospace',
+        fontFamily: 'Geist Mono, Consolas, "Courier New", monospace',
         theme: {
-            background: '#1e1e1e',
-            foreground: '#ffffff',
-            cursor: '#0078d4',
-            cursorAccent: '#ffffff',
-            selection: '#0078d4',
-            black: '#1e1e1e',
-            red: '#f85149',
-            green: '#7ee787',
-            yellow: '#f0c674',
-            blue: '#79c0ff',
-            magenta: '#bc8cff',
-            cyan: '#56d4dd',
-            white: '#f0f6fc',
-            brightBlack: '#484f58',
-            brightRed: '#ff7b72',
-            brightGreen: '#7ee787',
-            brightYellow: '#f0c674',
-            brightBlue: '#79c0ff',
-            brightMagenta: '#bc8cff',
-            brightCyan: '#56d4dd',
-            brightWhite: '#f0f6fc'
+            background: '#000000',
+            foreground: '#10b981',
+            cursor: '#10b981',
+            cursorAccent: '#000000',
+            selection: 'rgba(139, 92, 246, 0.3)',
+            black: '#000000',
+            red: '#ef4444',
+            green: '#10b981',
+            yellow: '#f59e0b',
+            blue: '#3b82f6',
+            magenta: '#8b5cf6',
+            cyan: '#06b6d4',
+            white: '#f3f4f6',
+            brightBlack: '#374151',
+            brightRed: '#f87171',
+            brightGreen: '#34d399',
+            brightYellow: '#fbbf24',
+            brightBlue: '#60a5fa',
+            brightMagenta: '#a78bfa',
+            brightCyan: '#22d3ee',
+            brightWhite: '#ffffff'
         },
         disableStdin: false,
         cursorStyle: 'block',
         scrollback: 1000,
-        convertEol: true
+        convertEol: true,
+        allowTransparency: true
     });
     
     term.open(document.getElementById('terminal-container'));

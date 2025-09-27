@@ -1,0 +1,250 @@
+/* Modern Actions Page Styling - Based on j-ssh-client mockup */
+
+/* Main Container */
+.actions-container {
+    -fx-background-color: #1f2937;
+    -fx-padding: 0;
+    -fx-spacing: 0;
+}
+
+/* Header Section */
+.actions-header {
+    -fx-background-color: #1f2937;
+    -fx-padding: 24px 24px 0 24px;
+}
+
+.actions-title {
+    -fx-font-size: 32px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 0 0 8px 0;
+}
+
+.actions-subtitle {
+    -fx-font-size: 16px;
+    -fx-font-weight: 400;
+    -fx-text-fill: #9ca3af;
+    -fx-padding: 0 0 24px 0;
+}
+
+/* Search and Action Bar */
+.actions-search {
+    -fx-background-color: #374151;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #374151;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 12px 16px;
+    -fx-font-size: 14px;
+    -fx-pref-width: 300px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 2, 0, 0, 1);
+}
+
+.actions-search:focused {
+    -fx-border-color: #8b5cf6;
+    -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.3), 4, 0, 0, 0);
+}
+
+.actions-count {
+    -fx-font-size: 14px;
+    -fx-text-fill: #9ca3af;
+    -fx-font-weight: 500;
+}
+
+.actions-add-btn {
+    -fx-background-color: #8b5cf6;
+    -fx-text-fill: #ffffff;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 12px 20px;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 2);
+}
+
+.actions-add-btn:hover {
+    -fx-background-color: #7c3aed;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 6, 0, 0, 3);
+}
+
+/* Content Area */
+.actions-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.actions-content {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+/* Action Cards */
+.action-card {
+    -fx-background-color: #374151;
+    -fx-border-color: #4b5563;
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 2);
+    -fx-padding: 20px;
+    -fx-spacing: 16px;
+}
+
+.action-card:hover {
+    -fx-background-color: #3f4755;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 8, 0, 0, 4);
+}
+
+.action-icon {
+    -fx-font-size: 20px;
+    -fx-text-fill: #8b5cf6;
+    -fx-background-color: rgba(139, 92, 246, 0.1);
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 10px;
+    -fx-pref-width: 40px;
+    -fx-pref-height: 40px;
+    -fx-alignment: center;
+}
+
+.action-name {
+    -fx-font-size: 18px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #ffffff;
+}
+
+.action-description {
+    -fx-font-size: 14px;
+    -fx-text-fill: #d1d5db;
+    -fx-wrap-text: true;
+}
+
+.action-usage-badge {
+    -fx-font-size: 12px;
+    -fx-text-fill: #8b5cf6;
+    -fx-background-color: rgba(139, 92, 246, 0.1);
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-padding: 4px 12px;
+}
+
+/* Commands Section */
+.action-commands-section {
+    -fx-background-color: rgba(75, 85, 99, 0.3);
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 16px;
+}
+
+.action-commands-title {
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #9ca3af;
+    -fx-text-transform: uppercase;
+    -fx-letter-spacing: 0.5px;
+}
+
+.action-copy-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #9ca3af;
+    -fx-border-color: transparent;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-padding: 4px 8px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+.action-copy-btn:hover {
+    -fx-background-color: rgba(156, 163, 175, 0.1);
+    -fx-text-fill: #ffffff;
+}
+
+.action-command-prompt {
+    -fx-font-size: 14px;
+    -fx-font-family: "Consolas", "Monaco", monospace;
+    -fx-text-fill: #9ca3af;
+    -fx-font-weight: 500;
+}
+
+.action-command-text {
+    -fx-font-size: 14px;
+    -fx-font-family: "Consolas", "Monaco", monospace;
+    -fx-text-fill: #ffffff;
+    -fx-wrap-text: true;
+}
+
+/* Action Buttons */
+.action-run-btn {
+    -fx-background-color: #10b981;
+    -fx-text-fill: #ffffff;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 8px 16px;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-cursor: hand;
+}
+
+.action-run-btn:hover {
+    -fx-background-color: #059669;
+}
+
+.action-edit-btn {
+    -fx-background-color: #374151;
+    -fx-text-fill: #9ca3af;
+    -fx-border-color: #4b5563;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 8px 12px;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.action-edit-btn:hover {
+    -fx-background-color: #4b5563;
+    -fx-text-fill: #ffffff;
+}
+
+.action-delete-btn {
+    -fx-background-color: #374151;
+    -fx-text-fill: #ef4444;
+    -fx-border-color: #4b5563;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 8px 12px;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.action-delete-btn:hover {
+    -fx-background-color: rgba(239, 68, 68, 0.1);
+    -fx-border-color: #ef4444;
+}
+
+/* Empty State */
+.actions-empty-state {
+    -fx-alignment: center;
+    -fx-padding: 64px;
+}
+
+.actions-empty-icon {
+    -fx-font-size: 48px;
+    -fx-text-fill: #6b7280;
+}
+
+.actions-empty-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #ffffff;
+}
+
+.actions-empty-text {
+    -fx-font-size: 16px;
+    -fx-text-fill: #9ca3af;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}

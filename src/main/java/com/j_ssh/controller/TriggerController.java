@@ -7,127 +7,328 @@ import com.j_ssh.model.managers.TriggerManager;
 import com.j_ssh.model.objects.ActionData;
 import com.j_ssh.model.objects.ServerData;
 import com.j_ssh.model.objects.TriggerData;
+import com.j_ssh.view.bootstrap.BootstrapColumn;
 import com.j_ssh.view.bootstrap.BootstrapRow;
-import javafx.collections.FXCollections;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 
 import java.util.HashMap;
 import java.util.List;
 
 public class TriggerController extends com.j_ssh.view.bootstrap.BootstrapPane {
-    private TableView<TriggerData> triggersTable;
+    private VBox triggersContainer;
     private TriggerManager triggerManager;
     private SessionManager sessionManager;
     private ActionManager actionManager;
+    private TextField searchField;
+    private Label triggerCountLabel;
 
     public TriggerController() {
         this.triggerManager = TriggerManager.get();
         this.sessionManager = SessionManager.get();
         this.actionManager = ActionManager.get();
-        initializeComponents();
+        
+        // Apply modern styling to main container
+        this.getStyleClass().add("triggers-container");
+        
+        initializeModernComponents();
         loadTriggers();
     }
 
-    private void initializeComponents() {
+    private void initializeModernComponents() {
         // Add menu bar for navigation
         BootstrapRow menuRow = API.get().createToolbox();
         this.addRow(menuRow);
 
-        // Create toolbar
-        BootstrapRow toolbarRow = createToolbar();
-
-        // Create triggers table
-        BootstrapRow tableRow = createTriggersTable();
+        // Create modern header section
+        BootstrapRow headerRow = createModernHeader();
+        
+        // Create triggers content area
+        BootstrapRow contentRow = createTriggersContent();
 
         // Add rows to the main pane
-        this.addRow(toolbarRow);
-        this.addRow(tableRow);
+        this.addRow(headerRow);
+        this.addRow(contentRow);
     }
-
-    private BootstrapRow createToolbar() {
+    
+    private BootstrapRow createModernHeader() {
         BootstrapRow row = new BootstrapRow();
-
-        // Create buttons
-        Button addButton = new Button("Add Trigger");
-        addButton.getStyleClass().add("btn-primary");
+        
+        VBox headerSection = new VBox();
+        headerSection.getStyleClass().add("triggers-header");
+        headerSection.setSpacing(16);
+        headerSection.setPadding(new Insets(24));
+        
+        // Title and subtitle section
+        VBox titleSection = new VBox();
+        titleSection.setSpacing(8);
+        
+        Label titleLabel = new Label("Triggers");
+        titleLabel.getStyleClass().add("triggers-title");
+        
+        Label subtitleLabel = new Label("Automated action sequences");
+        subtitleLabel.getStyleClass().add("triggers-subtitle");
+        
+        titleSection.getChildren().addAll(titleLabel, subtitleLabel);
+        
+        // Search and action section
+        HBox searchActionSection = new HBox();
+        searchActionSection.setSpacing(16);
+        searchActionSection.setAlignment(Pos.CENTER_LEFT);
+        
+        // Search field
+        searchField = new TextField();
+        searchField.getStyleClass().add("triggers-search");
+        searchField.setPromptText("Search triggers...");
+        searchField.setPrefWidth(300);
+        searchField.textProperty().addListener((obs, oldText, newText) -> filterTriggers(newText));
+        
+        // Trigger count
+        triggerCountLabel = new Label("0 triggers");
+        triggerCountLabel.getStyleClass().add("triggers-count");
+        
+        // Add trigger button
+        Button addButton = new Button("+ Add Trigger");
+        addButton.getStyleClass().add("triggers-add-btn");
         addButton.setOnAction(e -> showAddTriggerDialog());
-
-        Button editButton = new Button("Edit Trigger");
-        editButton.getStyleClass().add("btn-secondary");
-        editButton.setOnAction(e -> editSelectedTrigger());
-
-        Button deleteButton = new Button("Delete Trigger");
-        deleteButton.getStyleClass().add("btn-danger");
-        deleteButton.setOnAction(e -> deleteSelectedTrigger());
-
-        Button refreshButton = new Button("Refresh");
-        refreshButton.getStyleClass().add("btn-info");
-        refreshButton.setOnAction(e -> loadTriggers());
-
-        // Add buttons to row
-        row.addColumn(API.get().createColumn(addButton, 3));
-        row.addColumn(API.get().createColumn(editButton, 3));
-        row.addColumn(API.get().createColumn(deleteButton, 3));
-        row.addColumn(API.get().createColumn(refreshButton, 3));
-
+        
+        searchActionSection.getChildren().addAll(searchField, triggerCountLabel, new Region(), addButton);
+        HBox.setHgrow(searchActionSection.getChildren().get(2), Priority.ALWAYS);
+        
+        headerSection.getChildren().addAll(titleSection, searchActionSection);
+        
+        BootstrapColumn headerCol = API.get().createColumn(headerSection, 12);
+        row.addColumn(headerCol);
+        
         return row;
     }
 
-    private BootstrapRow createTriggersTable() {
+    private BootstrapRow createTriggersContent() {
         BootstrapRow row = new BootstrapRow();
-
-        triggersTable = new TableView<>();
-        triggersTable.setPrefHeight(400);
-
-        // Create columns
-        TableColumn<TriggerData, String> nameColumn = new TableColumn<>("Name");
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-
-        TableColumn<TriggerData, String> descriptionColumn = new TableColumn<>("Description");
-        descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
-
-        TableColumn<TriggerData, String> triggersCountColumn = new TableColumn<>("Triggers Count");
-        triggersCountColumn.setCellValueFactory(cellData -> {
-            TriggerData trigger = cellData.getValue();
-            return new javafx.beans.property.SimpleStringProperty(String.valueOf(trigger.getTriggers().size()));
-        });
-
-        TableColumn<TriggerData, String> triggersPreviewColumn = new TableColumn<>("Triggers Preview");
-        triggersPreviewColumn.setCellValueFactory(cellData -> {
-            TriggerData trigger = cellData.getValue();
-            StringBuilder preview = new StringBuilder();
-            int count = 0;
-            for (Integer serverIndex : trigger.getTriggers().keySet()) {
-                if (count >= 2) {
-                    preview.append("...");
-                    break;
-                }
-                ServerData server = sessionManager.getSession(serverIndex);
-                ActionData action = actionManager.getAction(trigger.getTriggers().get(serverIndex));
-                if (server != null && action != null) {
-                    preview.append(server.getNickname()).append(" → ").append(action.getName());
-                    if (count < trigger.getTriggers().size() - 1) {
-                        preview.append(", ");
-                    }
-                }
-                count++;
-            }
-            return new javafx.beans.property.SimpleStringProperty(preview.toString());
-        });
-
-        triggersTable.getColumns().addAll(nameColumn, descriptionColumn, triggersCountColumn, triggersPreviewColumn);
-
-        row.addColumn(API.get().createColumn(triggersTable, 12));
+        
+        // Create scrollable content area
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.getStyleClass().add("triggers-scroll");
+        scrollPane.setFitToWidth(true);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        
+        // Create triggers container
+        triggersContainer = new VBox();
+        triggersContainer.getStyleClass().add("triggers-content");
+        triggersContainer.setSpacing(16);
+        triggersContainer.setPadding(new Insets(24));
+        
+        scrollPane.setContent(triggersContainer);
+        
+        BootstrapColumn contentCol = API.get().createColumn(scrollPane, 12);
+        row.addColumn(contentCol);
+        
         return row;
+    }
+
+    private VBox createTriggerCard(TriggerData trigger) {
+        VBox card = new VBox();
+        card.getStyleClass().add("trigger-card");
+        card.setSpacing(16);
+        card.setPadding(new Insets(20));
+        
+        // Card header with expand/collapse functionality
+        HBox header = new HBox();
+        header.setAlignment(Pos.CENTER_LEFT);
+        header.setSpacing(12);
+        
+        // Trigger icon
+        Label triggerIcon = new Label("⚡");
+        triggerIcon.getStyleClass().add("trigger-icon");
+        
+        // Trigger info
+        VBox triggerInfo = new VBox();
+        triggerInfo.setSpacing(4);
+        
+        HBox titleRow = new HBox();
+        titleRow.setAlignment(Pos.CENTER_LEFT);
+        titleRow.setSpacing(12);
+        
+        Label nameLabel = new Label(trigger.getName());
+        nameLabel.getStyleClass().add("trigger-name");
+        
+        Label actionsCount = new Label(trigger.getTriggers().size() + " actions");
+        actionsCount.getStyleClass().add("trigger-actions-count");
+        
+        titleRow.getChildren().addAll(nameLabel, actionsCount);
+        
+        Label descLabel = new Label(trigger.getDescription());
+        descLabel.getStyleClass().add("trigger-description");
+        
+        // Server info
+        Label serverInfo = new Label("Server: Jared Test Server • Last run: 2 hours ago • Runs: 5");
+        serverInfo.getStyleClass().add("trigger-server-info");
+        
+        triggerInfo.getChildren().addAll(titleRow, descLabel, serverInfo);
+        
+        // Expand/collapse button
+        Button expandButton = new Button("▼");
+        expandButton.getStyleClass().add("trigger-expand-btn");
+        
+        header.getChildren().addAll(triggerIcon, triggerInfo, new Region(), expandButton);
+        HBox.setHgrow(header.getChildren().get(2), Priority.ALWAYS);
+        
+        // Action sequence (initially hidden)
+        VBox actionSequence = createActionSequence(trigger);
+        actionSequence.setVisible(false);
+        actionSequence.setManaged(false);
+        
+        // Action buttons
+        HBox actionButtons = new HBox();
+        actionButtons.setSpacing(8);
+        actionButtons.setAlignment(Pos.CENTER_LEFT);
+        
+        Button runButton = new Button("▶ Run Trigger");
+        runButton.getStyleClass().add("trigger-run-btn");
+        runButton.setOnAction(e -> runTrigger(trigger));
+        
+        Button editButton = new Button("✎");
+        editButton.getStyleClass().add("trigger-edit-btn");
+        editButton.setOnAction(e -> editTrigger(trigger));
+        
+        Button deleteButton = new Button("🗑");
+        deleteButton.getStyleClass().add("trigger-delete-btn");
+        deleteButton.setOnAction(e -> deleteTrigger(trigger));
+        
+        actionButtons.getChildren().addAll(runButton, editButton, deleteButton);
+        
+        // Expand/collapse functionality
+        expandButton.setOnAction(e -> {
+            boolean isExpanded = actionSequence.isVisible();
+            actionSequence.setVisible(!isExpanded);
+            actionSequence.setManaged(!isExpanded);
+            expandButton.setText(isExpanded ? "▼" : "▲");
+        });
+        
+        card.getChildren().addAll(header, actionSequence, actionButtons);
+        
+        return card;
+    }
+    
+    private VBox createActionSequence(TriggerData trigger) {
+        VBox sequence = new VBox();
+        sequence.getStyleClass().add("trigger-action-sequence");
+        sequence.setSpacing(8);
+        sequence.setPadding(new Insets(16));
+        
+        Label sequenceTitle = new Label("Action Sequence:");
+        sequenceTitle.getStyleClass().add("trigger-sequence-title");
+        
+        VBox sequenceItems = new VBox();
+        sequenceItems.setSpacing(8);
+        
+        int count = 1;
+        for (Integer serverIndex : trigger.getTriggers().keySet()) {
+            HBox sequenceItem = new HBox();
+            sequenceItem.setAlignment(Pos.CENTER_LEFT);
+            sequenceItem.setSpacing(12);
+            
+            Label stepNumber = new Label(String.valueOf(count));
+            stepNumber.getStyleClass().add("trigger-step-number");
+            
+            ActionData action = actionManager.getAction(trigger.getTriggers().get(serverIndex));
+            String actionName = action != null ? action.getName() : "Unknown Action";
+            
+            Label actionLabel = new Label(actionName);
+            actionLabel.getStyleClass().add("trigger-sequence-action");
+            
+            if (count < trigger.getTriggers().size()) {
+                Label arrow = new Label("→");
+                arrow.getStyleClass().add("trigger-sequence-arrow");
+                sequenceItem.getChildren().addAll(stepNumber, actionLabel, arrow);
+            } else {
+                sequenceItem.getChildren().addAll(stepNumber, actionLabel);
+            }
+            
+            sequenceItems.getChildren().add(sequenceItem);
+            count++;
+        }
+        
+        sequence.getChildren().addAll(sequenceTitle, sequenceItems);
+        
+        return sequence;
     }
 
     private void loadTriggers() {
-        triggersTable.getItems().clear();
+        triggersContainer.getChildren().clear();
         List<TriggerData> triggers = triggerManager.getAllTriggers();
-        triggersTable.getItems().addAll(triggers);
+        
+        // Update trigger count
+        triggerCountLabel.setText(triggers.size() + " trigger" + (triggers.size() != 1 ? "s" : ""));
+        
+        if (triggers.isEmpty()) {
+            // Show empty state
+            VBox emptyState = createEmptyState();
+            triggersContainer.getChildren().add(emptyState);
+        } else {
+            for (TriggerData trigger : triggers) {
+                VBox triggerCard = createTriggerCard(trigger);
+                triggersContainer.getChildren().add(triggerCard);
+            }
+        }
+    }
+    
+    private VBox createEmptyState() {
+        VBox emptyState = new VBox();
+        emptyState.getStyleClass().add("triggers-empty-state");
+        emptyState.setAlignment(Pos.CENTER);
+        emptyState.setSpacing(16);
+        emptyState.setPadding(new Insets(64));
+        
+        Label emptyIcon = new Label("⚡");
+        emptyIcon.getStyleClass().add("triggers-empty-icon");
+        
+        Label emptyTitle = new Label("No triggers found");
+        emptyTitle.getStyleClass().add("triggers-empty-title");
+        
+        Label emptyText = new Label("Create your first automated trigger sequence");
+        emptyText.getStyleClass().add("triggers-empty-text");
+        
+        Button createButton = new Button("+ Add Trigger");
+        createButton.getStyleClass().add("triggers-add-btn");
+        createButton.setOnAction(e -> showAddTriggerDialog());
+        
+        emptyState.getChildren().addAll(emptyIcon, emptyTitle, emptyText, createButton);
+        
+        return emptyState;
+    }
+    
+    private void filterTriggers(String searchText) {
+        // Implementation for filtering triggers based on search text
+        // This would filter the triggers and reload the display
+        loadTriggers(); // For now, just reload all triggers
+    }
+    
+    private void runTrigger(TriggerData trigger) {
+        // Implementation to run the trigger
+        System.out.println("Running trigger: " + trigger.getName());
+        // Here you would integrate with the actual trigger execution system
+    }
+    
+    private void editTrigger(TriggerData trigger) {
+        showEditTriggerDialog(trigger);
+    }
+    
+    private void deleteTrigger(TriggerData trigger) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete Trigger");
+        alert.setHeaderText("Are you sure you want to delete this trigger?");
+        alert.setContentText("Trigger: " + trigger.getName());
+        
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                triggerManager.deleteTrigger(trigger.getIndex());
+                loadTriggers();
+            }
+        });
     }
 
     private void showAddTriggerDialog() {
@@ -144,52 +345,21 @@ public class TriggerController extends com.j_ssh.view.bootstrap.BootstrapPane {
         });
     }
 
-    private void editSelectedTrigger() {
-        TriggerData selectedTrigger = triggersTable.getSelectionModel().getSelectedItem();
-        if (selectedTrigger != null) {
-            TriggerDialog dialog = new TriggerDialog("Edit Trigger", selectedTrigger);
-            dialog.showAndWait().ifPresent(triggerData -> {
-                if (triggerData != null) {
-                    triggerManager.updateTrigger(
-                        selectedTrigger.getIndex(),
-                        triggerData.getName(),
-                        triggerData.getDescription(),
-                        triggerData.getTriggers()
-                    );
-                    loadTriggers();
-                }
-            });
-        } else {
-            showAlert("No Selection", "Please select a trigger to edit.");
-        }
+    private void showEditTriggerDialog(TriggerData trigger) {
+        TriggerDialog dialog = new TriggerDialog("Edit Trigger", trigger);
+        dialog.showAndWait().ifPresent(triggerData -> {
+            if (triggerData != null) {
+                triggerManager.updateTrigger(
+                    trigger.getIndex(),
+                    triggerData.getName(),
+                    triggerData.getDescription(),
+                    triggerData.getTriggers()
+                );
+                loadTriggers();
+            }
+        });
     }
 
-    private void deleteSelectedTrigger() {
-        TriggerData selectedTrigger = triggersTable.getSelectionModel().getSelectedItem();
-        if (selectedTrigger != null) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Delete Trigger");
-            alert.setHeaderText("Are you sure you want to delete this trigger?");
-            alert.setContentText("Trigger: " + selectedTrigger.getName());
-            
-            alert.showAndWait().ifPresent(response -> {
-                if (response == ButtonType.OK) {
-                    triggerManager.deleteTrigger(selectedTrigger.getIndex());
-                    loadTriggers();
-                }
-            });
-        } else {
-            showAlert("No Selection", "Please select a trigger to delete.");
-        }
-    }
-
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
 
     // Inner class for trigger dialog
     private class TriggerDialog extends Dialog<TriggerData> {

@@ -1,0 +1,261 @@
+/* Modern Triggers Page Styling - Based on j-ssh-client mockup */
+
+/* Main Container */
+.triggers-container {
+    -fx-background-color: #1f2937;
+    -fx-padding: 0;
+    -fx-spacing: 0;
+}
+
+/* Header Section */
+.triggers-header {
+    -fx-background-color: #1f2937;
+    -fx-padding: 24px 24px 0 24px;
+}
+
+.triggers-title {
+    -fx-font-size: 32px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 0 0 8px 0;
+}
+
+.triggers-subtitle {
+    -fx-font-size: 16px;
+    -fx-font-weight: 400;
+    -fx-text-fill: #9ca3af;
+    -fx-padding: 0 0 24px 0;
+}
+
+/* Search and Action Bar */
+.triggers-search {
+    -fx-background-color: #374151;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #374151;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 12px 16px;
+    -fx-font-size: 14px;
+    -fx-pref-width: 300px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 2, 0, 0, 1);
+}
+
+.triggers-search:focused {
+    -fx-border-color: #8b5cf6;
+    -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.3), 4, 0, 0, 0);
+}
+
+.triggers-count {
+    -fx-font-size: 14px;
+    -fx-text-fill: #9ca3af;
+    -fx-font-weight: 500;
+}
+
+.triggers-add-btn {
+    -fx-background-color: #8b5cf6;
+    -fx-text-fill: #ffffff;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 12px 20px;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 2);
+}
+
+.triggers-add-btn:hover {
+    -fx-background-color: #7c3aed;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 6, 0, 0, 3);
+}
+
+/* Content Area */
+.triggers-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.triggers-content {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+/* Trigger Cards */
+.trigger-card {
+    -fx-background-color: #374151;
+    -fx-border-color: #4b5563;
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 2);
+    -fx-padding: 20px;
+    -fx-spacing: 16px;
+}
+
+.trigger-card:hover {
+    -fx-background-color: #3f4755;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 8, 0, 0, 4);
+}
+
+.trigger-icon {
+    -fx-font-size: 20px;
+    -fx-text-fill: #8b5cf6;
+    -fx-background-color: rgba(139, 92, 246, 0.1);
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 10px;
+    -fx-pref-width: 40px;
+    -fx-pref-height: 40px;
+    -fx-alignment: center;
+}
+
+.trigger-name {
+    -fx-font-size: 18px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #ffffff;
+}
+
+.trigger-actions-count {
+    -fx-font-size: 12px;
+    -fx-text-fill: #8b5cf6;
+    -fx-background-color: rgba(139, 92, 246, 0.1);
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-padding: 4px 12px;
+}
+
+.trigger-description {
+    -fx-font-size: 14px;
+    -fx-text-fill: #d1d5db;
+    -fx-wrap-text: true;
+}
+
+.trigger-server-info {
+    -fx-font-size: 12px;
+    -fx-text-fill: #9ca3af;
+}
+
+.trigger-expand-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #9ca3af;
+    -fx-border-color: transparent;
+    -fx-font-size: 16px;
+    -fx-cursor: hand;
+    -fx-padding: 8px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+.trigger-expand-btn:hover {
+    -fx-background-color: rgba(156, 163, 175, 0.1);
+    -fx-text-fill: #ffffff;
+}
+
+/* Action Sequence */
+.trigger-action-sequence {
+    -fx-background-color: rgba(75, 85, 99, 0.3);
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 16px;
+}
+
+.trigger-sequence-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #ffffff;
+}
+
+.trigger-step-number {
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #ffffff;
+    -fx-background-color: #8b5cf6;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-padding: 4px 8px;
+    -fx-min-width: 24px;
+    -fx-alignment: center;
+}
+
+.trigger-sequence-action {
+    -fx-font-size: 14px;
+    -fx-text-fill: #d1d5db;
+}
+
+.trigger-sequence-arrow {
+    -fx-font-size: 14px;
+    -fx-text-fill: #9ca3af;
+}
+
+/* Action Buttons */
+.trigger-run-btn {
+    -fx-background-color: #10b981;
+    -fx-text-fill: #ffffff;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 8px 16px;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-cursor: hand;
+}
+
+.trigger-run-btn:hover {
+    -fx-background-color: #059669;
+}
+
+.trigger-edit-btn {
+    -fx-background-color: #374151;
+    -fx-text-fill: #9ca3af;
+    -fx-border-color: #4b5563;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 8px 12px;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.trigger-edit-btn:hover {
+    -fx-background-color: #4b5563;
+    -fx-text-fill: #ffffff;
+}
+
+.trigger-delete-btn {
+    -fx-background-color: #374151;
+    -fx-text-fill: #ef4444;
+    -fx-border-color: #4b5563;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 8px 12px;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.trigger-delete-btn:hover {
+    -fx-background-color: rgba(239, 68, 68, 0.1);
+    -fx-border-color: #ef4444;
+}
+
+/* Empty State */
+.triggers-empty-state {
+    -fx-alignment: center;
+    -fx-padding: 64px;
+}
+
+.triggers-empty-icon {
+    -fx-font-size: 48px;
+    -fx-text-fill: #6b7280;
+}
+
+.triggers-empty-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #ffffff;
+}
+
+.triggers-empty-text {
+    -fx-font-size: 16px;
+    -fx-text-fill: #9ca3af;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}

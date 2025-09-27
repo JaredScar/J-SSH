@@ -6,125 +6,326 @@ import com.j_ssh.model.objects.ActionData;
 import com.j_ssh.view.bootstrap.BootstrapColumn;
 import com.j_ssh.view.bootstrap.BootstrapPane;
 import com.j_ssh.view.bootstrap.BootstrapRow;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ButtonController extends BootstrapPane {
-    private TableView<ActionData> actionsTable;
-    private ObservableList<ActionData> actionsList;
+    private VBox actionsContainer;
     private ActionManager actionManager;
+    private TextField searchField;
+    private Label actionCountLabel;
     
     public ButtonController() {
         this.actionManager = ActionManager.get();
-        initializeComponents();
+        
+        // Apply modern styling to main container
+        this.getStyleClass().add("actions-container");
+        
+        initializeModernComponents();
         loadActions();
     }
     
-    private void initializeComponents() {
+    private void initializeModernComponents() {
         // Add menu bar for navigation
         BootstrapRow menuRow = API.get().createToolbox();
         this.addRow(menuRow);
         
-        // Create toolbar
-        BootstrapRow toolbarRow = createToolbar();
+        // Create modern header section
+        BootstrapRow headerRow = createModernHeader();
         
-        // Create actions table
-        BootstrapRow tableRow = createActionsTable();
+        // Create actions content area
+        BootstrapRow contentRow = createActionsContent();
         
         // Add rows to the main pane
-        this.addRow(toolbarRow);
-        this.addRow(tableRow);
+        this.addRow(headerRow);
+        this.addRow(contentRow);
     }
     
-    private BootstrapRow createToolbar() {
+    private BootstrapRow createModernHeader() {
         BootstrapRow row = new BootstrapRow();
         
-        // Create buttons
-        Button addButton = new Button("Add Action");
-        addButton.getStyleClass().add("btn-primary");
+        VBox headerSection = new VBox();
+        headerSection.getStyleClass().add("actions-header");
+        headerSection.setSpacing(16);
+        headerSection.setPadding(new Insets(24));
+        
+        // Title and subtitle section
+        VBox titleSection = new VBox();
+        titleSection.setSpacing(8);
+        
+        Label titleLabel = new Label("Actions");
+        titleLabel.getStyleClass().add("actions-title");
+        
+        Label subtitleLabel = new Label("Reusable command sequences");
+        subtitleLabel.getStyleClass().add("actions-subtitle");
+        
+        titleSection.getChildren().addAll(titleLabel, subtitleLabel);
+        
+        // Search and action section
+        HBox searchActionSection = new HBox();
+        searchActionSection.setSpacing(16);
+        searchActionSection.setAlignment(Pos.CENTER_LEFT);
+        
+        // Search field
+        searchField = new TextField();
+        searchField.getStyleClass().add("actions-search");
+        searchField.setPromptText("Search actions...");
+        searchField.setPrefWidth(300);
+        searchField.textProperty().addListener((obs, oldText, newText) -> filterActions(newText));
+        
+        // Action count
+        actionCountLabel = new Label("0 actions");
+        actionCountLabel.getStyleClass().add("actions-count");
+        
+        // Add action button
+        Button addButton = new Button("+ Add Action");
+        addButton.getStyleClass().add("actions-add-btn");
         addButton.setOnAction(e -> showAddActionDialog());
         
-        Button editButton = new Button("Edit Action");
-        editButton.getStyleClass().add("btn-secondary");
-        editButton.setOnAction(e -> editSelectedAction());
+        searchActionSection.getChildren().addAll(searchField, actionCountLabel, new Region(), addButton);
+        HBox.setHgrow(searchActionSection.getChildren().get(2), Priority.ALWAYS);
         
-        Button deleteButton = new Button("Delete Action");
-        deleteButton.getStyleClass().add("btn-danger");
-        deleteButton.setOnAction(e -> deleteSelectedAction());
+        headerSection.getChildren().addAll(titleSection, searchActionSection);
         
-        Button refreshButton = new Button("Refresh");
-        refreshButton.getStyleClass().add("btn-info");
-        refreshButton.setOnAction(e -> loadActions());
-        
-        // Add buttons to columns
-        row.addColumn(API.get().createColumn(addButton, 3));
-        row.addColumn(API.get().createColumn(editButton, 3));
-        row.addColumn(API.get().createColumn(deleteButton, 3));
-        row.addColumn(API.get().createColumn(refreshButton, 3));
+        BootstrapColumn headerCol = API.get().createColumn(headerSection, 12);
+        row.addColumn(headerCol);
         
         return row;
     }
     
-    private BootstrapRow createActionsTable() {
+    private BootstrapRow createActionsContent() {
         BootstrapRow row = new BootstrapRow();
         
-        // Create table
-        actionsTable = new TableView<>();
-        actionsList = FXCollections.observableArrayList();
-        actionsTable.setItems(actionsList);
+        // Create scrollable content area
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.getStyleClass().add("actions-scroll");
+        scrollPane.setFitToWidth(true);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         
-        // Create columns
-        TableColumn<ActionData, String> nameColumn = new TableColumn<>("Name");
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        nameColumn.setPrefWidth(200);
+        // Create actions container
+        actionsContainer = new VBox();
+        actionsContainer.getStyleClass().add("actions-content");
+        actionsContainer.setSpacing(16);
+        actionsContainer.setPadding(new Insets(24));
         
-        TableColumn<ActionData, String> commandsCountColumn = new TableColumn<>("Commands Count");
-        commandsCountColumn.setCellValueFactory(cellData -> {
-            ActionData action = cellData.getValue();
-            return new javafx.beans.property.SimpleStringProperty(String.valueOf(action.getCommands().size()));
-        });
-        commandsCountColumn.setPrefWidth(150);
+        scrollPane.setContent(actionsContainer);
         
-        TableColumn<ActionData, String> commandsPreviewColumn = new TableColumn<>("Commands Preview");
-        commandsPreviewColumn.setCellValueFactory(cellData -> {
-            ActionData action = cellData.getValue();
-            List<String> commands = action.getCommands();
-            String preview;
-            if (commands.isEmpty()) {
-                preview = "No commands";
-            } else if (commands.size() == 1) {
-                preview = commands.get(0);
-            } else {
-                preview = commands.get(0) + " (+" + (commands.size() - 1) + " more)";
-            }
-            return new javafx.beans.property.SimpleStringProperty(preview);
-        });
-        commandsPreviewColumn.setPrefWidth(300);
-        
-        // Add columns to table
-        actionsTable.getColumns().addAll(nameColumn, commandsCountColumn, commandsPreviewColumn);
-        
-        // Set table properties
-        actionsTable.setPrefHeight(400);
-        actionsTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        
-        // Add table to column
-        BootstrapColumn tableCol = API.get().createColumn(actionsTable, 12);
-        row.addColumn(tableCol);
+        BootstrapColumn contentCol = API.get().createColumn(scrollPane, 12);
+        row.addColumn(contentCol);
         
         return row;
+    }
+    
+    private VBox createActionCard(ActionData action) {
+        VBox card = new VBox();
+        card.getStyleClass().add("action-card");
+        card.setSpacing(16);
+        card.setPadding(new Insets(20));
+        
+        // Card header
+        HBox header = new HBox();
+        header.setAlignment(Pos.CENTER_LEFT);
+        header.setSpacing(12);
+        
+        // Action icon
+        Label actionIcon = new Label("▶");
+        actionIcon.getStyleClass().add("action-icon");
+        
+        // Action info
+        VBox actionInfo = new VBox();
+        actionInfo.setSpacing(4);
+        
+        Label nameLabel = new Label(action.getName());
+        nameLabel.getStyleClass().add("action-name");
+        
+        String description = getActionDescription(action);
+        if (description != null && !description.isEmpty()) {
+            Label descLabel = new Label(description);
+            descLabel.getStyleClass().add("action-description");
+            actionInfo.getChildren().addAll(nameLabel, descLabel);
+        } else {
+            actionInfo.getChildren().add(nameLabel);
+        }
+        
+        // Usage badge
+        Label usageBadge = new Label("Used 15 times");
+        usageBadge.getStyleClass().add("action-usage-badge");
+        
+        header.getChildren().addAll(actionIcon, actionInfo, new Region(), usageBadge);
+        HBox.setHgrow(header.getChildren().get(2), Priority.ALWAYS);
+        
+        // Commands section
+        VBox commandsSection = createCommandsSection(action);
+        
+        // Action buttons
+        HBox actionButtons = new HBox();
+        actionButtons.setSpacing(8);
+        actionButtons.setAlignment(Pos.CENTER_LEFT);
+        
+        Button runButton = new Button("▶ Run Action");
+        runButton.getStyleClass().add("action-run-btn");
+        runButton.setOnAction(e -> runAction(action));
+        
+        Button editButton = new Button("✎");
+        editButton.getStyleClass().add("action-edit-btn");
+        editButton.setOnAction(e -> editAction(action));
+        
+        Button deleteButton = new Button("🗑");
+        deleteButton.getStyleClass().add("action-delete-btn");
+        deleteButton.setOnAction(e -> deleteAction(action));
+        
+        actionButtons.getChildren().addAll(runButton, editButton, deleteButton);
+        
+        card.getChildren().addAll(header, commandsSection, actionButtons);
+        
+        return card;
+    }
+    
+    private VBox createCommandsSection(ActionData action) {
+        VBox commandsSection = new VBox();
+        commandsSection.getStyleClass().add("action-commands-section");
+        commandsSection.setSpacing(8);
+        commandsSection.setPadding(new Insets(16));
+        
+        HBox commandsHeader = new HBox();
+        commandsHeader.setAlignment(Pos.CENTER_LEFT);
+        commandsHeader.setSpacing(8);
+        
+        Label commandsTitle = new Label("Commands:");
+        commandsTitle.getStyleClass().add("action-commands-title");
+        
+        Button copyButton = new Button("📋");
+        copyButton.getStyleClass().add("action-copy-btn");
+        copyButton.setOnAction(e -> copyCommands(action));
+        
+        commandsHeader.getChildren().addAll(commandsTitle, new Region(), copyButton);
+        HBox.setHgrow(commandsHeader.getChildren().get(1), Priority.ALWAYS);
+        
+        VBox commandsList = new VBox();
+        commandsList.setSpacing(4);
+        
+        for (String command : action.getCommands()) {
+            HBox commandRow = new HBox();
+            commandRow.setAlignment(Pos.CENTER_LEFT);
+            commandRow.setSpacing(8);
+            
+            Label promptLabel = new Label("$");
+            promptLabel.getStyleClass().add("action-command-prompt");
+            
+            Label commandLabel = new Label(command);
+            commandLabel.getStyleClass().add("action-command-text");
+            
+            commandRow.getChildren().addAll(promptLabel, commandLabel);
+            commandsList.getChildren().add(commandRow);
+        }
+        
+        commandsSection.getChildren().addAll(commandsHeader, commandsList);
+        
+        return commandsSection;
     }
     
     private void loadActions() {
+        actionsContainer.getChildren().clear();
         List<ActionData> actions = actionManager.getAllActions();
-        actionsList.clear();
-        actionsList.addAll(actions);
+        
+        // Update action count
+        actionCountLabel.setText(actions.size() + " action" + (actions.size() != 1 ? "s" : ""));
+        
+        if (actions.isEmpty()) {
+            // Show empty state
+            VBox emptyState = createEmptyState();
+            actionsContainer.getChildren().add(emptyState);
+        } else {
+            for (ActionData action : actions) {
+                VBox actionCard = createActionCard(action);
+                actionsContainer.getChildren().add(actionCard);
+            }
+        }
+    }
+    
+    private VBox createEmptyState() {
+        VBox emptyState = new VBox();
+        emptyState.getStyleClass().add("actions-empty-state");
+        emptyState.setAlignment(Pos.CENTER);
+        emptyState.setSpacing(16);
+        emptyState.setPadding(new Insets(64));
+        
+        Label emptyIcon = new Label("▶");
+        emptyIcon.getStyleClass().add("actions-empty-icon");
+        
+        Label emptyTitle = new Label("No actions found");
+        emptyTitle.getStyleClass().add("actions-empty-title");
+        
+        Label emptyText = new Label("Create your first reusable command action");
+        emptyText.getStyleClass().add("actions-empty-text");
+        
+        Button createButton = new Button("+ Add Action");
+        createButton.getStyleClass().add("actions-add-btn");
+        createButton.setOnAction(e -> showAddActionDialog());
+        
+        emptyState.getChildren().addAll(emptyIcon, emptyTitle, emptyText, createButton);
+        
+        return emptyState;
+    }
+    
+    private String getActionDescription(ActionData action) {
+        // For now, return a generic description based on action name
+        // In the future, this could be stored as part of ActionData
+        if (action.getName().toLowerCase().contains("git pull")) {
+            return "Pull latest changes from repository";
+        } else if (action.getName().toLowerCase().contains("restart")) {
+            return "Restart system service";
+        } else if (action.getName().toLowerCase().contains("deploy")) {
+            return "Deploy application to server";
+        }
+        return null;
+    }
+    
+    private void filterActions(String searchText) {
+        // Implementation for filtering actions based on search text
+        // This would filter the actions and reload the display
+        loadActions(); // For now, just reload all actions
+    }
+    
+    private void runAction(ActionData action) {
+        // Implementation to run the action
+        System.out.println("Running action: " + action.getName());
+        // Here you would integrate with the actual action execution system
+    }
+    
+    private void editAction(ActionData action) {
+        showEditActionDialog(action);
+    }
+    
+    private void deleteAction(ActionData action) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete Action");
+        alert.setHeaderText("Are you sure you want to delete this action?");
+        alert.setContentText("Action: " + action.getName());
+        
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                actionManager.deleteAction(action.getIndex());
+                loadActions();
+            }
+        });
+    }
+    
+    private void copyCommands(ActionData action) {
+        // Implementation to copy commands to clipboard
+        StringBuilder commands = new StringBuilder();
+        for (String command : action.getCommands()) {
+            commands.append(command).append("\n");
+        }
+        
+        // Copy to clipboard (simplified implementation)
+        System.out.println("Copied commands to clipboard:\n" + commands.toString());
     }
     
     private void showAddActionDialog() {
@@ -135,45 +336,14 @@ public class ButtonController extends BootstrapPane {
         });
     }
     
-    private void editSelectedAction() {
-        ActionData selected = actionsTable.getSelectionModel().getSelectedItem();
-        if (selected != null) {
-            ActionDialog dialog = new ActionDialog("Edit Action", selected);
-            dialog.showAndWait().ifPresent(actionData -> {
-                actionManager.updateAction(selected.getIndex(), actionData.getName(), actionData.getCommands());
-                loadActions();
-            });
-        } else {
-            showAlert("No Selection", "Please select an action to edit.");
-        }
+    private void showEditActionDialog(ActionData action) {
+        ActionDialog dialog = new ActionDialog("Edit Action", action);
+        dialog.showAndWait().ifPresent(actionData -> {
+            actionManager.updateAction(action.getIndex(), actionData.getName(), actionData.getCommands());
+            loadActions();
+        });
     }
     
-    private void deleteSelectedAction() {
-        ActionData selected = actionsTable.getSelectionModel().getSelectedItem();
-        if (selected != null) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Delete Action");
-            alert.setHeaderText("Delete Action: " + selected.getName());
-            alert.setContentText("Are you sure you want to delete this action? This action cannot be undone.");
-            
-            alert.showAndWait().ifPresent(response -> {
-                if (response == ButtonType.OK) {
-                    actionManager.deleteAction(selected.getIndex());
-                    loadActions();
-                }
-            });
-        } else {
-            showAlert("No Selection", "Please select an action to delete.");
-        }
-    }
-    
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
     
     /**
      * Dialog for adding/editing actions

@@ -1,0 +1,364 @@
+/* Modern Terminal Interface Styling - Based on j-ssh-client mockup */
+
+/* Main Terminal Container */
+.terminal-container {
+    -fx-background-color: #1f2937;
+    -fx-padding: 0;
+    -fx-spacing: 0;
+}
+
+/* Terminal Tabs Styling */
+#terminal_tabs {
+    -fx-background-color: #1f2937;
+    -fx-border-color: #374151;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 2);
+    -fx-padding: 0;
+}
+
+#terminal_tabs .tab-pane .tab-header-area {
+    -fx-padding: 8px 16px 0 16px;
+    -fx-background-color: #1f2937;
+}
+
+#terminal_tabs .tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: transparent;
+}
+
+.terminal_tab {
+    -fx-background-color: #374151;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 12px 20px;
+    -fx-font-weight: 500;
+    -fx-border-color: #374151;
+    -fx-border-width: 1px 1px 0 1px;
+    -fx-border-radius: 8px 8px 0 0;
+    -fx-background-radius: 8px 8px 0 0;
+    -fx-font-size: 14px;
+}
+
+.terminal_tab:hover {
+    -fx-background-color: #4b5563;
+    -fx-text-fill: #ffffff;
+}
+
+.terminal_tab:selected {
+    -fx-background-color: #1f2937;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #8b5cf6;
+    -fx-border-width: 2px 2px 0 2px;
+}
+
+.terminal_tab .tab-label {
+    -fx-text-fill: inherit;
+    -fx-font-weight: 500;
+}
+
+/* Terminal Content Area */
+.terminal {
+    -fx-text-fill: #10b981;
+    -fx-font-family: "Geist Mono", "Consolas", "Monaco", "Courier New", monospace;
+    -fx-font-size: 14px;
+    -fx-background-color: #000000;
+    -fx-border-color: #374151;
+    -fx-border-width: 1px;
+    -fx-border-radius: 0 0 12px 12px;
+    -fx-background-radius: 0 0 12px 12px;
+}
+
+.terminal .content {
+    -fx-background-color: #000000;
+    -fx-text-fill: #10b981;
+}
+
+/* Terminal WebView Styling */
+.web-view {
+    -fx-background-color: #000000;
+    -fx-border-color: transparent;
+    -fx-border-radius: 0 0 12px 12px;
+    -fx-background-radius: 0 0 12px 12px;
+}
+
+/* Terminal Sidebar Styling */
+.terminal-sidebar {
+    -fx-background-color: #374151;
+    -fx-border-color: #4b5563;
+    -fx-border-width: 0 0 0 1px;
+    -fx-padding: 24px;
+    -fx-spacing: 16px;
+    -fx-pref-width: 320px;
+    -fx-min-width: 300px;
+}
+
+.terminal-sidebar-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 0;
+}
+
+.terminal-sidebar-subtitle {
+    -fx-font-size: 14px;
+    -fx-font-weight: 400;
+    -fx-text-fill: #9ca3af;
+    -fx-padding: 0;
+}
+
+/* Session Info Section */
+.terminal-session-info {
+    -fx-background-color: #4b5563;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 16px;
+    -fx-spacing: 8px;
+}
+
+.terminal-session-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 0;
+}
+
+/* Actions Container */
+.terminal-actions-container {
+    -fx-spacing: 12px;
+}
+
+/* Action Cards */
+.terminal-action-card {
+    -fx-background-color: #4b5563;
+    -fx-border-color: #6b7280;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 16px;
+    -fx-spacing: 8px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 2, 0, 0, 1);
+}
+
+.terminal-action-card:hover {
+    -fx-background-color: #6b7280;
+    -fx-border-color: #8b5cf6;
+    -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.2), 4, 0, 0, 2);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.terminal-action-name {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 0;
+}
+
+.terminal-action-desc {
+    -fx-font-size: 12px;
+    -fx-font-weight: 400;
+    -fx-text-fill: #d1d5db;
+    -fx-padding: 0;
+}
+
+.terminal-action-run-btn {
+    -fx-background-color: #8b5cf6;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: 600;
+    -fx-padding: 6px 10px;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+    -fx-cursor: hand;
+    -fx-font-size: 12px;
+    -fx-min-width: 28px;
+    -fx-pref-width: 28px;
+    -fx-max-width: 28px;
+    -fx-min-height: 28px;
+    -fx-pref-height: 28px;
+    -fx-max-height: 28px;
+}
+
+.terminal-action-run-btn:hover {
+    -fx-background-color: #7c3aed;
+    -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.4), 3, 0, 0, 1);
+}
+
+.terminal-action-run-btn:pressed {
+    -fx-background-color: #6d28d9;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 1, 0, 0, 0);
+}
+
+/* Focus Terminal Button */
+.terminal-focus-btn {
+    -fx-background-color: #6b7280;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: 500;
+    -fx-padding: 12px 16px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 2, 0, 0, 1);
+}
+
+.terminal-focus-btn:hover {
+    -fx-background-color: #8b5cf6;
+    -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.3), 4, 0, 0, 2);
+}
+
+.terminal-focus-btn:pressed {
+    -fx-background-color: #7c3aed;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 1, 0, 0, 0);
+}
+
+/* Empty Actions State */
+.terminal-empty-actions {
+    -fx-padding: 32px 16px;
+    -fx-alignment: center;
+}
+
+.terminal-empty-icon {
+    -fx-font-size: 32px;
+    -fx-text-fill: #6b7280;
+}
+
+.terminal-empty-text {
+    -fx-font-size: 14px;
+    -fx-font-weight: 400;
+    -fx-text-fill: #9ca3af;
+    -fx-text-alignment: center;
+}
+
+/* Terminal Header (if needed) */
+.terminal-header {
+    -fx-background-color: #374151;
+    -fx-border-color: #4b5563;
+    -fx-border-width: 0 0 1px 0;
+    -fx-padding: 16px 24px;
+}
+
+.terminal-header-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #ffffff;
+}
+
+.terminal-header-controls {
+    -fx-spacing: 8px;
+    -fx-alignment: center-right;
+}
+
+.terminal-control-btn {
+    -fx-background-color: #4b5563;
+    -fx-text-fill: #d1d5db;
+    -fx-font-weight: 500;
+    -fx-padding: 6px 8px;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+    -fx-cursor: hand;
+    -fx-font-size: 12px;
+    -fx-min-width: 24px;
+    -fx-pref-width: 24px;
+    -fx-max-width: 24px;
+    -fx-min-height: 24px;
+    -fx-pref-height: 24px;
+    -fx-max-height: 24px;
+}
+
+.terminal-control-btn:hover {
+    -fx-background-color: #6b7280;
+    -fx-text-fill: #ffffff;
+}
+
+/* Terminal Status Bar */
+.terminal-status-bar {
+    -fx-background-color: #374151;
+    -fx-border-color: #4b5563;
+    -fx-border-width: 1px 0 0 0;
+    -fx-padding: 8px 16px;
+}
+
+.terminal-status-text {
+    -fx-font-size: 12px;
+    -fx-font-weight: 400;
+    -fx-text-fill: #9ca3af;
+}
+
+/* Scrollbar Styling for Terminal */
+.terminal .scroll-bar {
+    -fx-background-color: #4b5563;
+    -fx-border-color: #374151;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+}
+
+.terminal .scroll-bar .thumb {
+    -fx-background-color: #6b7280;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+}
+
+.terminal .scroll-bar .thumb:hover {
+    -fx-background-color: #8b5cf6;
+}
+
+.terminal .scroll-bar .thumb:pressed {
+    -fx-background-color: #7c3aed;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .terminal-sidebar {
+        -fx-pref-width: 280px;
+        -fx-min-width: 260px;
+        -fx-padding: 16px;
+    }
+    
+    .terminal-sidebar-title {
+        -fx-font-size: 16px;
+    }
+    
+    .terminal-action-card {
+        -fx-padding: 12px;
+    }
+    
+    .terminal-focus-btn {
+        -fx-padding: 10px 12px;
+    }
+}
+
+/* Animation Transitions */
+.terminal-action-card {
+    -fx-transition: -fx-scale-x 0.2s ease-in-out, 
+                    -fx-scale-y 0.2s ease-in-out,
+                    -fx-background-color 0.2s ease-in-out,
+                    -fx-border-color 0.2s ease-in-out;
+}
+
+.terminal-action-run-btn, .terminal-focus-btn, .terminal-control-btn {
+    -fx-transition: -fx-background-color 0.2s ease-in-out,
+                    -fx-effect 0.2s ease-in-out;
+}
+
+/* Tab Pane Specific Styling */
+.tab-pane {
+    -fx-tab-min-width: 120px;
+    -fx-tab-max-width: 200px;
+}
+
+.tab-pane .tab-header-area .tab {
+    -fx-background-insets: 0;
+    -fx-padding: 8px 16px;
+}
+
+.tab-pane .tab-header-area .tab .tab-label {
+    -fx-alignment: CENTER;
+    -fx-text-alignment: CENTER;
+}
+
+.tab-pane .tab-content-area {
+    -fx-background-color: #000000;
+    -fx-border-color: #374151;
+    -fx-border-width: 1px;
+    -fx-border-radius: 0 0 12px 12px;
+    -fx-background-radius: 0 0 12px 12px;
+}
