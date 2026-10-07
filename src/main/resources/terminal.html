@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Terminal</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/xterm/5.5.0/xterm.css" integrity="sha512-AbNrj/oSHJaILgcdnkYm+DQ08SqVbZ8jlkJbFyyS1WDcAaXAcAfxJnCH69el7oVgTwVwyA5u5T+RdFyUykrV3Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="xterm.css" />
     <style>
         body, html {
             margin: 0;
@@ -69,7 +69,7 @@
 </head>
 <body>
 <div id="terminal-container"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xterm/5.5.0/xterm.js" integrity="sha512-Gujw5GajF5is3nMoGv9X+tCMqePLL/60qvAv1LofUZTV9jK8ENbM9L+maGmOsNzuZaiuyc/fpph1KT9uR5w3CQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="xterm.js"></script>
 <script>
     let term = new Terminal({
         cursorBlink: true,
@@ -122,13 +122,20 @@
             }
         });
         
-        // Handle terminal resize
-        window.addEventListener('resize', function() {
-            term.fit();
+        window.fitTerm = function () {
+            var container = document.getElementById('terminal-container');
+            if (!container || !term) return;
+            var style = window.getComputedStyle(term.element);
+            var fontSize = parseFloat(style.fontSize) || 14;
+            var cols = Math.max(40, Math.floor(container.clientWidth / (fontSize * 0.62)));
+            var rows = Math.max(8, Math.floor(container.clientHeight / (fontSize * 1.4)));
+            term.resize(cols, rows);
+        };
+        window.addEventListener('resize', function () {
+            window.fitTerm();
         });
-        
-        // Initial fit
-        setTimeout(() => term.fit(), 100);
+        setTimeout(window.fitTerm, 50);
+        setTimeout(window.fitTerm, 300);
     });
 </script>
 </body>

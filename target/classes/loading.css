@@ -53,22 +53,3 @@
     -fx-padding: 10px 0 0 0;
 }
 
-/* Animation keyframes */
-@keyframes spin {
-    from { -fx-rotate: 0deg; }
-    to { -fx-rotate: 360deg; }
-}
-
-@keyframes pulse {
-    0% { -fx-opacity: 1; }
-    50% { -fx-opacity: 0.5; }
-    100% { -fx-opacity: 1; }
-}
-
-.loading-spinner.animated {
-    animation: spin 1s linear infinite;
-}
-
-.loading-title.animated {
-    animation: pulse 2s ease-in-out infinite;
-}

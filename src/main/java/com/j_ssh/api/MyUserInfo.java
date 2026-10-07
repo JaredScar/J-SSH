@@ -14,6 +14,7 @@ import java.util.concurrent.CountDownLatch;
 
 public class MyUserInfo implements UserInfo, UIKeyboardInteractive {
     private String passwd;
+    private boolean quiet;
 
     @Override
     public String getPassword() {
@@ -22,6 +23,10 @@ public class MyUserInfo implements UserInfo, UIKeyboardInteractive {
 
     public void setPassword(String passwd) {
         this.passwd = passwd;
+    }
+
+    public void setQuiet(boolean quiet) {
+        this.quiet = quiet;
     }
 
     @Override
@@ -46,6 +51,9 @@ public class MyUserInfo implements UserInfo, UIKeyboardInteractive {
 
     @Override
     public void showMessage(String message) {
+        if (quiet) {
+            return;
+        }
         showMessageDialog(message);
     }
 
@@ -100,13 +108,18 @@ public class MyUserInfo implements UserInfo, UIKeyboardInteractive {
     }
 
     private void showMessageDialog(String message) {
-        Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Message");
-            alert.setHeaderText(null);
-            alert.setContentText(message);
-            alert.showAndWait();
-        });
+        CountDownLatch latch = new CountDownLatch(1);
+        Runnable present = () -> com.j_ssh.main.MainApp.get().showServerMessage(message, latch::countDown);
+        if (Platform.isFxApplicationThread()) {
+            present.run();
+            return;
+        }
+        Platform.runLater(present);
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     private String[] showKeyboardInteractiveDialog(String destination, String name, String instruction, String[] prompt, boolean[] echo) {

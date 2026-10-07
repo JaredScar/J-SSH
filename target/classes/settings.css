@@ -202,3 +202,97 @@
     -fx-font-size: 14px;
     -fx-text-fill: #ffffff;
 }
+
+.page-title {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 28px;
+    -fx-font-weight: 700;
+}
+
+.page-intro {
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 14px;
+    -fx-wrap-text: true;
+}
+
+.guide-section {
+    -fx-background-color: #111827;
+    -fx-background-radius: 14;
+    -fx-border-color: #374151;
+    -fx-border-radius: 14;
+    -fx-border-width: 1;
+    -fx-padding: 18 20 18 20;
+    -fx-spacing: 8;
+}
+
+.guide-heading {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+}
+
+.guide-lead {
+    -fx-text-fill: #d1d5db;
+    -fx-font-size: 13px;
+}
+
+.guide-step {
+    -fx-text-fill: #e5e7eb;
+    -fx-font-size: 13px;
+    -fx-padding: 1 0 1 0;
+}
+
+.stat-card {
+    -fx-background-color: #111827;
+    -fx-background-radius: 14;
+    -fx-border-color: #374151;
+    -fx-border-radius: 14;
+    -fx-border-width: 1;
+    -fx-padding: 16 18 16 18;
+}
+
+.stat-value {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 26px;
+    -fx-font-weight: 700;
+}
+
+.stat-caption {
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 12px;
+}
+
+.settings-path {
+    -fx-text-fill: #e5e7eb;
+    -fx-font-family: Consolas, "Courier New", monospace;
+    -fx-font-size: 12px;
+    -fx-background-color: #1f2937;
+    -fx-background-radius: 8;
+    -fx-padding: 10 12 10 12;
+}
+
+.settings-primary-btn {
+    -fx-background-color: #8b5cf6;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: 700;
+    -fx-background-radius: 8;
+    -fx-padding: 8 14 8 14;
+    -fx-cursor: hand;
+}
+
+.settings-primary-btn:hover {
+    -fx-background-color: #7c3aed;
+}
+
+.settings-secondary-btn {
+    -fx-background-color: #374151;
+    -fx-text-fill: #f3f4f6;
+    -fx-font-weight: 600;
+    -fx-background-radius: 8;
+    -fx-padding: 8 14 8 14;
+    -fx-cursor: hand;
+}
+
+.settings-secondary-btn:hover {
+    -fx-background-color: #4b5563;
+}

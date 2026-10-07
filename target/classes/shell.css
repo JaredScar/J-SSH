@@ -1,0 +1,386 @@
+/* App shell — sidebar layout matching the j-ssh-client mockup */
+
+.app-shell {
+    -fx-background-color: #111827;
+    -fx-font-family: "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 14px;
+}
+
+.sidebar {
+    -fx-background-color: #111827;
+    -fx-border-color: #1f2937;
+    -fx-border-width: 0 1 0 0;
+    -fx-pref-width: 260px;
+    -fx-min-width: 260px;
+    -fx-max-width: 260px;
+    -fx-padding: 0;
+}
+
+.sidebar-header {
+    -fx-padding: 22 18 18 18;
+    -fx-border-color: transparent transparent #1f2937 transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-spacing: 12;
+}
+
+.brand-mark {
+    -fx-background-color: #8b5cf6;
+    -fx-background-radius: 10;
+    -fx-min-width: 36px;
+    -fx-min-height: 36px;
+    -fx-max-width: 36px;
+    -fx-max-height: 36px;
+    -fx-alignment: center;
+}
+
+.brand-mark-icon {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-family: "Segoe MDL2 Assets";
+}
+
+.brand-title {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+}
+
+.brand-subtitle {
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 12px;
+}
+
+.sidebar-nav {
+    -fx-padding: 16 12 12 12;
+    -fx-spacing: 6;
+}
+
+.sidebar-footer {
+    -fx-padding: 12;
+    -fx-spacing: 4;
+    -fx-border-color: #1f2937 transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+}
+
+.nav-item {
+    -fx-background-color: transparent;
+    -fx-background-radius: 10;
+    -fx-background-insets: 0;
+    -fx-border-width: 0;
+    -fx-padding: 10 12;
+    -fx-cursor: hand;
+    -fx-alignment: center-left;
+    -fx-max-width: infinity;
+}
+
+.nav-item:hover {
+    -fx-background-color: #1f2937;
+}
+
+.nav-item:pressed {
+    -fx-background-color: #374151;
+}
+
+.nav-item .nav-title {
+    -fx-text-fill: #f3f4f6;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+}
+
+.nav-item .nav-desc {
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 11px;
+}
+
+.nav-item .nav-icon {
+    -fx-text-fill: #c4b5fd;
+    -fx-font-size: 16px;
+    -fx-font-family: "Segoe MDL2 Assets";
+    -fx-min-width: 20px;
+}
+
+.nav-item.nav-active {
+    -fx-background-color: #8b5cf6;
+}
+
+.nav-item.nav-active .nav-title,
+.nav-item.nav-active .nav-desc,
+.nav-item.nav-active .nav-icon {
+    -fx-text-fill: #ffffff;
+}
+
+.nav-item:disabled {
+    -fx-opacity: 0.4;
+    -fx-cursor: default;
+}
+
+.content-frame {
+    -fx-background-color: #1f2937;
+}
+
+.page-scroll {
+    -fx-background-color: transparent;
+    -fx-background: #1f2937;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.page-scroll > .viewport {
+    -fx-background-color: #1f2937;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: #1f2937;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical,
+.scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #4b5563;
+    -fx-background-radius: 8;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #6b7280;
+}
+
+.scroll-bar .track {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.button {
+    -fx-background-insets: 0;
+    -fx-border-width: 0;
+}
+
+.sessions-header,
+.actions-header,
+.triggers-header,
+.settings-header {
+    -fx-border-color: transparent transparent #374151 transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-background-color: #1f2937;
+}
+
+.loading-overlay {
+    -fx-background-color: rgba(17, 24, 39, 0.78);
+}
+
+.loading-card {
+    -fx-background-color: #1f2937;
+    -fx-background-radius: 16;
+    -fx-border-color: #374151;
+    -fx-border-radius: 16;
+    -fx-border-width: 1;
+    -fx-padding: 28 36;
+    -fx-spacing: 14;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.45), 24, 0, 0, 8);
+}
+
+.loading-card .label {
+    -fx-text-fill: #f9fafb;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+}
+
+.loading-card .progress-indicator {
+    -fx-progress-color: #8b5cf6;
+}
+
+.message-overlay {
+    -fx-background-color: rgba(17, 24, 39, 0.72);
+}
+
+.message-card {
+    -fx-background-color: #1f2937;
+    -fx-background-radius: 16;
+    -fx-border-color: #4b5563;
+    -fx-border-radius: 16;
+    -fx-border-width: 1;
+    -fx-padding: 22 24 18 24;
+    -fx-max-width: 440px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.45), 28, 0, 0, 10);
+}
+
+.message-title {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+}
+
+.message-subtitle {
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 12px;
+}
+
+.message-flow {
+    -fx-padding: 12 0 4 0;
+}
+
+.message-text {
+    -fx-fill: #e5e7eb;
+    -fx-font-size: 14px;
+}
+
+.message-link {
+    -fx-text-fill: #c4b5fd;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-font-size: 14px;
+    -fx-underline: true;
+}
+
+.message-link:hover {
+    -fx-text-fill: #ddd6fe;
+}
+
+.terminal-chrome {
+    -fx-background-color: #111827;
+    -fx-border-color: transparent transparent #374151 transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 12 16;
+    -fx-spacing: 12;
+    -fx-alignment: center-left;
+}
+
+.terminal-close-dot {
+    -fx-background-color: #ef4444;
+    -fx-background-radius: 20;
+    -fx-background-insets: 0;
+    -fx-border-width: 0;
+    -fx-padding: 0;
+    -fx-min-width: 14px;
+    -fx-min-height: 14px;
+    -fx-pref-width: 14px;
+    -fx-pref-height: 14px;
+    -fx-max-width: 14px;
+    -fx-max-height: 14px;
+    -fx-cursor: hand;
+}
+
+.terminal-close-dot:hover {
+    -fx-background-color: #dc2626;
+}
+
+.terminal-close-dot:disabled {
+    -fx-opacity: 0.35;
+    -fx-cursor: default;
+}
+
+.terminal-chrome-title {
+    -fx-text-fill: #f9fafb;
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+}
+
+.terminal-badge {
+    -fx-background-color: #374151;
+    -fx-text-fill: #d1d5db;
+    -fx-background-radius: 999;
+    -fx-padding: 4 10;
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+}
+
+.terminal-badge.badge-live {
+    -fx-background-color: #14532d;
+    -fx-text-fill: #86efac;
+}
+
+.terminal-empty {
+    -fx-background-color: #111827;
+    -fx-alignment: center;
+    -fx-spacing: 8;
+}
+
+.terminal-empty-title {
+    -fx-text-fill: #f9fafb;
+    -fx-font-size: 20px;
+    -fx-font-weight: 700;
+}
+
+.terminal-empty-text {
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 13px;
+}
+
+.jssh-dialog {
+    -fx-background-color: #1f2937;
+}
+
+.jssh-dialog > .header-panel {
+    -fx-background-color: #111827;
+    -fx-padding: 16 20 12 20;
+}
+
+.jssh-dialog > .header-panel .label {
+    -fx-text-fill: #f9fafb;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+}
+
+.jssh-dialog > .content.label {
+    -fx-text-fill: #d1d5db;
+}
+
+.jssh-dialog .label {
+    -fx-text-fill: #e5e7eb;
+}
+
+.jssh-dialog .text-field,
+.jssh-dialog .text-area,
+.jssh-dialog .combo-box,
+.jssh-dialog .list-view {
+    -fx-background-color: #374151;
+    -fx-text-fill: #ffffff;
+    -fx-prompt-text-fill: #9ca3af;
+    -fx-background-radius: 8;
+    -fx-border-color: #4b5563;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-background-insets: 0;
+}
+
+.jssh-dialog .text-field .text,
+.jssh-dialog .text-area .text {
+    -fx-fill: #ffffff;
+}
+
+.jssh-dialog .button {
+    -fx-background-color: #4b5563;
+    -fx-text-fill: #ffffff;
+    -fx-background-radius: 8;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+}
+
+.jssh-dialog .button:hover {
+    -fx-background-color: #6b7280;
+}
+
+.jssh-dialog .button:default {
+    -fx-background-color: #8b5cf6;
+}
+
+.jssh-dialog .button:default:hover {
+    -fx-background-color: #7c3aed;
+}
+
+.jssh-dialog > .button-bar > .container {
+    -fx-background-color: #1f2937;
+}

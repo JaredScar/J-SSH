@@ -2,20 +2,23 @@ package com.j_ssh.main;
 
 import com.j_ssh.controller.ButtonController;
 import com.j_ssh.controller.DashboardController;
+import com.j_ssh.controller.HelpController;
 import com.j_ssh.controller.LoadingController;
 import com.j_ssh.controller.SessionController;
 import com.j_ssh.controller.SettingsController;
 import com.j_ssh.controller.TerminalController;
 import com.j_ssh.controller.TriggerController;
 import com.j_ssh.model.objects.JScene;
+import com.j_ssh.view.AppShell;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Dialog;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.awt.*;
-import java.io.File;
 
 public class MainApp extends Application {
     private static MainApp main;
@@ -23,54 +26,40 @@ public class MainApp extends Application {
     @Getter
     private Stage primaryStage;
 
+    private AppShell appShell;
+    private Scene mainScene;
+
     @Getter
     @Setter
     private DashboardController dashboardController;
-    @Getter
-    @Setter
-    private Scene dashboardScene;
 
     @Getter
     @Setter
     private TerminalController terminalController;
-    @Getter
-    @Setter
-    private Scene terminalScene;
 
     @Getter
     @Setter
     private SettingsController settingsController;
+
     @Getter
     @Setter
-    private Scene settingsScene;
+    private HelpController helpController;
 
     @Getter
     @Setter
     private LoadingController loadingController;
-    @Getter
-    @Setter
-    private Scene loadingScene;
 
     @Getter
     @Setter
     private ButtonController buttonController;
-    @Getter
-    @Setter
-    private Scene actionsScene;
 
     @Getter
     @Setter
     private SessionController sessionController;
-    @Getter
-    @Setter
-    private Scene sessionsScene;
 
     @Getter
     @Setter
     private TriggerController triggerController;
-    @Getter
-    @Setter
-    private Scene triggersScene;
 
     public static MainApp get() {
         return main;
@@ -81,74 +70,70 @@ public class MainApp extends Application {
         // This is the primary stage for the app starting
         this.primaryStage = primaryStage;
         main = this;
-        this.terminalController = new TerminalController();
         primaryStage.setTitle("J-SSH");
         Toolkit tk = Toolkit.getDefaultToolkit();
         primaryStage.setWidth(tk.getScreenSize().getWidth() - (tk.getScreenSize().getWidth() / 3));
         primaryStage.setHeight((tk.getScreenSize().getHeight()) - (tk.getScreenSize().getHeight() / 3));
-        File cssFile = new File("global.css");
-        String globalCssPath = null;
-        if (cssFile.exists()) {
-            globalCssPath = cssFile.toURI().toString();
-        } else {
-            System.out.println("CSS file not found: " + cssFile.getAbsolutePath());
-        }
-        this.dashboardController = new DashboardController();
-        if (globalCssPath != null)
-            this.dashboardController.getStylesheets().add(globalCssPath);
-        // Add dashboard CSS
-        this.dashboardController.getStylesheets().add(getClass().getResource("/dashboard.css").toString());
-        Scene scene = new Scene(dashboardController);
-        this.dashboardScene = scene;
-        primaryStage.setScene(scene);
+        this.appShell = new AppShell();
+        this.terminalController = new TerminalController();
+        this.loadingController = new LoadingController();
+        this.buttonController = new ButtonController();
+        this.sessionController = new SessionController();
+        this.triggerController = new TriggerController();
+        this.settingsController = new SettingsController();
+        this.helpController = new HelpController();
+
+        StackPane windowRoot = new StackPane(appShell);
+        appShell.attachOverlayHost(windowRoot);
+        this.mainScene = new Scene(windowRoot);
+        addStylesheet("/shell.css");
+        addStylesheet("/sessions.css");
+        addStylesheet("/actions.css");
+        addStylesheet("/triggers.css");
+        addStylesheet("/terminal.css");
+        addStylesheet("/settings.css");
+        addStylesheet("/loading.css");
+        addStylesheet("/dashboard.css");
+
+        primaryStage.setScene(mainScene);
+        primaryStage.setMinWidth(1020);
+        primaryStage.setMinHeight(680);
         primaryStage.show();
         primaryStage.centerOnScreen();
-        this.terminalController = new TerminalController();
-        if (globalCssPath != null)
-            this.terminalController.getStylesheets().add(globalCssPath);
-        // Add modern terminal CSS
-        this.terminalController.getStylesheets().add(getClass().getResource("/terminal.css").toString());
-        scene = new Scene(this.terminalController);
-        this.terminalScene = scene;
-        this.loadingController = new LoadingController();
-        if (globalCssPath != null)
-            this.loadingController.getStylesheets().add(globalCssPath);
-        // Add loading CSS
-        this.loadingController.getStylesheets().add(getClass().getResource("/loading.css").toString());
-        scene = new Scene(this.loadingController);
-        this.loadingScene = scene;
-        
-        this.buttonController = new ButtonController();
-        if (globalCssPath != null)
-            this.buttonController.getStylesheets().add(globalCssPath);
-        // Add modern actions CSS
-        this.buttonController.getStylesheets().add(getClass().getResource("/actions.css").toString());
-        scene = new Scene(this.buttonController);
-        this.actionsScene = scene;
-        
-        this.sessionController = new SessionController();
-        if (globalCssPath != null)
-            this.sessionController.getStylesheets().add(globalCssPath);
-        // Add modern sessions CSS
-        this.sessionController.getStylesheets().add(getClass().getResource("/sessions.css").toString());
-        scene = new Scene(this.sessionController);
-        this.sessionsScene = scene;
-        
-        this.triggerController = new TriggerController();
-        if (globalCssPath != null)
-            this.triggerController.getStylesheets().add(globalCssPath);
-        // Add modern triggers CSS
-        this.triggerController.getStylesheets().add(getClass().getResource("/triggers.css").toString());
-        scene = new Scene(this.triggerController);
-        this.triggersScene = scene;
-        
-        this.settingsController = new SettingsController();
-        if (globalCssPath != null)
-            this.settingsController.getStylesheets().add(globalCssPath);
-        // Add settings CSS
-        this.settingsController.getStylesheets().add(getClass().getResource("/settings.css").toString());
-        scene = new Scene(this.settingsController);
-        this.settingsScene = scene;
+        changeScene(JScene.SESSIONS);
+    }
+
+    private void addStylesheet(String resource) {
+        var url = getClass().getResource(resource);
+        if (url != null) {
+            mainScene.getStylesheets().add(url.toExternalForm());
+        }
+    }
+
+    public static void theme(Dialog<?> dialog) {
+        if (main == null || main.primaryStage == null || main.primaryStage.getScene() == null) {
+            return;
+        }
+        dialog.getDialogPane().getStylesheets().setAll(main.primaryStage.getScene().getStylesheets());
+        if (!dialog.getDialogPane().getStyleClass().contains("jssh-dialog")) {
+            dialog.getDialogPane().getStyleClass().add("jssh-dialog");
+        }
+    }
+
+    public void setTerminalEnabled(boolean enabled) {
+        if (appShell != null) {
+            appShell.setTerminalEnabled(enabled);
+        }
+    }
+
+    public void showServerMessage(String message, Runnable onClose) {
+        if (appShell == null) {
+            if (onClose != null) {
+                onClose.run();
+            }
+            return;
+        }
+        appShell.showServerMessage(message, onClose);
     }
 
     public double getScreenWidth() {
@@ -160,76 +145,59 @@ public class MainApp extends Application {
         return tk.getScreenSize().getHeight();
     }
     
-    public Scene getTerminalScene() {
-        return this.terminalScene;
-    }
-    
-    public Scene getDashboardScene() {
-        return this.dashboardScene;
-    }
-    
-    public Scene getSessionsScene() {
-        return this.sessionsScene;
-    }
-    
-    public Scene getActionsScene() {
-        return this.actionsScene;
-    }
-    
-    public Scene getTriggersScene() {
-        return this.triggersScene;
-    }
-    
-    public Scene getSettingsScene() {
-        return this.settingsScene;
-    }
-    
-    public Scene getLoadingScene() {
-        return this.loadingScene;
-    }
-    
     public Stage getPrimaryStage() {
         return this.primaryStage;
     }
-    
+
     public TerminalController getTerminalController() {
         return this.terminalController;
     }
 
     public void changeScene(JScene scene) {
-        Scene fxScene = null;
+        if (appShell == null) {
+            return;
+        }
         switch (scene) {
-            case TERMINAL:
-                fxScene = this.getTerminalScene();
-                this.getPrimaryStage().setScene(fxScene);
+            case LOADING:
+                appShell.setLoading(true);
                 break;
-            case DASHBOARD:
-                fxScene = this.getDashboardScene();
-                this.getPrimaryStage().setScene(fxScene);
+            case TERMINAL:
+                appShell.setLoading(false);
+                terminalController.refreshActions();
+                appShell.showPage(terminalController);
+                appShell.setActive(JScene.TERMINAL);
+                appShell.setTerminalEnabled(true);
                 break;
             case SETTINGS:
-                fxScene = this.getSettingsScene();
-                this.getPrimaryStage().setScene(fxScene);
+                appShell.setLoading(false);
+                settingsController.refresh();
+                appShell.showPage(settingsController);
+                appShell.setActive(JScene.SETTINGS);
                 break;
-            case LOADING:
-                fxScene = this.getLoadingScene();
-                this.getPrimaryStage().setScene(fxScene);
+            case HELP:
+                appShell.setLoading(false);
+                appShell.showPage(helpController);
+                appShell.setActive(JScene.HELP);
                 break;
             case ACTIONS:
-                fxScene = this.getActionsScene();
-                this.getPrimaryStage().setScene(fxScene);
-                break;
-            case SESSIONS:
-                fxScene = this.getSessionsScene();
-                this.getPrimaryStage().setScene(fxScene);
-                // Refresh connection statuses when switching to sessions view
-                if (this.sessionController != null) {
-                    this.sessionController.onViewActivated();
-                }
+                appShell.setLoading(false);
+                appShell.showPage(buttonController);
+                appShell.setActive(JScene.ACTIONS);
                 break;
             case TRIGGERS:
-                fxScene = this.getTriggersScene();
-                this.getPrimaryStage().setScene(fxScene);
+                appShell.setLoading(false);
+                appShell.showPage(triggerController);
+                appShell.setActive(JScene.TRIGGERS);
+                break;
+            case DASHBOARD:
+            case SESSIONS:
+            default:
+                appShell.setLoading(false);
+                appShell.showPage(sessionController);
+                appShell.setActive(JScene.SESSIONS);
+                if (sessionController != null) {
+                    sessionController.onViewActivated();
+                }
                 break;
         }
     }

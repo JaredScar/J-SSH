@@ -1,14 +1,12 @@
 package com.j_ssh.controller;
 
-import com.j_ssh.api.API;
+import com.j_ssh.main.MainApp;
 import com.j_ssh.model.managers.ActionManager;
 import com.j_ssh.model.managers.SessionManager;
 import com.j_ssh.model.managers.TriggerManager;
 import com.j_ssh.model.objects.ActionData;
 import com.j_ssh.model.objects.ServerData;
 import com.j_ssh.model.objects.TriggerData;
-import com.j_ssh.view.bootstrap.BootstrapColumn;
-import com.j_ssh.view.bootstrap.BootstrapRow;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -17,7 +15,7 @@ import javafx.scene.layout.*;
 import java.util.HashMap;
 import java.util.List;
 
-public class TriggerController extends com.j_ssh.view.bootstrap.BootstrapPane {
+public class TriggerController extends BorderPane {
     private VBox triggersContainer;
     private TriggerManager triggerManager;
     private SessionManager sessionManager;
@@ -38,24 +36,11 @@ public class TriggerController extends com.j_ssh.view.bootstrap.BootstrapPane {
     }
 
     private void initializeModernComponents() {
-        // Add menu bar for navigation
-        BootstrapRow menuRow = API.get().createToolbox();
-        this.addRow(menuRow);
-
-        // Create modern header section
-        BootstrapRow headerRow = createModernHeader();
-        
-        // Create triggers content area
-        BootstrapRow contentRow = createTriggersContent();
-
-        // Add rows to the main pane
-        this.addRow(headerRow);
-        this.addRow(contentRow);
+        setTop(createModernHeader());
+        setCenter(createTriggersContent());
     }
     
-    private BootstrapRow createModernHeader() {
-        BootstrapRow row = new BootstrapRow();
-        
+    private VBox createModernHeader() {
         VBox headerSection = new VBox();
         headerSection.getStyleClass().add("triggers-header");
         headerSection.setSpacing(16);
@@ -98,35 +83,23 @@ public class TriggerController extends com.j_ssh.view.bootstrap.BootstrapPane {
         HBox.setHgrow(searchActionSection.getChildren().get(2), Priority.ALWAYS);
         
         headerSection.getChildren().addAll(titleSection, searchActionSection);
-        
-        BootstrapColumn headerCol = API.get().createColumn(headerSection, 12);
-        row.addColumn(headerCol);
-        
-        return row;
+        return headerSection;
     }
 
-    private BootstrapRow createTriggersContent() {
-        BootstrapRow row = new BootstrapRow();
-        
-        // Create scrollable content area
+    private ScrollPane createTriggersContent() {
         ScrollPane scrollPane = new ScrollPane();
-        scrollPane.getStyleClass().add("triggers-scroll");
+        scrollPane.getStyleClass().addAll("triggers-scroll", "page-scroll");
         scrollPane.setFitToWidth(true);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         
-        // Create triggers container
         triggersContainer = new VBox();
         triggersContainer.getStyleClass().add("triggers-content");
         triggersContainer.setSpacing(16);
         triggersContainer.setPadding(new Insets(24));
         
         scrollPane.setContent(triggersContainer);
-        
-        BootstrapColumn contentCol = API.get().createColumn(scrollPane, 12);
-        row.addColumn(contentCol);
-        
-        return row;
+        return scrollPane;
     }
 
     private VBox createTriggerCard(TriggerData trigger) {
@@ -163,8 +136,7 @@ public class TriggerController extends com.j_ssh.view.bootstrap.BootstrapPane {
         Label descLabel = new Label(trigger.getDescription());
         descLabel.getStyleClass().add("trigger-description");
         
-        // Server info
-        Label serverInfo = new Label("Server: Jared Test Server • Last run: 2 hours ago • Runs: 5");
+        Label serverInfo = new Label(describeServers(trigger));
         serverInfo.getStyleClass().add("trigger-server-info");
         
         triggerInfo.getChildren().addAll(titleRow, descLabel, serverInfo);
@@ -257,9 +229,28 @@ public class TriggerController extends com.j_ssh.view.bootstrap.BootstrapPane {
         return sequence;
     }
 
+    private String describeServers(TriggerData trigger) {
+        String names = trigger.getTriggers().keySet().stream()
+                .map(sessionManager::getSession)
+                .filter(server -> server != null)
+                .map(ServerData::getNickname)
+                .distinct()
+                .reduce((left, right) -> left + ", " + right)
+                .orElse("No server");
+        return "Servers: " + names;
+    }
+
     private void loadTriggers() {
         triggersContainer.getChildren().clear();
-        List<TriggerData> triggers = triggerManager.getAllTriggers();
+        String query = searchField == null || searchField.getText() == null
+                ? ""
+                : searchField.getText().trim().toLowerCase();
+        List<TriggerData> triggers = triggerManager.getAllTriggers().stream()
+                .filter(trigger -> query.isEmpty()
+                        || trigger.getName().toLowerCase().contains(query)
+                        || (trigger.getDescription() != null && trigger.getDescription().toLowerCase().contains(query))
+                        || describeServers(trigger).toLowerCase().contains(query))
+                .toList();
         
         // Update trigger count
         triggerCountLabel.setText(triggers.size() + " trigger" + (triggers.size() != 1 ? "s" : ""));
@@ -302,9 +293,7 @@ public class TriggerController extends com.j_ssh.view.bootstrap.BootstrapPane {
     }
     
     private void filterTriggers(String searchText) {
-        // Implementation for filtering triggers based on search text
-        // This would filter the triggers and reload the display
-        loadTriggers(); // For now, just reload all triggers
+        loadTriggers();
     }
     
     private void runTrigger(TriggerData trigger) {
@@ -322,6 +311,7 @@ public class TriggerController extends com.j_ssh.view.bootstrap.BootstrapPane {
         alert.setTitle("Delete Trigger");
         alert.setHeaderText("Are you sure you want to delete this trigger?");
         alert.setContentText("Trigger: " + trigger.getName());
+        MainApp.theme(alert);
         
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
@@ -422,6 +412,7 @@ public class TriggerController extends com.j_ssh.view.bootstrap.BootstrapPane {
 
             getDialogPane().setContent(grid);
             getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+            MainApp.theme(this);
 
             setResultConverter(dialogButton -> {
                 if (dialogButton == ButtonType.OK) {

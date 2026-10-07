@@ -1,20 +1,19 @@
 package com.j_ssh.controller;
 
-import com.j_ssh.api.API;
+import com.j_ssh.main.MainApp;
 import com.j_ssh.model.managers.ActionManager;
 import com.j_ssh.model.objects.ActionData;
-import com.j_ssh.view.bootstrap.BootstrapColumn;
-import com.j_ssh.view.bootstrap.BootstrapPane;
-import com.j_ssh.view.bootstrap.BootstrapRow;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ButtonController extends BootstrapPane {
+public class ButtonController extends BorderPane {
     private VBox actionsContainer;
     private ActionManager actionManager;
     private TextField searchField;
@@ -31,24 +30,11 @@ public class ButtonController extends BootstrapPane {
     }
     
     private void initializeModernComponents() {
-        // Add menu bar for navigation
-        BootstrapRow menuRow = API.get().createToolbox();
-        this.addRow(menuRow);
-        
-        // Create modern header section
-        BootstrapRow headerRow = createModernHeader();
-        
-        // Create actions content area
-        BootstrapRow contentRow = createActionsContent();
-        
-        // Add rows to the main pane
-        this.addRow(headerRow);
-        this.addRow(contentRow);
+        setTop(createModernHeader());
+        setCenter(createActionsContent());
     }
     
-    private BootstrapRow createModernHeader() {
-        BootstrapRow row = new BootstrapRow();
-        
+    private VBox createModernHeader() {
         VBox headerSection = new VBox();
         headerSection.getStyleClass().add("actions-header");
         headerSection.setSpacing(16);
@@ -91,35 +77,23 @@ public class ButtonController extends BootstrapPane {
         HBox.setHgrow(searchActionSection.getChildren().get(2), Priority.ALWAYS);
         
         headerSection.getChildren().addAll(titleSection, searchActionSection);
-        
-        BootstrapColumn headerCol = API.get().createColumn(headerSection, 12);
-        row.addColumn(headerCol);
-        
-        return row;
+        return headerSection;
     }
     
-    private BootstrapRow createActionsContent() {
-        BootstrapRow row = new BootstrapRow();
-        
-        // Create scrollable content area
+    private ScrollPane createActionsContent() {
         ScrollPane scrollPane = new ScrollPane();
-        scrollPane.getStyleClass().add("actions-scroll");
+        scrollPane.getStyleClass().addAll("actions-scroll", "page-scroll");
         scrollPane.setFitToWidth(true);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         
-        // Create actions container
         actionsContainer = new VBox();
         actionsContainer.getStyleClass().add("actions-content");
         actionsContainer.setSpacing(16);
         actionsContainer.setPadding(new Insets(24));
         
         scrollPane.setContent(actionsContainer);
-        
-        BootstrapColumn contentCol = API.get().createColumn(scrollPane, 12);
-        row.addColumn(contentCol);
-        
-        return row;
+        return scrollPane;
     }
     
     private VBox createActionCard(ActionData action) {
@@ -153,12 +127,8 @@ public class ButtonController extends BootstrapPane {
             actionInfo.getChildren().add(nameLabel);
         }
         
-        // Usage badge
-        Label usageBadge = new Label("Used 15 times");
-        usageBadge.getStyleClass().add("action-usage-badge");
-        
-        header.getChildren().addAll(actionIcon, actionInfo, new Region(), usageBadge);
-        HBox.setHgrow(header.getChildren().get(2), Priority.ALWAYS);
+        header.getChildren().addAll(actionIcon, actionInfo);
+        HBox.setHgrow(actionInfo, Priority.ALWAYS);
         
         // Commands section
         VBox commandsSection = createCommandsSection(action);
@@ -232,9 +202,15 @@ public class ButtonController extends BootstrapPane {
     
     private void loadActions() {
         actionsContainer.getChildren().clear();
-        List<ActionData> actions = actionManager.getAllActions();
+        String query = searchField == null || searchField.getText() == null
+                ? ""
+                : searchField.getText().trim().toLowerCase();
+        List<ActionData> actions = actionManager.getAllActions().stream()
+                .filter(action -> query.isEmpty()
+                        || action.getName().toLowerCase().contains(query)
+                        || action.getCommands().stream().anyMatch(command -> command.toLowerCase().contains(query)))
+                .toList();
         
-        // Update action count
         actionCountLabel.setText(actions.size() + " action" + (actions.size() != 1 ? "s" : ""));
         
         if (actions.isEmpty()) {
@@ -288,9 +264,7 @@ public class ButtonController extends BootstrapPane {
     }
     
     private void filterActions(String searchText) {
-        // Implementation for filtering actions based on search text
-        // This would filter the actions and reload the display
-        loadActions(); // For now, just reload all actions
+        loadActions();
     }
     
     private void runAction(ActionData action) {
@@ -308,6 +282,7 @@ public class ButtonController extends BootstrapPane {
         alert.setTitle("Delete Action");
         alert.setHeaderText("Are you sure you want to delete this action?");
         alert.setContentText("Action: " + action.getName());
+        MainApp.theme(alert);
         
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
@@ -324,8 +299,9 @@ public class ButtonController extends BootstrapPane {
             commands.append(command).append("\n");
         }
         
-        // Copy to clipboard (simplified implementation)
-        System.out.println("Copied commands to clipboard:\n" + commands.toString());
+        ClipboardContent content = new ClipboardContent();
+        content.putString(commands.toString().trim());
+        Clipboard.getSystemClipboard().setContent(content);
     }
     
     private void showAddActionDialog() {
@@ -380,9 +356,9 @@ public class ButtonController extends BootstrapPane {
             
             getDialogPane().setContent(form);
             
-            // Add buttons
             ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
             getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+            MainApp.theme(this);
             
             // Set result converter
             setResultConverter(dialogButton -> {

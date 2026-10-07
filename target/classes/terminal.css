@@ -7,14 +7,39 @@
     -fx-spacing: 0;
 }
 
-/* Terminal Tabs Styling */
-#terminal_tabs {
+.terminal-session-tabs {
+    -fx-background-color: #111827;
+    -fx-alignment: center-left;
+}
+
+.session-chip-row {
+    -fx-alignment: center-left;
+    -fx-spacing: 4;
     -fx-background-color: #1f2937;
-    -fx-border-color: #374151;
-    -fx-border-radius: 12px;
-    -fx-background-radius: 12px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 2);
-    -fx-padding: 0;
+    -fx-background-radius: 8;
+    -fx-padding: 2 4 2 2;
+}
+
+.session-chip-row.session-chip-active {
+    -fx-background-color: #8b5cf6;
+}
+
+.session-chip, .session-chip-close {
+    -fx-background-color: transparent;
+    -fx-text-fill: #e5e7eb;
+    -fx-background-radius: 6;
+    -fx-padding: 4 8;
+    -fx-cursor: hand;
+    -fx-font-size: 12px;
+}
+
+.session-chip-close {
+    -fx-padding: 2 6;
+    -fx-font-weight: 700;
+}
+
+.session-chip:hover, .session-chip-close:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.12);
 }
 
 #terminal_tabs .tab-pane .tab-header-area {
@@ -303,40 +328,6 @@
 
 .terminal .scroll-bar .thumb:pressed {
     -fx-background-color: #7c3aed;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .terminal-sidebar {
-        -fx-pref-width: 280px;
-        -fx-min-width: 260px;
-        -fx-padding: 16px;
-    }
-    
-    .terminal-sidebar-title {
-        -fx-font-size: 16px;
-    }
-    
-    .terminal-action-card {
-        -fx-padding: 12px;
-    }
-    
-    .terminal-focus-btn {
-        -fx-padding: 10px 12px;
-    }
-}
-
-/* Animation Transitions */
-.terminal-action-card {
-    -fx-transition: -fx-scale-x 0.2s ease-in-out, 
-                    -fx-scale-y 0.2s ease-in-out,
-                    -fx-background-color 0.2s ease-in-out,
-                    -fx-border-color 0.2s ease-in-out;
-}
-
-.terminal-action-run-btn, .terminal-focus-btn, .terminal-control-btn {
-    -fx-transition: -fx-background-color 0.2s ease-in-out,
-                    -fx-effect 0.2s ease-in-out;
 }
 
 /* Tab Pane Specific Styling */

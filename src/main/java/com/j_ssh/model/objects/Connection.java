@@ -6,6 +6,12 @@ import com.jcraft.jsch.*;
 import lombok.Getter;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class Connection {
     @Getter
@@ -21,9 +27,23 @@ public class Connection {
     private Session session;
     @Getter
     private Channel channel;
-    private PipedOutputStream pipe = new PipedOutputStream();
+    private PipedOutputStream pipe;
     private InputStream in;
-    private ByteArrayOutputStream out;
+    private final BlockingQueue<byte[]> incoming = new LinkedBlockingQueue<>();
+    private final OutputStream remoteOutput = new OutputStream() {
+        @Override
+        public void write(int b) {
+            incoming.offer(new byte[]{(byte) b});
+        }
+
+        @Override
+        public void write(byte[] buffer, int offset, int length) {
+            if (length <= 0) {
+                return;
+            }
+            incoming.offer(Arrays.copyOfRange(buffer, offset, offset + length));
+        }
+    };
     private String error = null;
     public Connection(String username, String host, String password, int port) {
         this.username = username;
@@ -41,6 +61,7 @@ public class Connection {
             session = ssh.getSession(this.username, this.host,22);
             MyUserInfo ui = new MyUserInfo();
             ui.setPassword(this.password);
+            ui.setQuiet(true);
             session.setUserInfo(ui);
             session.setConfig(
                     "PreferredAuthentications", "password,keyboard-interactive");
@@ -90,12 +111,14 @@ public class Connection {
             jsch.setKnownHosts("knownHosts.txt");
             Session session = jsch.getSession(this.username, this.host, this.port);
             session.setPassword(this.password);
+            com.j_ssh.api.MyUserInfo ui = new com.j_ssh.api.MyUserInfo();
+            ui.setPassword(this.password);
+            session.setUserInfo(ui);
             session.connect();
             this.session = session;
 
-            this.pipe = new PipedOutputStream();
-            this.in = new PipedInputStream(this.pipe);
-            this.out = new ByteArrayOutputStream();
+            this.in = new PipedInputStream(65536);
+            this.pipe = new PipedOutputStream((PipedInputStream) this.in);
         } catch (JSchException | IOException e) {
             this.error = e.getMessage();
             AlertHandler.triggerExceptionAlert("Connection Error", "Error Encountered", e);
@@ -106,10 +129,13 @@ public class Connection {
 
     public boolean start() {
         try {
-            this.channel = this.session.openChannel("shell");
-            this.channel.setInputStream(this.in);
-            this.channel.setOutputStream(this.out);
-            this.channel.connect();
+            ChannelShell shell = (ChannelShell) this.session.openChannel("shell");
+            shell.setPtyType("xterm");
+            shell.setPtySize(120, 40, 800, 600);
+            shell.setInputStream(this.in);
+            shell.setOutputStream(this.remoteOutput);
+            shell.connect();
+            this.channel = shell;
         } catch (JSchException e) {
             this.error = e.getMessage();
             AlertHandler.triggerExceptionAlert("Connection Error", "Error Encountered", e);
@@ -120,13 +146,41 @@ public class Connection {
 
     public boolean sendCommand(String cmd) {
         try {
-            this.pipe.write((cmd).getBytes());
+            synchronized (this.pipe) {
+                this.pipe.write(cmd.getBytes(StandardCharsets.UTF_8));
+                this.pipe.flush();
+            }
         } catch (IOException e) {
             this.error = e.getMessage();
             AlertHandler.triggerExceptionAlert("Connection Error", "Error Encountered", e);
             return false;
         }
         return true;
+    }
+
+    /**
+     * Blocks until the server sends something, then returns that data plus anything
+     * already queued behind it.
+     */
+    public byte[] readIncoming() throws InterruptedException {
+        byte[] first = incoming.take();
+        if (incoming.isEmpty()) {
+            return first;
+        }
+        List<byte[]> chunks = new ArrayList<>();
+        chunks.add(first);
+        incoming.drainTo(chunks);
+        int size = 0;
+        for (byte[] chunk : chunks) {
+            size += chunk.length;
+        }
+        byte[] merged = new byte[size];
+        int offset = 0;
+        for (byte[] chunk : chunks) {
+            System.arraycopy(chunk, 0, merged, offset, chunk.length);
+            offset += chunk.length;
+        }
+        return merged;
     }
 
     public void disconnect() {
@@ -147,9 +201,6 @@ public class Connection {
 
     public InputStream getInputStream() {
         return this.in;
-    }
-    public ByteArrayOutputStream getOutputStream() {
-        return this.out;
     }
     private static class MyLogger implements com.jcraft.jsch.Logger {
         static java.util.Hashtable<Integer, String> name = new java.util.Hashtable<>();

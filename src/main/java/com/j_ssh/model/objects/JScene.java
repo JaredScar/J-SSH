@@ -7,5 +7,6 @@ public enum JScene {
     LOADING,
     ACTIONS,
     SESSIONS,
-    TRIGGERS
+    TRIGGERS,
+    HELP
 }

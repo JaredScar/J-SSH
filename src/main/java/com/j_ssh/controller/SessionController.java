@@ -1,6 +1,5 @@
 package com.j_ssh.controller;
 
-import com.j_ssh.api.API;
 import com.j_ssh.components.TerminalTabComponent;
 import com.j_ssh.main.MainApp;
 import com.j_ssh.model.managers.AsyncManager;
@@ -9,7 +8,6 @@ import com.j_ssh.model.managers.SessionManager;
 import com.j_ssh.model.objects.Connection;
 import com.j_ssh.model.objects.JScene;
 import com.j_ssh.model.objects.ServerData;
-import com.j_ssh.view.bootstrap.BootstrapRow;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,7 +20,7 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SessionController extends com.j_ssh.view.bootstrap.BootstrapPane {
+public class SessionController extends BorderPane {
     private FlowPane sessionsGrid;
     private SessionManager sessionManager;
     private ConnectionManager connectionManager;
@@ -39,27 +37,12 @@ public class SessionController extends com.j_ssh.view.bootstrap.BootstrapPane {
     }
 
     private void initializeComponents() {
-        // Add menu bar for navigation
-        BootstrapRow menuRow = API.get().createToolbox();
-        this.addRow(menuRow);
-
-        // Create header section
-        BootstrapRow headerRow = createHeaderSection();
-
-        // Create sessions grid
-        BootstrapRow gridRow = createSessionsGrid();
-
-        // Add rows to the main pane
-        this.addRow(headerRow);
-        this.addRow(gridRow);
-        
-        // Apply modern styling
         this.getStyleClass().add("sessions-container");
+        setTop(createHeaderSection());
+        setCenter(createSessionsGrid());
     }
 
-    private BootstrapRow createHeaderSection() {
-        BootstrapRow row = new BootstrapRow();
-        
+    private VBox createHeaderSection() {
         VBox headerContainer = new VBox();
         headerContainer.getStyleClass().add("sessions-header");
         headerContainer.setSpacing(20);
@@ -102,29 +85,24 @@ public class SessionController extends com.j_ssh.view.bootstrap.BootstrapPane {
         HBox.setHgrow(actionBar.getChildren().get(2), Priority.ALWAYS);
         
         headerContainer.getChildren().addAll(titleSection, actionBar);
-        
-        row.addColumn(API.get().createColumn(headerContainer, 12));
-        return row;
+        return headerContainer;
     }
 
-    private BootstrapRow createSessionsGrid() {
-        BootstrapRow row = new BootstrapRow();
-        
-        VBox gridContainer = new VBox();
-        gridContainer.getStyleClass().add("sessions-grid-container");
-        gridContainer.setPadding(new Insets(24));
-        
-        // Create sessions grid
+    private ScrollPane createSessionsGrid() {
         sessionsGrid = new FlowPane();
         sessionsGrid.getStyleClass().add("sessions-grid");
-        sessionsGrid.setHgap(20);
-        sessionsGrid.setVgap(20);
-        sessionsGrid.setPrefWrapLength(0);
-        
-        gridContainer.getChildren().add(sessionsGrid);
-        
-        row.addColumn(API.get().createColumn(gridContainer, 12));
-        return row;
+        sessionsGrid.setHgap(16);
+        sessionsGrid.setVgap(16);
+        sessionsGrid.setPadding(new Insets(24));
+
+        ScrollPane scroll = new ScrollPane(sessionsGrid);
+        scroll.setFitToWidth(true);
+        scroll.getStyleClass().add("page-scroll");
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scroll.viewportBoundsProperty().addListener((obs, oldBounds, bounds) ->
+                sessionsGrid.setPrefWrapLength(Math.max(280, bounds.getWidth() - 8)));
+        return scroll;
     }
 
     private void loadSessions() {
@@ -247,25 +225,6 @@ public class SessionController extends com.j_ssh.view.bootstrap.BootstrapPane {
         header.getChildren().addAll(iconContainer, sessionInfo, new Region(), statusContainer);
         HBox.setHgrow(header.getChildren().get(2), Priority.ALWAYS);
         
-        // Connection details
-        VBox details = new VBox();
-        details.setSpacing(8);
-        details.getStyleClass().add("session-details");
-        
-        HBox lastUsedRow = new HBox();
-        lastUsedRow.setAlignment(Pos.CENTER_LEFT);
-        lastUsedRow.setSpacing(8);
-        
-        Label clockIcon = new Label("🕒");
-        clockIcon.getStyleClass().add("session-detail-icon");
-        
-        Label lastUsedLabel = new Label("Last used: 2 hours ago"); // Mock data
-        lastUsedLabel.getStyleClass().add("session-detail-text");
-        
-        lastUsedRow.getChildren().addAll(clockIcon, lastUsedLabel);
-        
-        details.getChildren().add(lastUsedRow);
-        
         // Action buttons
         HBox actions = new HBox();
         actions.setSpacing(8);
@@ -291,7 +250,7 @@ public class SessionController extends com.j_ssh.view.bootstrap.BootstrapPane {
         actions.getChildren().addAll(connectButton, new Region(), editButton, deleteButton);
         HBox.setHgrow(actions.getChildren().get(1), Priority.ALWAYS);
         
-        card.getChildren().addAll(header, details, actions);
+        card.getChildren().addAll(header, actions);
         
         return card;
     }
@@ -415,6 +374,7 @@ public class SessionController extends com.j_ssh.view.bootstrap.BootstrapPane {
                         alert.setTitle("Connection Failed");
                         alert.setHeaderText("Failed to connect to " + session.getNickname());
                         alert.setContentText(connection.error() != null ? connection.error() : "Unknown connection error");
+                        MainApp.theme(alert);
                         alert.showAndWait();
                     });
                 }
@@ -486,6 +446,7 @@ public class SessionController extends com.j_ssh.view.bootstrap.BootstrapPane {
         alert.setTitle("Delete Session");
         alert.setHeaderText("Are you sure you want to delete this session?");
         alert.setContentText("Session: " + session.getNickname() + " (" + session.getIp() + ")");
+        MainApp.theme(alert);
         
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
@@ -517,6 +478,7 @@ public class SessionController extends com.j_ssh.view.bootstrap.BootstrapPane {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
+        MainApp.theme(alert);
         alert.showAndWait();
     }
 
@@ -569,6 +531,7 @@ public class SessionController extends com.j_ssh.view.bootstrap.BootstrapPane {
 
             getDialogPane().setContent(formContainer);
             getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+            MainApp.theme(this);
             
             // Style the dialog buttons
             getDialogPane().getStyleClass().add("session-dialog-pane");

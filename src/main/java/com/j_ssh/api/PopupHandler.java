@@ -58,47 +58,9 @@ public class PopupHandler {
         result.ifPresent(buttonType -> resultCallback.accept(buttonType == ButtonType.OK));
     }
     public static void triggerAboutPopup() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("About J-SSH");
-        alert.setHeaderText("About J-SSH");
-        alert.setContentText("A simple SSH application that supports running commands via actions. With this SSH application, you can save SSH sessions, credentials, and create actions (multiple commands) to perform on SSH servers. Actions can be nicknamed then added to the right sidebar of the application window. Clicking on the action will perform said action. Perform multiple commands on multiple servers with 1 single click of an action button.");
-
-        alert.showAndWait();
+        com.j_ssh.main.MainApp.get().changeScene(com.j_ssh.model.objects.JScene.SETTINGS);
     }
     public static void triggerHelpPopup() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("J-SSH Help");
-        alert.setHeaderText("J-SSH User Guide");
-        
-        StringBuilder helpText = new StringBuilder();
-        helpText.append("Welcome to J-SSH! Here's how to use the application:\n\n");
-        
-        helpText.append("📋 SESSIONS:\n");
-        helpText.append("• Create New Session: Add SSH server connections with credentials\n");
-        helpText.append("• Edit Sessions: Modify existing server configurations\n");
-        helpText.append("• Open Session: Connect to a server and open terminal\n\n");
-        
-        helpText.append("⚡ ACTIONS:\n");
-        helpText.append("• Create New Action: Define command sequences to execute\n");
-        helpText.append("• Edit Actions: Modify existing command sequences\n");
-        helpText.append("• Trigger Action: Execute actions on connected terminals\n\n");
-        
-        helpText.append("🔗 TRIGGERS:\n");
-        helpText.append("• Create New Trigger: Set up automated actions across multiple servers\n");
-        helpText.append("• Edit Triggers: Modify trigger configurations\n");
-        helpText.append("• Trigger Action: Execute triggers manually\n\n");
-        
-        helpText.append("💡 TIPS:\n");
-        helpText.append("• Use the action buttons in the terminal sidebar for quick command execution\n");
-        helpText.append("• Actions can contain multiple commands that execute sequentially\n");
-        helpText.append("• Triggers allow you to run the same action on multiple servers simultaneously\n");
-        helpText.append("• All data is automatically saved to data.json\n\n");
-        
-        helpText.append("🆘 SUPPORT:\n");
-        helpText.append("For additional help, check the About section or contact support.");
-        
-        alert.setContentText(helpText.toString());
-        alert.getDialogPane().setPrefWidth(600);
-        alert.showAndWait();
+        com.j_ssh.main.MainApp.get().changeScene(com.j_ssh.model.objects.JScene.HELP);
     }
 }
