@@ -59,6 +59,9 @@ public class MyUserInfo implements UserInfo, UIKeyboardInteractive {
 
     @Override
     public String[] promptKeyboardInteractive(String destination, String name, String instruction, String[] prompt, boolean[] echo) {
+        if (passwd != null && prompt != null && prompt.length == 1) {
+            return new String[]{passwd};
+        }
         return showKeyboardInteractiveDialog(destination, name, instruction, prompt, echo);
     }
 
