@@ -26,6 +26,7 @@ public class MainApp extends Application {
     @Getter
     private Stage primaryStage;
 
+    @Getter
     private AppShell appShell;
     private Scene mainScene;
 
@@ -86,15 +87,7 @@ public class MainApp extends Application {
         StackPane windowRoot = new StackPane(appShell);
         appShell.attachOverlayHost(windowRoot);
         this.mainScene = new Scene(windowRoot);
-        addStylesheet("/shell.css");
-        addStylesheet("/sessions.css");
-        addStylesheet("/actions.css");
-        addStylesheet("/triggers.css");
-        addStylesheet("/terminal.css");
-        addStylesheet("/settings.css");
-        addStylesheet("/loading.css");
-        addStylesheet("/dashboard.css");
-        addStylesheet("/theme.css");
+        addStylesheet("/app.css");
 
         primaryStage.setScene(mainScene);
         primaryStage.setMinWidth(1020);
@@ -118,12 +111,6 @@ public class MainApp extends Application {
         dialog.getDialogPane().getStylesheets().setAll(main.primaryStage.getScene().getStylesheets());
         if (!dialog.getDialogPane().getStyleClass().contains("jssh-dialog")) {
             dialog.getDialogPane().getStyleClass().add("jssh-dialog");
-        }
-    }
-
-    public void setTerminalEnabled(boolean enabled) {
-        if (appShell != null) {
-            appShell.setTerminalEnabled(enabled);
         }
     }
 
@@ -167,7 +154,6 @@ public class MainApp extends Application {
                 terminalController.refreshActions();
                 appShell.showPage(terminalController);
                 appShell.setActive(JScene.TERMINAL);
-                appShell.setTerminalEnabled(true);
                 break;
             case SETTINGS:
                 appShell.setLoading(false);

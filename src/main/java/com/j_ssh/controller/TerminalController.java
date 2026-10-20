@@ -5,83 +5,169 @@ import com.j_ssh.main.MainApp;
 import com.j_ssh.model.managers.ActionManager;
 import com.j_ssh.model.managers.ConnectionManager;
 import com.j_ssh.model.objects.ActionData;
-import javafx.geometry.Insets;
+import com.j_ssh.model.objects.Connection;
+import com.j_ssh.model.objects.JScene;
+import com.j_ssh.view.UiKit;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The terminal page. Every open SSH terminal also gets a row in the sidebar (see
+ * {@link com.j_ssh.view.AppShell#getTerminalTabs()}); double-click a row to rename it.
+ */
 public class TerminalController extends BorderPane {
+    private static final String NAME_KEY = "sessionName";
+    private static final String ROW_KEY = "sidebarRow";
+    private static final String LABEL_KEY = "sidebarLabel";
+    private static final String HOST_KEY = "sidebarNameHost";
+    private static final int MAX_NAME_LENGTH = 40;
+
     private final StackPane terminalHost = new StackPane();
-    private final HBox sessionTabs = new HBox(8);
     private final List<TerminalTabComponent> openTerminals = new ArrayList<>();
-    private TerminalTabComponent activeTerminal;
-    private VBox actionButtonsPanel;
-    private VBox actionsContainer;
     private final ActionManager actionManager;
-    private Label sessionInfoLabel;
-    private Label statusBadge;
-    private Button closeSessionButton;
-    private final VBox emptyState = new VBox();
-    
+    private final VBox emptyState;
+    private final Label nameLabel = new Label("No session selected");
+    private final Label addressLabel = new Label();
+    private final Label statusDot = new Label("\u25CF");
+    private Button clearButton;
+    private Button disconnectButton;
+    private VBox actionsContainer;
+    private TerminalTabComponent activeTerminal;
+
     public TerminalController() {
         this.actionManager = ActionManager.get();
-        this.getStyleClass().add("terminal-container");
-        this.terminalHost.setStyle("-fx-background-color: #080b12;");
-        this.terminalHost.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        this.terminalHost.setMinSize(0, 0);
-        this.sessionTabs.getStyleClass().add("terminal-session-tabs");
-        this.sessionTabs.setPadding(new Insets(8, 12, 0, 12));
+        getStyleClass().add("terminal-container");
 
+        terminalHost.getStyleClass().add("terminal-host");
+        terminalHost.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        terminalHost.setMinSize(0, 0);
+
+        Button toSessions = UiKit.button("Go to Sessions", null, "btn-secondary");
+        toSessions.setOnAction(event -> MainApp.get().changeScene(JScene.SESSIONS));
+        emptyState = UiKit.emptyState(UiKit.PROMPT, "No active session",
+                "Connect from Sessions to open a terminal.", toSessions);
         emptyState.getStyleClass().add("terminal-empty");
-        emptyState.setAlignment(Pos.CENTER);
-        Label emptyTitle = new Label("No active session");
-        emptyTitle.getStyleClass().add("terminal-empty-title");
-        Label emptyText = new Label("Connect from Sessions to open a terminal");
-        emptyText.getStyleClass().add("terminal-empty-text");
-        emptyState.getChildren().addAll(emptyTitle, emptyText);
 
-        StackPane terminalBody = new StackPane(terminalHost, emptyState);
-        terminalBody.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        VBox.setVgrow(terminalBody, Priority.ALWAYS);
-        VBox terminalColumn = new VBox(createChrome(), sessionTabs, terminalBody);
-        terminalColumn.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        VBox.setVgrow(terminalBody, Priority.ALWAYS);
-        setCenter(terminalColumn);
+        StackPane body = new StackPane(terminalHost, emptyState);
+        body.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        VBox column = new VBox(createHeader(), body);
+        VBox.setVgrow(body, Priority.ALWAYS);
+        column.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        setCenter(column);
+        setRight(createQuickActions());
         setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-
-        createModernActionButtonsPanel();
-        setRight(actionButtonsPanel);
         refreshEmptyState();
     }
 
-    private HBox createChrome() {
-        HBox bar = new HBox(10);
-        bar.getStyleClass().add("terminal-chrome");
-        bar.setAlignment(Pos.CENTER_LEFT);
+    // ---------------------------------------------------------------- layout
 
-        closeSessionButton = new Button();
-        closeSessionButton.getStyleClass().add("terminal-close-dot");
-        closeSessionButton.setTooltip(new Tooltip("Close this terminal"));
-        closeSessionButton.setDisable(true);
-        closeSessionButton.setOnAction(event -> {
+    private HBox createHeader() {
+        statusDot.getStyleClass().addAll("status-dot", "dot-on");
+        nameLabel.getStyleClass().add("terminal-name");
+        addressLabel.getStyleClass().add("terminal-address");
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        clearButton = UiKit.button("Clear", UiKit.ERASER, "btn-ghost");
+        clearButton.setOnAction(event -> {
+            if (activeTerminal != null) {
+                activeTerminal.clearScreen();
+            }
+        });
+        disconnectButton = UiKit.button("Disconnect", UiKit.POWER, "btn-ghost");
+        disconnectButton.setOnAction(event -> {
             if (activeTerminal != null) {
                 closeTerminal(activeTerminal);
             }
         });
 
-        Label title = new Label("Terminal");
-        title.getStyleClass().add("terminal-chrome-title");
-        sessionInfoLabel = new Label("No session selected");
-        sessionInfoLabel.getStyleClass().add("terminal-session-label");
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-        statusBadge = new Label("Disconnected");
-        statusBadge.getStyleClass().add("terminal-badge");
-        bar.getChildren().addAll(closeSessionButton, title, sessionInfoLabel, spacer, statusBadge);
+        HBox bar = new HBox(10, statusDot, nameLabel, addressLabel, spacer, clearButton, disconnectButton);
+        bar.getStyleClass().add("terminal-chrome");
+        bar.setAlignment(Pos.CENTER_LEFT);
         return bar;
+    }
+
+    private VBox createQuickActions() {
+        Label title = new Label("Quick actions");
+        title.getStyleClass().add("quick-title");
+
+        actionsContainer = new VBox();
+        ScrollPane scroll = new ScrollPane(actionsContainer);
+        scroll.setFitToWidth(true);
+        scroll.getStyleClass().add("page-scroll");
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        VBox.setVgrow(scroll, Priority.ALWAYS);
+
+        VBox panel = new VBox(title, scroll);
+        panel.getStyleClass().add("quick-panel");
+        panel.setPrefWidth(260);
+        panel.setMinWidth(240);
+        panel.setMaxWidth(280);
+        loadQuickActions();
+        return panel;
+    }
+
+    public void refreshActions() {
+        if (actionsContainer != null) {
+            loadQuickActions();
+        }
+    }
+
+    private void loadQuickActions() {
+        actionsContainer.getChildren().clear();
+        List<ActionData> actions = actionManager.getAllActions();
+        if (actions.isEmpty()) {
+            Label none = new Label("No actions yet. Create one on the Actions page.");
+            none.getStyleClass().add("quick-empty");
+            none.setWrapText(true);
+            actionsContainer.getChildren().add(none);
+            return;
+        }
+        for (ActionData action : actions) {
+            actionsContainer.getChildren().add(createQuickRow(action));
+        }
+    }
+
+    private HBox createQuickRow(ActionData action) {
+        Label name = new Label(action.getName());
+        name.getStyleClass().add("quick-name");
+        Label detail = new Label(action.getCommands().size() == 1
+                ? "1 command" : action.getCommands().size() + " commands");
+        detail.getStyleClass().add("quick-desc");
+        VBox text = new VBox(2, name, detail);
+        HBox.setHgrow(text, Priority.ALWAYS);
+
+        Label play = UiKit.icon(UiKit.PLAY);
+        play.getStyleClass().add("quick-play");
+
+        HBox row = new HBox(8, text, play);
+        row.getStyleClass().add("quick-row");
+        row.setAlignment(Pos.CENTER_LEFT);
+        row.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.PRIMARY) {
+                runAction(action);
+            }
+        });
+        return row;
     }
 
     private void refreshEmptyState() {
@@ -90,181 +176,167 @@ public class TerminalController extends BorderPane {
         emptyState.setManaged(!hasTabs);
         terminalHost.setVisible(hasTabs);
         terminalHost.setManaged(hasTabs);
-        sessionTabs.setVisible(hasTabs);
-        sessionTabs.setManaged(hasTabs);
-        if (closeSessionButton != null) {
-            closeSessionButton.setDisable(!hasTabs);
-        }
+        statusDot.setVisible(hasTabs);
+        clearButton.setDisable(!hasTabs);
+        disconnectButton.setDisable(!hasTabs);
         if (!hasTabs) {
-            sessionInfoLabel.setText("No session selected");
-            statusBadge.setText("Disconnected");
-            statusBadge.getStyleClass().remove("badge-live");
+            nameLabel.setText("No session selected");
+            addressLabel.setText("");
         }
     }
 
-    public void refreshActions() {
-        if (actionsContainer != null) {
-            loadModernActionButtons(actionsContainer);
-        }
-    }
-    
-    private void createModernActionButtonsPanel() {
-        actionButtonsPanel = new VBox();
-        actionButtonsPanel.getStyleClass().add("terminal-sidebar");
-        actionButtonsPanel.setSpacing(16);
-        actionButtonsPanel.setPadding(new Insets(24));
-        actionButtonsPanel.setPrefWidth(320);
-        actionButtonsPanel.setMinWidth(300);
-        
-        // Header section
-        VBox headerSection = new VBox();
-        headerSection.setSpacing(8);
-        
-        Label titleLabel = new Label("Quick Actions");
-        titleLabel.getStyleClass().add("terminal-sidebar-title");
-        
-        Label subtitleLabel = new Label("Run predefined commands");
-        subtitleLabel.getStyleClass().add("terminal-sidebar-subtitle");
-        
-        headerSection.getChildren().addAll(titleLabel, subtitleLabel);
-        
-        // Actions container
-        actionsContainer = new VBox();
-        actionsContainer.setSpacing(12);
-        actionsContainer.getStyleClass().add("terminal-actions-container");
-        
-        // Load and add action buttons
-        loadModernActionButtons(actionsContainer);
-        
-        Button focusTerminalButton = new Button("Focus Terminal");
-        focusTerminalButton.getStyleClass().add("terminal-focus-btn");
-        focusTerminalButton.setMaxWidth(Double.MAX_VALUE);
-        focusTerminalButton.setOnAction(e -> focusCurrentTerminal());
-        
-        ScrollPane actionScroll = new ScrollPane(actionsContainer);
-        actionScroll.setFitToWidth(true);
-        actionScroll.getStyleClass().add("page-scroll");
-        actionScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        VBox.setVgrow(actionScroll, Priority.ALWAYS);
+    // ------------------------------------------------------- tabs / sessions
 
-        actionButtonsPanel.getChildren().addAll(headerSection, actionScroll, focusTerminalButton);
-    }
-    
-    private void loadModernActionButtons(VBox actionsContainer) {
-        // Clear existing buttons
-        actionsContainer.getChildren().clear();
-        
-        // Load actions and create modern action cards
-        List<ActionData> actions = actionManager.getAllActions();
-        if (actions.isEmpty()) {
-            // Show empty state
-            VBox emptyState = new VBox();
-            emptyState.setAlignment(Pos.CENTER);
-            emptyState.setSpacing(12);
-            emptyState.getStyleClass().add("terminal-empty-actions");
-            
-            Label emptyIcon = new Label("\uE945");
-            emptyIcon.getStyleClass().add("terminal-empty-icon");
-            
-            Label emptyText = new Label("No actions available");
-            emptyText.getStyleClass().add("terminal-empty-text");
-            
-            emptyState.getChildren().addAll(emptyIcon, emptyText);
-            actionsContainer.getChildren().add(emptyState);
-        } else {
-            for (ActionData action : actions) {
-                VBox actionCard = createModernActionCard(action);
-                actionsContainer.getChildren().add(actionCard);
-            }
-        }
-    }
-    
-    private VBox createModernActionCard(ActionData action) {
-        VBox card = new VBox();
-        card.getStyleClass().add("terminal-action-card");
-        card.setSpacing(8);
-        
-        // Card header
-        HBox header = new HBox();
-        header.setAlignment(Pos.CENTER_LEFT);
-        header.setSpacing(8);
-        
-        Label nameLabel = new Label(action.getName());
-        nameLabel.getStyleClass().add("terminal-action-name");
-        
-        Label descLabel = new Label("Action: " + action.getCommands().size() + " command(s)");
-        descLabel.getStyleClass().add("terminal-action-desc");
-        
-        // Run button
-        Button runButton = new Button("\uE768");
-        runButton.getStyleClass().add("terminal-action-run-btn");
-        runButton.setOnAction(e -> executeActionOnCurrentTerminal(action));
-        
-        header.getChildren().addAll(nameLabel, new Region(), runButton);
-        HBox.setHgrow(header.getChildren().get(1), Priority.ALWAYS);
-        
-        card.getChildren().addAll(header, descLabel);
-        
-        return card;
-    }
-    
-    private void focusCurrentTerminal() {
-        if (activeTerminal != null) {
-            activeTerminal.requestFocus();
-        }
-    }
-    
-    private void executeActionOnCurrentTerminal(ActionData action) {
-        if (activeTerminal != null) {
-            actionManager.executeAction(action, activeTerminal);
-        } else {
-            // Show alert if no terminal is selected
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("No Terminal Selected");
-            alert.setHeaderText(null);
-            alert.setContentText("Please select a terminal tab to execute the action.");
-            MainApp.theme(alert);
-            alert.showAndWait();
-        }
-    }
     public void addTerminalTab(TerminalTabComponent tab) {
         String nickname = tab.getNickname() == null || tab.getNickname().isBlank()
-                ? "Terminal"
-                : tab.getNickname();
-        String uniqueName = nickname;
-        int count = 2;
-        for (TerminalTabComponent existing : openTerminals) {
-            Object existingName = existing.getProperties().get("sessionName");
-            if (uniqueName.equals(existingName)) {
-                uniqueName = nickname + " (" + count + ")";
-                count++;
-            }
-        }
-        final String sessionName = uniqueName;
-        tab.getProperties().put("sessionName", sessionName);
+                ? "Terminal" : tab.getNickname();
+        String sessionName = uniqueName(nickname, null);
+        tab.getProperties().put(NAME_KEY, sessionName);
         tab.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         openTerminals.add(tab);
         terminalHost.getChildren().add(tab);
 
-        Button chip = new Button(sessionName);
-        chip.getStyleClass().add("session-chip");
-        chip.setOnAction(event -> showTerminal(tab));
-        Button close = new Button("\uE711");
-        close.getStyleClass().add("session-chip-close");
-        close.setOnAction(event -> closeTerminal(tab));
-        HBox chipRow = new HBox(4, chip, close);
-        chipRow.setAlignment(Pos.CENTER_LEFT);
-        chipRow.getStyleClass().add("session-chip-row");
-        tab.getProperties().put("chip", chipRow);
-        sessionTabs.getChildren().add(chipRow);
+        HBox row = createSidebarRow(tab, sessionName);
+        tab.getProperties().put(ROW_KEY, row);
+        MainApp.get().getAppShell().getTerminalTabs().getChildren().add(row);
 
         showTerminal(tab);
-        statusBadge.setText("Connected");
-        if (!statusBadge.getStyleClass().contains("badge-live")) {
-            statusBadge.getStyleClass().add("badge-live");
-        }
         refreshEmptyState();
-        MainApp.get().setTerminalEnabled(true);
+    }
+
+    private String uniqueName(String wanted, TerminalTabComponent ignore) {
+        String candidate = wanted;
+        int count = 2;
+        while (nameTaken(candidate, ignore)) {
+            candidate = wanted + " (" + count + ")";
+            count++;
+        }
+        return candidate;
+    }
+
+    private boolean nameTaken(String name, TerminalTabComponent ignore) {
+        for (TerminalTabComponent open : openTerminals) {
+            if (open != ignore && name.equals(open.getProperties().get(NAME_KEY))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private HBox createSidebarRow(TerminalTabComponent tab, String name) {
+        Label dot = new Label("\u25CF");
+        dot.getStyleClass().add("term-dot");
+
+        Label label = new Label(name);
+        label.getStyleClass().add("term-name");
+        label.setMaxWidth(Double.MAX_VALUE);
+        StackPane nameHost = new StackPane(label);
+        nameHost.setAlignment(Pos.CENTER_LEFT);
+        HBox.setHgrow(nameHost, Priority.ALWAYS);
+
+        Button close = UiKit.iconButton(UiKit.CLOSE, "Close terminal");
+        close.getStyleClass().add("term-tab-close");
+        close.setOnAction(event -> closeTerminal(tab));
+
+        HBox row = new HBox(8, dot, nameHost, close);
+        row.getStyleClass().add("term-tab");
+        row.setAlignment(Pos.CENTER_LEFT);
+        Tooltip.install(row, new Tooltip("Double-click to rename"));
+
+        row.setOnMouseClicked(event -> {
+            if (event.getButton() != MouseButton.PRIMARY) {
+                return;
+            }
+            if (event.getClickCount() >= 2) {
+                beginRename(tab);
+            } else {
+                showTerminal(tab);
+                MainApp.get().changeScene(JScene.TERMINAL);
+            }
+        });
+
+        ContextMenu menu = new ContextMenu(
+                UiKit.menuItem("Rename", () -> beginRename(tab)),
+                UiKit.menuItem("Close terminal", () -> closeTerminal(tab)));
+        row.setOnContextMenuRequested(event -> {
+            menu.show(row, event.getScreenX(), event.getScreenY());
+            event.consume();
+        });
+
+        tab.getProperties().put(LABEL_KEY, label);
+        tab.getProperties().put(HOST_KEY, nameHost);
+        return row;
+    }
+
+    private void beginRename(TerminalTabComponent tab) {
+        Object labelObject = tab.getProperties().get(LABEL_KEY);
+        Object hostObject = tab.getProperties().get(HOST_KEY);
+        if (!(labelObject instanceof Label label) || !(hostObject instanceof StackPane host)) {
+            return;
+        }
+        if (host.getChildren().size() == 1 && host.getChildren().get(0) instanceof TextField) {
+            return;
+        }
+
+        TextField field = new TextField(label.getText());
+        field.getStyleClass().add("term-rename-field");
+        field.setMaxWidth(Double.MAX_VALUE);
+        boolean[] finished = {false};
+
+        Runnable commit = () -> {
+            if (finished[0]) {
+                return;
+            }
+            finished[0] = true;
+            applyRename(tab, field.getText());
+            host.getChildren().setAll(label);
+        };
+        Runnable cancel = () -> {
+            if (finished[0]) {
+                return;
+            }
+            finished[0] = true;
+            host.getChildren().setAll(label);
+        };
+
+        field.setOnAction(event -> commit.run());
+        field.focusedProperty().addListener((obs, was, focused) -> {
+            if (!focused) {
+                commit.run();
+            }
+        });
+        field.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                cancel.run();
+                event.consume();
+            }
+        });
+
+        host.getChildren().setAll(field);
+        Platform.runLater(() -> {
+            field.requestFocus();
+            field.selectAll();
+        });
+    }
+
+    private void applyRename(TerminalTabComponent tab, String requested) {
+        String trimmed = requested == null ? "" : requested.trim();
+        if (trimmed.isEmpty()) {
+            return;
+        }
+        if (trimmed.length() > MAX_NAME_LENGTH) {
+            trimmed = trimmed.substring(0, MAX_NAME_LENGTH).trim();
+        }
+        String finalName = uniqueName(trimmed, tab);
+        tab.getProperties().put(NAME_KEY, finalName);
+        Object labelObject = tab.getProperties().get(LABEL_KEY);
+        if (labelObject instanceof Label label) {
+            label.setText(finalName);
+        }
+        if (tab == activeTerminal) {
+            nameLabel.setText(finalName);
+            MainApp.get().getAppShell().setConnectionSummary(finalName, addressLabel.getText());
+        }
     }
 
     private void showTerminal(TerminalTabComponent tab) {
@@ -273,17 +345,22 @@ public class TerminalController extends BorderPane {
             boolean selected = open == tab;
             open.setVisible(selected);
             open.setManaged(selected);
-            Object chip = open.getProperties().get("chip");
-            if (chip instanceof HBox row) {
-                if (selected && !row.getStyleClass().contains("session-chip-active")) {
-                    row.getStyleClass().add("session-chip-active");
+            Object row = open.getProperties().get(ROW_KEY);
+            if (row instanceof HBox box) {
+                if (selected && !box.getStyleClass().contains("term-tab-active")) {
+                    box.getStyleClass().add("term-tab-active");
                 } else if (!selected) {
-                    row.getStyleClass().remove("session-chip-active");
+                    box.getStyleClass().remove("term-tab-active");
                 }
             }
         }
-        Object name = tab.getProperties().get("sessionName");
-        sessionInfoLabel.setText(name == null ? "Terminal" : name.toString());
+        Object name = tab.getProperties().get(NAME_KEY);
+        String shownName = name == null ? "Terminal" : name.toString();
+        Connection connection = tab.getConnection();
+        String address = connection == null ? "" : connection.getUsername() + "@" + connection.getHost();
+        nameLabel.setText(shownName);
+        addressLabel.setText(address);
+        MainApp.get().getAppShell().setConnectionSummary(shownName, address);
     }
 
     private void closeTerminal(TerminalTabComponent tab) {
@@ -291,21 +368,89 @@ public class TerminalController extends BorderPane {
         tab.close();
         openTerminals.remove(tab);
         terminalHost.getChildren().remove(tab);
-        Object chip = tab.getProperties().get("chip");
-        if (chip instanceof HBox row) {
-            sessionTabs.getChildren().remove(row);
+        Object row = tab.getProperties().get(ROW_KEY);
+        if (row instanceof HBox box) {
+            MainApp.get().getAppShell().getTerminalTabs().getChildren().remove(box);
         }
+        boolean wasShowing = getScene() != null;
         if (openTerminals.isEmpty()) {
             activeTerminal = null;
-            MainApp.get().setTerminalEnabled(false);
+            MainApp.get().getAppShell().setConnectionSummary(null, null);
             refreshEmptyState();
-            MainApp.get().changeScene(com.j_ssh.model.objects.JScene.SESSIONS);
+            if (wasShowing) {
+                MainApp.get().changeScene(JScene.SESSIONS);
+            }
         } else {
             showTerminal(openTerminals.get(openTerminals.size() - 1));
             refreshEmptyState();
         }
     }
+
     public void closeTerminalTab(TerminalTabComponent tab) {
         tab.close();
+    }
+
+    // ------------------------------------------- helpers for the other pages
+
+    public boolean hasActiveTerminal() {
+        return activeTerminal != null;
+    }
+
+    private TerminalTabComponent findTab(Connection connection) {
+        for (TerminalTabComponent open : openTerminals) {
+            if (open.getConnection() == connection) {
+                return open;
+            }
+        }
+        return null;
+    }
+
+    /** Brings the terminal that belongs to this connection to the front. */
+    public void focusConnection(Connection connection) {
+        TerminalTabComponent tab = findTab(connection);
+        if (tab != null) {
+            showTerminal(tab);
+        }
+        MainApp.get().changeScene(JScene.TERMINAL);
+    }
+
+    /** Closes the terminal that belongs to this connection (or just drops the link if none). */
+    public void closeConnection(Connection connection) {
+        TerminalTabComponent tab = findTab(connection);
+        if (tab != null) {
+            closeTerminal(tab);
+        } else if (connection != null && connection.isConnected()) {
+            connection.disconnect();
+        }
+    }
+
+    /** Runs an action in the terminal that is currently selected. */
+    public void runAction(ActionData action) {
+        if (activeTerminal == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("No terminal open");
+            alert.setHeaderText("No terminal open");
+            alert.setContentText("Connect to a session first, then run the action.");
+            MainApp.theme(alert);
+            alert.showAndWait();
+            return;
+        }
+        dispatch(action, activeTerminal);
+    }
+
+    /** Runs an action in the terminal for a specific connection. Returns false if none is open. */
+    public boolean runActionOn(Connection connection, ActionData action) {
+        TerminalTabComponent tab = findTab(connection);
+        if (tab == null) {
+            return false;
+        }
+        dispatch(action, tab);
+        return true;
+    }
+
+    private void dispatch(ActionData action, TerminalTabComponent tab) {
+        Thread runner = new Thread(() -> actionManager.executeAction(action, tab), "action-runner");
+        runner.setDaemon(true);
+        runner.start();
     }
 }

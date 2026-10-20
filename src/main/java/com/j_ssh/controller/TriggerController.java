@@ -2,317 +2,177 @@ package com.j_ssh.controller;
 
 import com.j_ssh.main.MainApp;
 import com.j_ssh.model.managers.ActionManager;
+import com.j_ssh.model.managers.ConnectionManager;
 import com.j_ssh.model.managers.SessionManager;
 import com.j_ssh.model.managers.TriggerManager;
 import com.j_ssh.model.objects.ActionData;
+import com.j_ssh.model.objects.Connection;
+import com.j_ssh.model.objects.JScene;
 import com.j_ssh.model.objects.ServerData;
 import com.j_ssh.model.objects.TriggerData;
-import javafx.geometry.Insets;
+import com.j_ssh.view.UiKit;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TriggerController extends BorderPane {
-    private VBox triggersContainer;
-    private TriggerManager triggerManager;
-    private SessionManager sessionManager;
-    private ActionManager actionManager;
-    private TextField searchField;
-    private Label triggerCountLabel;
+    private final TriggerManager triggerManager;
+    private final SessionManager sessionManager;
+    private final ActionManager actionManager;
+    private final TextField searchField = new TextField();
+    private final VBox body = new VBox(14);
 
     public TriggerController() {
         this.triggerManager = TriggerManager.get();
         this.sessionManager = SessionManager.get();
         this.actionManager = ActionManager.get();
-        
-        // Apply modern styling to main container
-        this.getStyleClass().add("triggers-container");
-        
-        initializeModernComponents();
+        getStyleClass().add("page");
+
+        searchField.textProperty().addListener((obs, oldText, newText) -> loadTriggers());
+        Button addButton = UiKit.button("New trigger", UiKit.PLUS, "btn-primary");
+        addButton.setOnAction(event -> showAddTriggerDialog());
+
+        setTop(UiKit.pageHeader("Triggers", "Run a sequence of actions on a server",
+                UiKit.searchBox(searchField, "Search triggers"), addButton));
+        setCenter(UiKit.scrollPage(body));
         loadTriggers();
     }
 
-    private void initializeModernComponents() {
-        setTop(createModernHeader());
-        setCenter(createTriggersContent());
-    }
-    
-    private VBox createModernHeader() {
-        VBox headerSection = new VBox();
-        headerSection.getStyleClass().add("triggers-header");
-        headerSection.setSpacing(16);
-        headerSection.setPadding(new Insets(24));
-        
-        // Title and subtitle section
-        VBox titleSection = new VBox();
-        titleSection.setSpacing(8);
-        
-        Label titleLabel = new Label("Triggers");
-        titleLabel.getStyleClass().add("triggers-title");
-        
-        Label subtitleLabel = new Label("Automated action sequences");
-        subtitleLabel.getStyleClass().add("triggers-subtitle");
-        
-        titleSection.getChildren().addAll(titleLabel, subtitleLabel);
-        
-        // Search and action section
-        HBox searchActionSection = new HBox();
-        searchActionSection.setSpacing(16);
-        searchActionSection.setAlignment(Pos.CENTER_LEFT);
-        
-        // Search field
-        searchField = new TextField();
-        searchField.getStyleClass().add("triggers-search");
-        searchField.setPromptText("Search triggers...");
-        searchField.setPrefWidth(300);
-        searchField.textProperty().addListener((obs, oldText, newText) -> filterTriggers(newText));
-        
-        // Trigger count
-        triggerCountLabel = new Label("0 triggers");
-        triggerCountLabel.getStyleClass().add("triggers-count");
-        
-        // Add trigger button
-        Button addButton = new Button("+ Add Trigger");
-        addButton.getStyleClass().add("triggers-add-btn");
-        addButton.setOnAction(e -> showAddTriggerDialog());
-        
-        searchActionSection.getChildren().addAll(searchField, triggerCountLabel, new Region(), addButton);
-        HBox.setHgrow(searchActionSection.getChildren().get(2), Priority.ALWAYS);
-        
-        headerSection.getChildren().addAll(titleSection, searchActionSection);
-        return headerSection;
-    }
-
-    private ScrollPane createTriggersContent() {
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.getStyleClass().addAll("triggers-scroll", "page-scroll");
-        scrollPane.setFitToWidth(true);
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        
-        triggersContainer = new VBox();
-        triggersContainer.getStyleClass().add("triggers-content");
-        triggersContainer.setSpacing(16);
-        triggersContainer.setPadding(new Insets(24));
-        
-        scrollPane.setContent(triggersContainer);
-        return scrollPane;
-    }
-
-    private VBox createTriggerCard(TriggerData trigger) {
-        VBox card = new VBox();
-        card.getStyleClass().add("trigger-card");
-        card.setSpacing(16);
-        card.setPadding(new Insets(20));
-        
-        // Card header with expand/collapse functionality
-        HBox header = new HBox();
-        header.setAlignment(Pos.CENTER_LEFT);
-        header.setSpacing(12);
-        
-        // Trigger icon
-        Label triggerIcon = new Label("\uE945");
-        triggerIcon.getStyleClass().add("trigger-icon");
-        
-        // Trigger info
-        VBox triggerInfo = new VBox();
-        triggerInfo.setSpacing(4);
-        
-        HBox titleRow = new HBox();
-        titleRow.setAlignment(Pos.CENTER_LEFT);
-        titleRow.setSpacing(12);
-        
-        Label nameLabel = new Label(trigger.getName());
-        nameLabel.getStyleClass().add("trigger-name");
-        
-        Label actionsCount = new Label(trigger.getTriggers().size() + " actions");
-        actionsCount.getStyleClass().add("trigger-actions-count");
-        
-        titleRow.getChildren().addAll(nameLabel, actionsCount);
-        
-        Label descLabel = new Label(trigger.getDescription());
-        descLabel.getStyleClass().add("trigger-description");
-        
-        Label serverInfo = new Label(describeServers(trigger));
-        serverInfo.getStyleClass().add("trigger-server-info");
-        
-        triggerInfo.getChildren().addAll(titleRow, descLabel, serverInfo);
-        
-        // Expand/collapse button
-        Button expandButton = new Button("\uE70D");
-        expandButton.getStyleClass().add("trigger-expand-btn");
-        
-        header.getChildren().addAll(triggerIcon, triggerInfo, new Region(), expandButton);
-        HBox.setHgrow(header.getChildren().get(2), Priority.ALWAYS);
-        
-        // Action sequence (initially hidden)
-        VBox actionSequence = createActionSequence(trigger);
-        actionSequence.setVisible(false);
-        actionSequence.setManaged(false);
-        
-        // Action buttons
-        HBox actionButtons = new HBox();
-        actionButtons.setSpacing(8);
-        actionButtons.setAlignment(Pos.CENTER_LEFT);
-        
-        Button runButton = new Button("▶ Run Trigger");
-        runButton.getStyleClass().add("trigger-run-btn");
-        runButton.setOnAction(e -> runTrigger(trigger));
-        
-        Button editButton = new Button("\uE70F");
-        editButton.getStyleClass().add("trigger-edit-btn");
-        editButton.setOnAction(e -> editTrigger(trigger));
-        
-        Button deleteButton = new Button("\uE74D");
-        deleteButton.getStyleClass().add("trigger-delete-btn");
-        deleteButton.setOnAction(e -> deleteTrigger(trigger));
-        
-        actionButtons.getChildren().addAll(runButton, editButton, deleteButton);
-        
-        // Expand/collapse functionality
-        expandButton.setOnAction(e -> {
-            boolean isExpanded = actionSequence.isVisible();
-            actionSequence.setVisible(!isExpanded);
-            actionSequence.setManaged(!isExpanded);
-            expandButton.setText(isExpanded ? "\uE70D" : "\uE70E");
-        });
-        
-        card.getChildren().addAll(header, actionSequence, actionButtons);
-        
-        return card;
-    }
-    
-    private VBox createActionSequence(TriggerData trigger) {
-        VBox sequence = new VBox();
-        sequence.getStyleClass().add("trigger-action-sequence");
-        sequence.setSpacing(8);
-        sequence.setPadding(new Insets(16));
-        
-        Label sequenceTitle = new Label("Action Sequence:");
-        sequenceTitle.getStyleClass().add("trigger-sequence-title");
-        
-        VBox sequenceItems = new VBox();
-        sequenceItems.setSpacing(8);
-        
-        int count = 1;
-        for (Integer serverIndex : trigger.getTriggers().keySet()) {
-            HBox sequenceItem = new HBox();
-            sequenceItem.setAlignment(Pos.CENTER_LEFT);
-            sequenceItem.setSpacing(12);
-            
-            Label stepNumber = new Label(String.valueOf(count));
-            stepNumber.getStyleClass().add("trigger-step-number");
-            
-            ActionData action = actionManager.getAction(trigger.getTriggers().get(serverIndex));
-            String actionName = action != null ? action.getName() : "Unknown Action";
-            
-            Label actionLabel = new Label(actionName);
-            actionLabel.getStyleClass().add("trigger-sequence-action");
-            
-            if (count < trigger.getTriggers().size()) {
-                Label arrow = new Label("\uE76C");
-                arrow.getStyleClass().add("trigger-sequence-arrow");
-                sequenceItem.getChildren().addAll(stepNumber, actionLabel, arrow);
-            } else {
-                sequenceItem.getChildren().addAll(stepNumber, actionLabel);
-            }
-            
-            sequenceItems.getChildren().add(sequenceItem);
-            count++;
-        }
-        
-        sequence.getChildren().addAll(sequenceTitle, sequenceItems);
-        
-        return sequence;
-    }
-
-    private String describeServers(TriggerData trigger) {
-        String names = trigger.getTriggers().keySet().stream()
-                .map(sessionManager::getSession)
-                .filter(server -> server != null)
-                .map(ServerData::getNickname)
-                .distinct()
-                .reduce((left, right) -> left + ", " + right)
-                .orElse("No server");
-        return "Servers: " + names;
-    }
-
     private void loadTriggers() {
-        triggersContainer.getChildren().clear();
-        String query = searchField == null || searchField.getText() == null
-                ? ""
-                : searchField.getText().trim().toLowerCase();
+        body.getChildren().clear();
+        String query = searchField.getText() == null ? "" : searchField.getText().trim().toLowerCase();
         List<TriggerData> triggers = triggerManager.getAllTriggers().stream()
                 .filter(trigger -> query.isEmpty()
                         || trigger.getName().toLowerCase().contains(query)
                         || (trigger.getDescription() != null && trigger.getDescription().toLowerCase().contains(query))
                         || describeServers(trigger).toLowerCase().contains(query))
                 .toList();
-        
-        // Update trigger count
-        triggerCountLabel.setText(triggers.size() + " trigger" + (triggers.size() != 1 ? "s" : ""));
-        
+
         if (triggers.isEmpty()) {
-            // Show empty state
-            VBox emptyState = createEmptyState();
-            triggersContainer.getChildren().add(emptyState);
-        } else {
-            for (TriggerData trigger : triggers) {
-                VBox triggerCard = createTriggerCard(trigger);
-                triggersContainer.getChildren().add(triggerCard);
-            }
+            Button create = UiKit.button("New trigger", UiKit.PLUS, "btn-primary");
+            create.setOnAction(event -> showAddTriggerDialog());
+            boolean searching = !query.isEmpty();
+            body.getChildren().add(UiKit.emptyState(UiKit.BOLT,
+                    searching ? "No matching triggers" : "No triggers yet",
+                    searching ? "Try a different search." : "Create a trigger to run actions on your servers.",
+                    searching ? null : create));
+            return;
+        }
+        for (TriggerData trigger : triggers) {
+            body.getChildren().add(createTriggerCard(trigger));
         }
     }
-    
-    private VBox createEmptyState() {
-        VBox emptyState = new VBox();
-        emptyState.getStyleClass().add("triggers-empty-state");
-        emptyState.setAlignment(Pos.CENTER);
-        emptyState.setSpacing(16);
-        emptyState.setPadding(new Insets(64));
-        
-        Label emptyIcon = new Label("\uE945");
-        emptyIcon.getStyleClass().add("triggers-empty-icon");
-        
-        Label emptyTitle = new Label("No triggers found");
-        emptyTitle.getStyleClass().add("triggers-empty-title");
-        
-        Label emptyText = new Label("Create your first automated trigger sequence");
-        emptyText.getStyleClass().add("triggers-empty-text");
-        
-        Button createButton = new Button("+ Add Trigger");
-        createButton.getStyleClass().add("triggers-add-btn");
-        createButton.setOnAction(e -> showAddTriggerDialog());
-        
-        emptyState.getChildren().addAll(emptyIcon, emptyTitle, emptyText, createButton);
-        
-        return emptyState;
+
+    private VBox createTriggerCard(TriggerData trigger) {
+        VBox card = new VBox(12);
+        card.getStyleClass().add("card");
+
+        Label name = new Label(trigger.getName());
+        name.getStyleClass().add("card-title");
+        VBox titles = new VBox(3, name);
+        if (trigger.getDescription() != null && !trigger.getDescription().isBlank()) {
+            Label desc = new Label(trigger.getDescription());
+            desc.getStyleClass().add("card-sub");
+            desc.setWrapText(true);
+            titles.getChildren().add(desc);
+        }
+        HBox.setHgrow(titles, Priority.ALWAYS);
+
+        Button run = UiKit.button("Run", UiKit.PLAY, "btn-secondary");
+        run.setOnAction(event -> runTrigger(trigger));
+        Button more = UiKit.moreButton(
+                UiKit.menuItem("Edit", () -> showEditTriggerDialog(trigger)),
+                UiKit.menuItem("Delete", () -> deleteTrigger(trigger)));
+        HBox top = new HBox(8, titles, run, more);
+        top.setAlignment(Pos.TOP_LEFT);
+
+        FlowPane steps = new FlowPane(8, 8);
+        steps.setAlignment(Pos.CENTER_LEFT);
+        int count = 1;
+        for (Integer serverIndex : trigger.getTriggers().keySet()) {
+            ActionData action = actionManager.getAction(trigger.getTriggers().get(serverIndex));
+            String actionName = action != null ? action.getName() : "Unknown action";
+            Label number = new Label(String.valueOf(count));
+            number.getStyleClass().add("step-number");
+            Label label = new Label(actionName);
+            label.getStyleClass().add("step-name");
+            HBox chip = new HBox(8, number, label);
+            chip.getStyleClass().add("step-chip");
+            chip.setAlignment(Pos.CENTER_LEFT);
+            if (count > 1) {
+                Label separator = UiKit.icon(UiKit.CHEVRON);
+                separator.getStyleClass().add("step-sep");
+                steps.getChildren().add(separator);
+            }
+            steps.getChildren().add(chip);
+            count++;
+        }
+
+        Label serversIcon = UiKit.icon(UiKit.MONITOR);
+        serversIcon.getStyleClass().add("card-meta");
+        Label servers = new Label(describeServers(trigger));
+        servers.getStyleClass().add("card-meta");
+        HBox footer = new HBox(7, serversIcon, servers);
+        footer.setAlignment(Pos.CENTER_LEFT);
+
+        card.getChildren().addAll(top, steps, footer);
+        return card;
     }
-    
-    private void filterTriggers(String searchText) {
-        loadTriggers();
+
+    private String describeServers(TriggerData trigger) {
+        return trigger.getTriggers().keySet().stream()
+                .map(sessionManager::getSession)
+                .filter(server -> server != null)
+                .map(ServerData::getNickname)
+                .distinct()
+                .reduce((left, right) -> left + ", " + right)
+                .orElse("No server");
     }
-    
+
+    /** Runs each step on its server, for servers that already have an open terminal. */
     private void runTrigger(TriggerData trigger) {
-        // Implementation to run the trigger
-        System.out.println("Running trigger: " + trigger.getName());
-        // Here you would integrate with the actual trigger execution system
+        TerminalController terminal = MainApp.get().getTerminalController();
+        int ran = 0;
+        List<String> notConnected = new ArrayList<>();
+        for (Map.Entry<Integer, Integer> step : trigger.getTriggers().entrySet()) {
+            ServerData server = sessionManager.getSession(step.getKey());
+            ActionData action = actionManager.getAction(step.getValue());
+            if (server == null || action == null) {
+                continue;
+            }
+            Connection connection = ConnectionManager.get().getServerConnection(server);
+            if (connection != null && connection.isConnected() && terminal.runActionOn(connection, action)) {
+                ran++;
+            } else {
+                notConnected.add(server.getNickname());
+            }
+        }
+        if (ran > 0) {
+            MainApp.get().changeScene(JScene.TERMINAL);
+        }
+        if (!notConnected.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Trigger");
+            alert.setHeaderText(ran == 0 ? "Nothing was run" : "Some steps were skipped");
+            alert.setContentText("No open terminal for: " + String.join(", ", notConnected)
+                    + ".\nConnect to those sessions, then run the trigger again.");
+            MainApp.theme(alert);
+            alert.showAndWait();
+        }
     }
-    
-    private void editTrigger(TriggerData trigger) {
-        showEditTriggerDialog(trigger);
-    }
-    
+
     private void deleteTrigger(TriggerData trigger) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Delete Trigger");
         alert.setHeaderText("Are you sure you want to delete this trigger?");
         alert.setContentText("Trigger: " + trigger.getName());
         MainApp.theme(alert);
-        
+
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 triggerManager.deleteTrigger(trigger.getIndex());
@@ -349,7 +209,6 @@ public class TriggerController extends BorderPane {
             }
         });
     }
-
 
     // Inner class for trigger dialog
     private class TriggerDialog extends Dialog<TriggerData> {

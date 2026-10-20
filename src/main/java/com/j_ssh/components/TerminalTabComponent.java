@@ -37,11 +37,11 @@ public class TerminalTabComponent extends BorderPane {
         this.webView = new WebView();
         this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         this.setMinSize(0, 0);
-        this.setStyle("-fx-background-color: #000000;");
+        this.setStyle("-fx-background-color: #08090b;");
 
         this.webView.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         this.webView.setMinSize(0, 0);
-        this.webView.setStyle("-fx-background-color: #000000;");
+        this.webView.setStyle("-fx-background-color: #08090b;");
         this.setCenter(this.webView);
 
         WebEngine webEngine = this.webView.getEngine();
@@ -132,6 +132,17 @@ public class TerminalTabComponent extends BorderPane {
         }, "ssh-output");
         outputThread.setDaemon(true);
         outputThread.start();
+    }
+
+    public void clearScreen() {
+        if (!terminalReady) {
+            return;
+        }
+        try {
+            webView.getEngine().executeScript("term.clear();");
+            webView.requestFocus();
+        } catch (Exception ignored) {
+        }
     }
 
     public void sendCommand(String cmd) {

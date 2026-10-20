@@ -11,7 +11,7 @@
             height: 100vh;
             width: 100vw;
             overflow: hidden;
-            background: #080b12;
+            background: #08090b;
             font-family: 'Geist Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
         }
         #terminal-container {
@@ -19,7 +19,7 @@
             height: 100%;
             padding: 16px;
             margin: 0;
-            background: #080b12;
+            background: #08090b;
             border-radius: 0 0 12px 12px;
             overflow: hidden;
             box-sizing: border-box;
@@ -27,15 +27,15 @@
         .xterm {
             height: 100% !important;
             width: 100% !important;
-            background: #080b12 !important;
+            background: #08090b !important;
         }
         .xterm-viewport {
             height: 100% !important;
-            background: #080b12 !important;
+            background: #08090b !important;
             border-radius: 0 0 12px 12px;
         }
         .xterm-screen {
-            background: #080b12 !important;
+            background: #08090b !important;
             border-radius: 0 0 12px 12px;
         }
         /* Modern scrollbar styling matching the design */
@@ -43,27 +43,27 @@
             width: 8px;
         }
         .xterm-viewport::-webkit-scrollbar-track {
-            background: #0f1422;
+            background: #0f1012;
             border-radius: 4px;
         }
         .xterm-viewport::-webkit-scrollbar-thumb {
-            background: #2a3350;
+            background: #2b2c31;
             border-radius: 4px;
             transition: background 0.2s ease;
         }
         .xterm-viewport::-webkit-scrollbar-thumb:hover {
-            background: #8b5cf6;
+            background: #f5ae3a;
         }
         .xterm-viewport::-webkit-scrollbar-thumb:active {
             background: #7c3aed;
         }
         /* Terminal cursor styling */
         .xterm-cursor-layer .xterm-cursor {
-            background: #a78bfa !important;
+            background: #f5ae3a !important;
         }
         /* Selection styling */
         .xterm .xterm-selection div {
-            background-color: rgba(139, 92, 246, 0.3) !important;
+            background-color: rgba(245, 174, 58, 0.28) !important;
         }
     </style>
 </head>
@@ -76,17 +76,17 @@
         fontSize: 14,
         fontFamily: 'Geist Mono, Consolas, "Courier New", monospace',
         theme: {
-            background: '#080b12',
-            foreground: '#d8deee',
-            cursor: '#a78bfa',
-            cursorAccent: '#080b12',
-            selection: 'rgba(139, 92, 246, 0.35)',
-            black: '#1b2133',
+            background: '#08090b',
+            foreground: '#d4d7de',
+            cursor: '#f5ae3a',
+            cursorAccent: '#08090b',
+            selection: 'rgba(245, 174, 58, 0.28)',
+            black: '#1c1d21',
             red: '#ef4444',
             green: '#10b981',
             yellow: '#f59e0b',
             blue: '#3b82f6',
-            magenta: '#8b5cf6',
+            magenta: '#c084fc',
             cyan: '#06b6d4',
             white: '#f3f4f6',
             brightBlack: '#374151',
@@ -94,7 +94,7 @@
             brightGreen: '#34d399',
             brightYellow: '#fbbf24',
             brightBlue: '#60a5fa',
-            brightMagenta: '#a78bfa',
+            brightMagenta: '#f5ae3a',
             brightCyan: '#22d3ee',
             brightWhite: '#ffffff'
         },

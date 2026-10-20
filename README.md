@@ -23,25 +23,29 @@ J-SSH is a powerful and intuitive SSH client application built with JavaFX that 
 - **Sessions**: Store server connection details (hostname, username, password, port)
 - **Actions**: Define sequences of commands to execute on connected servers
 - **Triggers**: Map actions to specific servers for bulk operations
-- **Terminal**: Interactive shell interface with real-time command execution
+- **Terminal**: Interactive shell interface with real-time command execution. Every open SSH connection gets its own tab in the sidebar, and you can rename it (double-click it, or right-click and choose Rename)
 
 ## 📸 Screenshots
 
 ### Session Management
 ![Sessions](images/J-SSH-dashboard.png)
-*Manage your SSH server connections with ease*
+*Manage your SSH server connections with ease. Active sessions are badged and get Open and Disconnect buttons*
 
 ### Actions Configuration
 ![Actions](images/J-SSH-actions.png)
-*Create and organize reusable command sequences*
+*Create and organize reusable command sequences as cards. Copy them or run them with one click*
 
 ### Terminal Interface
 ![Terminal](images/J-SSH-terminal.png)
-*Clean, modern terminal interface with action buttons*
+*Dark terminal with a Quick actions list. Each open connection has its own tab in the sidebar*
 
 ### Triggers Setup
 ![Triggers](images/J-SSH-triggers.png)
-*Configure automated actions across multiple servers*
+*Chain actions into steps and run them on your connected servers*
+
+### Renaming Terminal Tabs
+![Renaming a terminal tab](images/J-SSH-rename.png)
+*Double-click a terminal tab in the sidebar to rename it. Press Enter to save or Esc to cancel*
 
 ## 🔧 Technical Requirements
 
