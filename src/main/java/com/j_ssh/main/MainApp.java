@@ -94,6 +94,7 @@ public class MainApp extends Application {
         addStylesheet("/settings.css");
         addStylesheet("/loading.css");
         addStylesheet("/dashboard.css");
+        addStylesheet("/theme.css");
 
         primaryStage.setScene(mainScene);
         primaryStage.setMinWidth(1020);

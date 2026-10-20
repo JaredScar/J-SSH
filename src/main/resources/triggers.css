@@ -2,14 +2,14 @@
 
 /* Main Container */
 .triggers-container {
-    -fx-background-color: #1f2937;
+    -fx-background-color: #0e121c;
     -fx-padding: 0;
     -fx-spacing: 0;
 }
 
 /* Header Section */
 .triggers-header {
-    -fx-background-color: #1f2937;
+    -fx-background-color: #0e121c;
     -fx-padding: 24px 24px 0 24px;
 }
 
@@ -29,9 +29,9 @@
 
 /* Search and Action Bar */
 .triggers-search {
-    -fx-background-color: #374151;
+    -fx-background-color: #161b2a;
     -fx-text-fill: #ffffff;
-    -fx-border-color: #374151;
+    -fx-border-color: #161b2a;
     -fx-border-radius: 8px;
     -fx-background-radius: 8px;
     -fx-padding: 12px 16px;
@@ -81,8 +81,8 @@
 
 /* Trigger Cards */
 .trigger-card {
-    -fx-background-color: #374151;
-    -fx-border-color: #4b5563;
+    -fx-background-color: #161b2a;
+    -fx-border-color: #232b40;
     -fx-border-width: 1px;
     -fx-border-radius: 12px;
     -fx-background-radius: 12px;
@@ -203,9 +203,9 @@
 }
 
 .trigger-edit-btn {
-    -fx-background-color: #374151;
+    -fx-background-color: #161b2a;
     -fx-text-fill: #9ca3af;
-    -fx-border-color: #4b5563;
+    -fx-border-color: #232b40;
     -fx-border-width: 1px;
     -fx-border-radius: 6px;
     -fx-background-radius: 6px;
@@ -215,14 +215,14 @@
 }
 
 .trigger-edit-btn:hover {
-    -fx-background-color: #4b5563;
+    -fx-background-color: #232b40;
     -fx-text-fill: #ffffff;
 }
 
 .trigger-delete-btn {
-    -fx-background-color: #374151;
+    -fx-background-color: #161b2a;
     -fx-text-fill: #ef4444;
-    -fx-border-color: #4b5563;
+    -fx-border-color: #232b40;
     -fx-border-width: 1px;
     -fx-border-radius: 6px;
     -fx-background-radius: 6px;

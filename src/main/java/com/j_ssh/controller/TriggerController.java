@@ -114,7 +114,7 @@ public class TriggerController extends BorderPane {
         header.setSpacing(12);
         
         // Trigger icon
-        Label triggerIcon = new Label("⚡");
+        Label triggerIcon = new Label("\uE945");
         triggerIcon.getStyleClass().add("trigger-icon");
         
         // Trigger info
@@ -142,7 +142,7 @@ public class TriggerController extends BorderPane {
         triggerInfo.getChildren().addAll(titleRow, descLabel, serverInfo);
         
         // Expand/collapse button
-        Button expandButton = new Button("▼");
+        Button expandButton = new Button("\uE70D");
         expandButton.getStyleClass().add("trigger-expand-btn");
         
         header.getChildren().addAll(triggerIcon, triggerInfo, new Region(), expandButton);
@@ -162,11 +162,11 @@ public class TriggerController extends BorderPane {
         runButton.getStyleClass().add("trigger-run-btn");
         runButton.setOnAction(e -> runTrigger(trigger));
         
-        Button editButton = new Button("✎");
+        Button editButton = new Button("\uE70F");
         editButton.getStyleClass().add("trigger-edit-btn");
         editButton.setOnAction(e -> editTrigger(trigger));
         
-        Button deleteButton = new Button("🗑");
+        Button deleteButton = new Button("\uE74D");
         deleteButton.getStyleClass().add("trigger-delete-btn");
         deleteButton.setOnAction(e -> deleteTrigger(trigger));
         
@@ -177,7 +177,7 @@ public class TriggerController extends BorderPane {
             boolean isExpanded = actionSequence.isVisible();
             actionSequence.setVisible(!isExpanded);
             actionSequence.setManaged(!isExpanded);
-            expandButton.setText(isExpanded ? "▼" : "▲");
+            expandButton.setText(isExpanded ? "\uE70D" : "\uE70E");
         });
         
         card.getChildren().addAll(header, actionSequence, actionButtons);
@@ -213,7 +213,7 @@ public class TriggerController extends BorderPane {
             actionLabel.getStyleClass().add("trigger-sequence-action");
             
             if (count < trigger.getTriggers().size()) {
-                Label arrow = new Label("→");
+                Label arrow = new Label("\uE76C");
                 arrow.getStyleClass().add("trigger-sequence-arrow");
                 sequenceItem.getChildren().addAll(stepNumber, actionLabel, arrow);
             } else {
@@ -274,7 +274,7 @@ public class TriggerController extends BorderPane {
         emptyState.setSpacing(16);
         emptyState.setPadding(new Insets(64));
         
-        Label emptyIcon = new Label("⚡");
+        Label emptyIcon = new Label("\uE945");
         emptyIcon.getStyleClass().add("triggers-empty-icon");
         
         Label emptyTitle = new Label("No triggers found");

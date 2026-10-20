@@ -29,7 +29,7 @@ public class TerminalController extends BorderPane {
     public TerminalController() {
         this.actionManager = ActionManager.get();
         this.getStyleClass().add("terminal-container");
-        this.terminalHost.setStyle("-fx-background-color: #000000;");
+        this.terminalHost.setStyle("-fx-background-color: #080b12;");
         this.terminalHost.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         this.terminalHost.setMinSize(0, 0);
         this.sessionTabs.getStyleClass().add("terminal-session-tabs");
@@ -163,7 +163,7 @@ public class TerminalController extends BorderPane {
             emptyState.setSpacing(12);
             emptyState.getStyleClass().add("terminal-empty-actions");
             
-            Label emptyIcon = new Label("⚡");
+            Label emptyIcon = new Label("\uE945");
             emptyIcon.getStyleClass().add("terminal-empty-icon");
             
             Label emptyText = new Label("No actions available");
@@ -196,7 +196,7 @@ public class TerminalController extends BorderPane {
         descLabel.getStyleClass().add("terminal-action-desc");
         
         // Run button
-        Button runButton = new Button("▶");
+        Button runButton = new Button("\uE768");
         runButton.getStyleClass().add("terminal-action-run-btn");
         runButton.setOnAction(e -> executeActionOnCurrentTerminal(action));
         
@@ -249,7 +249,7 @@ public class TerminalController extends BorderPane {
         Button chip = new Button(sessionName);
         chip.getStyleClass().add("session-chip");
         chip.setOnAction(event -> showTerminal(tab));
-        Button close = new Button("x");
+        Button close = new Button("\uE711");
         close.getStyleClass().add("session-chip-close");
         close.setOnAction(event -> closeTerminal(tab));
         HBox chipRow = new HBox(4, chip, close);

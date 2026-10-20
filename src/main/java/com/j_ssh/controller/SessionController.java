@@ -157,104 +157,114 @@ public class SessionController extends BorderPane {
     private VBox createSessionCard(ServerData session) {
         VBox card = new VBox();
         card.getStyleClass().add("session-card");
-        card.setSpacing(16);
-        card.setPrefWidth(280);
-        card.setMinHeight(180);
-        
-        // Header with icon and status
-        HBox header = new HBox();
-        header.setAlignment(Pos.CENTER_LEFT);
-        header.setSpacing(12);
-        
-        // Server icon
-        VBox iconContainer = new VBox();
-        iconContainer.getStyleClass().add("session-icon-container");
-        iconContainer.setAlignment(Pos.CENTER);
-        iconContainer.setPrefSize(40, 40);
-        iconContainer.setMinSize(40, 40);
-        iconContainer.setMaxSize(40, 40);
-        
-        ImageView serverIcon = new ImageView();
-        serverIcon.setFitWidth(24);
-        serverIcon.setFitHeight(24);
-        serverIcon.setPreserveRatio(true);
-        
-        // Try to load custom icon, fallback to default
-        try {
-            if (session.getIconURL() != null && !session.getIconURL().isEmpty()) {
-                serverIcon.setImage(new Image(session.getIconURL()));
-            } else {
-                // Use default server icon (you might want to add a default icon resource)
-                serverIcon.getStyleClass().add("default-server-icon");
-            }
-        } catch (Exception e) {
-            serverIcon.getStyleClass().add("default-server-icon");
-        }
-        
-        iconContainer.getChildren().add(serverIcon);
-        
-        // Session info
-        VBox sessionInfo = new VBox();
-        sessionInfo.setSpacing(4);
-        
+        card.setSpacing(18);
+        card.setPrefWidth(300);
+        card.setMinWidth(260);
+
+        // Identity row: avatar + name/address
+        StackPane avatar = createAvatar(session);
+
         Label nameLabel = new Label(session.getNickname());
         nameLabel.getStyleClass().add("session-name");
-        
+        nameLabel.setMaxWidth(Double.MAX_VALUE);
+
         Label addressLabel = new Label(session.getUsername() + "@" + session.getIp());
         addressLabel.getStyleClass().add("session-address");
-        
-        sessionInfo.getChildren().addAll(nameLabel, addressLabel);
-        
-        // Status indicator with icon
-        HBox statusContainer = new HBox();
-        statusContainer.setAlignment(Pos.CENTER);
-        statusContainer.setSpacing(6);
-        
-        Label statusIcon = new Label();
+        addressLabel.setMaxWidth(Double.MAX_VALUE);
+
+        VBox sessionInfo = new VBox(3, nameLabel, addressLabel);
+        sessionInfo.setAlignment(Pos.CENTER_LEFT);
+        HBox.setHgrow(sessionInfo, Priority.ALWAYS);
+
+        HBox header = new HBox(14, avatar, sessionInfo);
+        header.setAlignment(Pos.CENTER_LEFT);
+
+        // Status pill (dot + label) with icon buttons on the right
+        HBox statusContainer = new HBox(7);
+        statusContainer.getStyleClass().add("status-pill");
+        statusContainer.setAlignment(Pos.CENTER_LEFT);
+
+        Label statusIcon = new Label("\u25CF");
         statusIcon.getStyleClass().add("session-status-icon");
-        
+
         Label statusLabel = new Label();
         statusLabel.getStyleClass().add("session-status");
-        
-        updateConnectionStatus(session, statusIcon, statusLabel);
+
         statusContainer.getChildren().addAll(statusIcon, statusLabel);
-        
-        // Store references for updates
+        updateConnectionStatus(session, statusIcon, statusLabel);
         statusLabels.put(session, statusLabel);
-        
-        header.getChildren().addAll(iconContainer, sessionInfo, new Region(), statusContainer);
-        HBox.setHgrow(header.getChildren().get(2), Priority.ALWAYS);
-        
-        // Action buttons
-        HBox actions = new HBox();
-        actions.setSpacing(8);
-        actions.setAlignment(Pos.CENTER_LEFT);
-        
+
+        Button editButton = new Button("\uE70F");
+        editButton.getStyleClass().add("session-action-btn");
+        editButton.setTooltip(new Tooltip("Edit session"));
+        editButton.setOnAction(e -> editSession(session));
+
+        Button deleteButton = new Button("\uE74D");
+        deleteButton.getStyleClass().addAll("session-action-btn", "session-delete-btn");
+        deleteButton.setTooltip(new Tooltip("Delete session"));
+        deleteButton.setOnAction(e -> deleteSession(session));
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        HBox statusRow = new HBox(6, statusContainer, spacer, editButton, deleteButton);
+        statusRow.setAlignment(Pos.CENTER_LEFT);
+
+        // Primary action
         Button connectButton = new Button();
         connectButton.getStyleClass().add("session-connect-btn");
+        connectButton.setMaxWidth(Double.MAX_VALUE);
         updateConnectButton(session, connectButton);
         connectButton.setOnAction(e -> toggleConnection(session));
-        
-        // Store reference for updates
         connectButtons.put(session, connectButton);
-        
-        Button editButton = new Button("✏");
-        editButton.getStyleClass().add("session-action-btn");
-        editButton.setOnAction(e -> editSession(session));
-        
-        Button deleteButton = new Button("🗑");
-        deleteButton.getStyleClass().add("session-action-btn");
-        deleteButton.getStyleClass().add("session-delete-btn");
-        deleteButton.setOnAction(e -> deleteSession(session));
-        
-        actions.getChildren().addAll(connectButton, new Region(), editButton, deleteButton);
-        HBox.setHgrow(actions.getChildren().get(1), Priority.ALWAYS);
-        
-        card.getChildren().addAll(header, actions);
-        
+
+        card.getChildren().addAll(header, statusRow, connectButton);
         return card;
     }
-    
+
+    private StackPane createAvatar(ServerData session) {
+        StackPane avatar = new StackPane();
+        avatar.getStyleClass().add("session-icon-container");
+        avatar.setPrefSize(48, 48);
+        avatar.setMinSize(48, 48);
+        avatar.setMaxSize(48, 48);
+
+        boolean imageShown = false;
+        try {
+            String url = session.getIconURL();
+            if (url != null && !url.isBlank()) {
+                Image image = new Image(url, 30, 30, true, true);
+                if (!image.isError()) {
+                    ImageView serverIcon = new ImageView(image);
+                    serverIcon.setFitWidth(30);
+                    serverIcon.setFitHeight(30);
+                    serverIcon.setPreserveRatio(true);
+                    avatar.getChildren().add(serverIcon);
+                    imageShown = true;
+                }
+            }
+        } catch (Exception ignored) {
+            // fall through to the initial
+        }
+
+        if (!imageShown) {
+            String nickname = session.getNickname() == null ? "" : session.getNickname().trim();
+            String initial = nickname.isEmpty() ? "?" : nickname.substring(0, 1).toUpperCase();
+            Label initialLabel = new Label(initial);
+            initialLabel.getStyleClass().add("session-initial");
+            avatar.getChildren().add(initialLabel);
+        }
+        return avatar;
+    }
+
+    private void applyPill(Label statusLabel, String state) {
+        if (statusLabel.getParent() == null) {
+            return;
+        }
+        var classes = statusLabel.getParent().getStyleClass();
+        classes.removeAll("pill-connected", "pill-disconnected", "pill-connecting");
+        classes.add(state);
+    }
+
     private void showEmptyState() {
         VBox emptyState = new VBox();
         emptyState.getStyleClass().add("sessions-empty-state");
@@ -262,7 +272,7 @@ public class SessionController extends BorderPane {
         emptyState.setSpacing(20);
         emptyState.setPrefHeight(300);
         
-        Label iconLabel = new Label("🖥");
+        Label iconLabel = new Label("");
         iconLabel.getStyleClass().add("empty-state-icon");
         
         Label titleLabel = new Label("No sessions found");
@@ -294,6 +304,7 @@ public class SessionController extends BorderPane {
             statusIcon.getStyleClass().removeAll("status-disconnected-icon", "status-connecting-icon");
             statusIcon.getStyleClass().add("status-connected-icon");
             statusLabel.setText("Connected");
+            applyPill(statusLabel, "pill-connected");
             statusLabel.getStyleClass().removeAll("status-disconnected", "status-connecting");
             statusLabel.getStyleClass().add("status-connected");
         } else {
@@ -301,6 +312,7 @@ public class SessionController extends BorderPane {
             statusIcon.getStyleClass().removeAll("status-connected-icon", "status-connecting-icon");
             statusIcon.getStyleClass().add("status-disconnected-icon");
             statusLabel.setText("Disconnected");
+            applyPill(statusLabel, "pill-disconnected");
             statusLabel.getStyleClass().removeAll("status-connected", "status-connecting");
             statusLabel.getStyleClass().add("status-disconnected");
         }
@@ -344,6 +356,7 @@ public class SessionController extends BorderPane {
         
         if (statusLabel != null) {
             statusLabel.setText("Connecting");
+            applyPill(statusLabel, "pill-connecting");
             statusLabel.getStyleClass().removeAll("status-connected", "status-disconnected");
             statusLabel.getStyleClass().add("status-connecting");
         }

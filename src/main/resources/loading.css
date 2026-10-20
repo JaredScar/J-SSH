@@ -1,6 +1,6 @@
 /* Modern Loading Screen Styling - Based on j-ssh-client mockup */
 .loading-container {
-    -fx-background-color: #1f2937;
+    -fx-background-color: #0e121c;
     -fx-alignment: center;
     -fx-spacing: 24px;
 }
@@ -31,8 +31,8 @@
 }
 
 .loading-progress {
-    -fx-background-color: #374151;
-    -fx-border-color: #374151;
+    -fx-background-color: #161b2a;
+    -fx-border-color: #161b2a;
     -fx-border-radius: 8px;
     -fx-background-radius: 8px;
     -fx-pref-width: 300px;

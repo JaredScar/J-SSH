@@ -2,20 +2,20 @@
 
 /* Main Terminal Container */
 .terminal-container {
-    -fx-background-color: #1f2937;
+    -fx-background-color: #0e121c;
     -fx-padding: 0;
     -fx-spacing: 0;
 }
 
 .terminal-session-tabs {
-    -fx-background-color: #111827;
+    -fx-background-color: #0a0d15;
     -fx-alignment: center-left;
 }
 
 .session-chip-row {
     -fx-alignment: center-left;
     -fx-spacing: 4;
-    -fx-background-color: #1f2937;
+    -fx-background-color: #0e121c;
     -fx-background-radius: 8;
     -fx-padding: 2 4 2 2;
 }
@@ -44,7 +44,7 @@
 
 #terminal_tabs .tab-pane .tab-header-area {
     -fx-padding: 8px 16px 0 16px;
-    -fx-background-color: #1f2937;
+    -fx-background-color: #0e121c;
 }
 
 #terminal_tabs .tab-pane .tab-header-area .tab-header-background {
@@ -52,11 +52,11 @@
 }
 
 .terminal_tab {
-    -fx-background-color: #374151;
+    -fx-background-color: #161b2a;
     -fx-text-fill: #ffffff;
     -fx-padding: 12px 20px;
     -fx-font-weight: 500;
-    -fx-border-color: #374151;
+    -fx-border-color: #161b2a;
     -fx-border-width: 1px 1px 0 1px;
     -fx-border-radius: 8px 8px 0 0;
     -fx-background-radius: 8px 8px 0 0;
@@ -64,12 +64,12 @@
 }
 
 .terminal_tab:hover {
-    -fx-background-color: #4b5563;
+    -fx-background-color: #232b40;
     -fx-text-fill: #ffffff;
 }
 
 .terminal_tab:selected {
-    -fx-background-color: #1f2937;
+    -fx-background-color: #0e121c;
     -fx-text-fill: #ffffff;
     -fx-border-color: #8b5cf6;
     -fx-border-width: 2px 2px 0 2px;
@@ -86,7 +86,7 @@
     -fx-font-family: "Geist Mono", "Consolas", "Monaco", "Courier New", monospace;
     -fx-font-size: 14px;
     -fx-background-color: #000000;
-    -fx-border-color: #374151;
+    -fx-border-color: #161b2a;
     -fx-border-width: 1px;
     -fx-border-radius: 0 0 12px 12px;
     -fx-background-radius: 0 0 12px 12px;
@@ -107,8 +107,8 @@
 
 /* Terminal Sidebar Styling */
 .terminal-sidebar {
-    -fx-background-color: #374151;
-    -fx-border-color: #4b5563;
+    -fx-background-color: #161b2a;
+    -fx-border-color: #232b40;
     -fx-border-width: 0 0 0 1px;
     -fx-padding: 24px;
     -fx-spacing: 16px;
@@ -132,7 +132,7 @@
 
 /* Session Info Section */
 .terminal-session-info {
-    -fx-background-color: #4b5563;
+    -fx-background-color: #232b40;
     -fx-border-radius: 8px;
     -fx-background-radius: 8px;
     -fx-padding: 16px;
@@ -153,7 +153,7 @@
 
 /* Action Cards */
 .terminal-action-card {
-    -fx-background-color: #4b5563;
+    -fx-background-color: #232b40;
     -fx-border-color: #6b7280;
     -fx-border-radius: 8px;
     -fx-background-radius: 8px;
@@ -255,8 +255,8 @@
 
 /* Terminal Header (if needed) */
 .terminal-header {
-    -fx-background-color: #374151;
-    -fx-border-color: #4b5563;
+    -fx-background-color: #161b2a;
+    -fx-border-color: #232b40;
     -fx-border-width: 0 0 1px 0;
     -fx-padding: 16px 24px;
 }
@@ -273,7 +273,7 @@
 }
 
 .terminal-control-btn {
-    -fx-background-color: #4b5563;
+    -fx-background-color: #232b40;
     -fx-text-fill: #d1d5db;
     -fx-font-weight: 500;
     -fx-padding: 6px 8px;
@@ -296,8 +296,8 @@
 
 /* Terminal Status Bar */
 .terminal-status-bar {
-    -fx-background-color: #374151;
-    -fx-border-color: #4b5563;
+    -fx-background-color: #161b2a;
+    -fx-border-color: #232b40;
     -fx-border-width: 1px 0 0 0;
     -fx-padding: 8px 16px;
 }
@@ -310,8 +310,8 @@
 
 /* Scrollbar Styling for Terminal */
 .terminal .scroll-bar {
-    -fx-background-color: #4b5563;
-    -fx-border-color: #374151;
+    -fx-background-color: #232b40;
+    -fx-border-color: #161b2a;
     -fx-border-radius: 6px;
     -fx-background-radius: 6px;
 }
@@ -348,7 +348,7 @@
 
 .tab-pane .tab-content-area {
     -fx-background-color: #000000;
-    -fx-border-color: #374151;
+    -fx-border-color: #161b2a;
     -fx-border-width: 1px;
     -fx-border-radius: 0 0 12px 12px;
     -fx-background-radius: 0 0 12px 12px;

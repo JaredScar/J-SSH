@@ -108,7 +108,7 @@ public class ButtonController extends BorderPane {
         header.setSpacing(12);
         
         // Action icon
-        Label actionIcon = new Label("▶");
+        Label actionIcon = new Label("\uE768");
         actionIcon.getStyleClass().add("action-icon");
         
         // Action info
@@ -142,11 +142,11 @@ public class ButtonController extends BorderPane {
         runButton.getStyleClass().add("action-run-btn");
         runButton.setOnAction(e -> runAction(action));
         
-        Button editButton = new Button("✎");
+        Button editButton = new Button("\uE70F");
         editButton.getStyleClass().add("action-edit-btn");
         editButton.setOnAction(e -> editAction(action));
         
-        Button deleteButton = new Button("🗑");
+        Button deleteButton = new Button("\uE74D");
         deleteButton.getStyleClass().add("action-delete-btn");
         deleteButton.setOnAction(e -> deleteAction(action));
         
@@ -170,7 +170,7 @@ public class ButtonController extends BorderPane {
         Label commandsTitle = new Label("Commands:");
         commandsTitle.getStyleClass().add("action-commands-title");
         
-        Button copyButton = new Button("📋");
+        Button copyButton = new Button("\uE8C8");
         copyButton.getStyleClass().add("action-copy-btn");
         copyButton.setOnAction(e -> copyCommands(action));
         
@@ -232,7 +232,7 @@ public class ButtonController extends BorderPane {
         emptyState.setSpacing(16);
         emptyState.setPadding(new Insets(64));
         
-        Label emptyIcon = new Label("▶");
+        Label emptyIcon = new Label("\uE768");
         emptyIcon.getStyleClass().add("actions-empty-icon");
         
         Label emptyTitle = new Label("No actions found");

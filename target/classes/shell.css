@@ -1,14 +1,14 @@
 /* App shell — sidebar layout matching the j-ssh-client mockup */
 
 .app-shell {
-    -fx-background-color: #111827;
+    -fx-background-color: #0a0d15;
     -fx-font-family: "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
     -fx-font-size: 14px;
 }
 
 .sidebar {
-    -fx-background-color: #111827;
-    -fx-border-color: #1f2937;
+    -fx-background-color: #0a0d15;
+    -fx-border-color: #0e121c;
     -fx-border-width: 0 1 0 0;
     -fx-pref-width: 260px;
     -fx-min-width: 260px;
@@ -18,7 +18,7 @@
 
 .sidebar-header {
     -fx-padding: 22 18 18 18;
-    -fx-border-color: transparent transparent #1f2937 transparent;
+    -fx-border-color: transparent transparent #0e121c transparent;
     -fx-border-width: 0 0 1 0;
     -fx-spacing: 12;
 }
@@ -58,7 +58,7 @@
 .sidebar-footer {
     -fx-padding: 12;
     -fx-spacing: 4;
-    -fx-border-color: #1f2937 transparent transparent transparent;
+    -fx-border-color: #0e121c transparent transparent transparent;
     -fx-border-width: 1 0 0 0;
 }
 
@@ -74,11 +74,11 @@
 }
 
 .nav-item:hover {
-    -fx-background-color: #1f2937;
+    -fx-background-color: #0e121c;
 }
 
 .nav-item:pressed {
-    -fx-background-color: #374151;
+    -fx-background-color: #161b2a;
 }
 
 .nav-item .nav-title {
@@ -115,23 +115,23 @@
 }
 
 .content-frame {
-    -fx-background-color: #1f2937;
+    -fx-background-color: #0e121c;
 }
 
 .page-scroll {
     -fx-background-color: transparent;
-    -fx-background: #1f2937;
+    -fx-background: #0e121c;
     -fx-border-color: transparent;
     -fx-padding: 0;
 }
 
 .page-scroll > .viewport {
-    -fx-background-color: #1f2937;
+    -fx-background-color: #0e121c;
 }
 
 .scroll-pane {
     -fx-background-color: transparent;
-    -fx-background: #1f2937;
+    -fx-background: #0e121c;
 }
 
 .scroll-pane > .viewport {
@@ -144,7 +144,7 @@
 }
 
 .scroll-bar .thumb {
-    -fx-background-color: #4b5563;
+    -fx-background-color: #232b40;
     -fx-background-radius: 8;
 }
 
@@ -171,9 +171,9 @@
 .actions-header,
 .triggers-header,
 .settings-header {
-    -fx-border-color: transparent transparent #374151 transparent;
+    -fx-border-color: transparent transparent #161b2a transparent;
     -fx-border-width: 0 0 1 0;
-    -fx-background-color: #1f2937;
+    -fx-background-color: #0e121c;
 }
 
 .loading-overlay {
@@ -181,9 +181,9 @@
 }
 
 .loading-card {
-    -fx-background-color: #1f2937;
+    -fx-background-color: #0e121c;
     -fx-background-radius: 16;
-    -fx-border-color: #374151;
+    -fx-border-color: #161b2a;
     -fx-border-radius: 16;
     -fx-border-width: 1;
     -fx-padding: 28 36;
@@ -207,9 +207,9 @@
 }
 
 .message-card {
-    -fx-background-color: #1f2937;
+    -fx-background-color: #0e121c;
     -fx-background-radius: 16;
-    -fx-border-color: #4b5563;
+    -fx-border-color: #232b40;
     -fx-border-radius: 16;
     -fx-border-width: 1;
     -fx-padding: 22 24 18 24;
@@ -250,8 +250,8 @@
 }
 
 .terminal-chrome {
-    -fx-background-color: #111827;
-    -fx-border-color: transparent transparent #374151 transparent;
+    -fx-background-color: #0a0d15;
+    -fx-border-color: transparent transparent #161b2a transparent;
     -fx-border-width: 0 0 1 0;
     -fx-padding: 12 16;
     -fx-spacing: 12;
@@ -289,7 +289,7 @@
 }
 
 .terminal-badge {
-    -fx-background-color: #374151;
+    -fx-background-color: #161b2a;
     -fx-text-fill: #d1d5db;
     -fx-background-radius: 999;
     -fx-padding: 4 10;
@@ -303,7 +303,7 @@
 }
 
 .terminal-empty {
-    -fx-background-color: #111827;
+    -fx-background-color: #0a0d15;
     -fx-alignment: center;
     -fx-spacing: 8;
 }
@@ -320,11 +320,11 @@
 }
 
 .jssh-dialog {
-    -fx-background-color: #1f2937;
+    -fx-background-color: #0e121c;
 }
 
 .jssh-dialog > .header-panel {
-    -fx-background-color: #111827;
+    -fx-background-color: #0a0d15;
     -fx-padding: 16 20 12 20;
 }
 
@@ -346,11 +346,11 @@
 .jssh-dialog .text-area,
 .jssh-dialog .combo-box,
 .jssh-dialog .list-view {
-    -fx-background-color: #374151;
+    -fx-background-color: #161b2a;
     -fx-text-fill: #ffffff;
     -fx-prompt-text-fill: #9ca3af;
     -fx-background-radius: 8;
-    -fx-border-color: #4b5563;
+    -fx-border-color: #232b40;
     -fx-border-radius: 8;
     -fx-border-width: 1;
     -fx-background-insets: 0;
@@ -362,7 +362,7 @@
 }
 
 .jssh-dialog .button {
-    -fx-background-color: #4b5563;
+    -fx-background-color: #232b40;
     -fx-text-fill: #ffffff;
     -fx-background-radius: 8;
     -fx-padding: 8 16;
@@ -382,5 +382,5 @@
 }
 
 .jssh-dialog > .button-bar > .container {
-    -fx-background-color: #1f2937;
+    -fx-background-color: #0e121c;
 }

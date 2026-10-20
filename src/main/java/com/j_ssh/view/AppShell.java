@@ -251,7 +251,7 @@ public class AppShell extends BorderPane {
 
         sessionsButton = navButton("\uE7F4", "Sessions", "Manage SSH connections", () -> MainApp.get().changeScene(JScene.SESSIONS));
         actionsButton = navButton("\uE768", "Actions", "Reusable commands", () -> MainApp.get().changeScene(JScene.ACTIONS));
-        triggersButton = navButton("\uE7C8", "Triggers", "Automated sequences", () -> MainApp.get().changeScene(JScene.TRIGGERS));
+        triggersButton = navButton("\uE945", "Triggers", "Automated sequences", () -> MainApp.get().changeScene(JScene.TRIGGERS));
         terminalButton = navButton("\uE756", "Terminal", "Active session", () -> MainApp.get().changeScene(JScene.TERMINAL));
         terminalButton.setDisable(true);
         nav.getChildren().addAll(sessionsButton, actionsButton, triggersButton, terminalButton);

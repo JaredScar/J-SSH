@@ -2,14 +2,14 @@
 
 /* Main Container */
 .sessions-container {
-    -fx-background-color: #1f2937;
+    -fx-background-color: #0e121c;
     -fx-padding: 0;
     -fx-spacing: 0;
 }
 
 /* Header Section */
 .sessions-header {
-    -fx-background-color: #1f2937;
+    -fx-background-color: #0e121c;
     -fx-padding: 24px 24px 0 24px;
 }
 
@@ -29,9 +29,9 @@
 
 /* Search and Action Bar */
 .sessions-search {
-    -fx-background-color: #374151;
+    -fx-background-color: #161b2a;
     -fx-text-fill: #ffffff;
-    -fx-border-color: #374151;
+    -fx-border-color: #161b2a;
     -fx-border-radius: 8px;
     -fx-background-radius: 8px;
     -fx-padding: 12px 16px;
@@ -79,7 +79,7 @@
 
 /* Grid Container */
 .sessions-grid-container {
-    -fx-background-color: #1f2937;
+    -fx-background-color: #0e121c;
     -fx-padding: 24px;
 }
 
@@ -91,8 +91,8 @@
 
 /* Session Cards */
 .session-card {
-    -fx-background-color: #374151;
-    -fx-border-color: #374151;
+    -fx-background-color: #161b2a;
+    -fx-border-color: #161b2a;
     -fx-border-radius: 12px;
     -fx-background-radius: 12px;
     -fx-padding: 20px;
@@ -104,7 +104,7 @@
 }
 
 .session-card:hover {
-    -fx-background-color: #4b5563;
+    -fx-background-color: #232b40;
     -fx-border-color: #8b5cf6;
     -fx-effect: dropshadow(gaussian, rgba(139, 92, 246, 0.2), 8, 0, 0, 4);
     -fx-scale-x: 1.02;
@@ -118,7 +118,7 @@
 
 /* Session Card Icon */
 .session-icon-container {
-    -fx-background-color: #4b5563;
+    -fx-background-color: #232b40;
     -fx-border-color: #6b7280;
     -fx-border-radius: 8px;
     -fx-background-radius: 8px;
@@ -256,7 +256,7 @@
 }
 
 .session-action-btn {
-    -fx-background-color: #4b5563;
+    -fx-background-color: #232b40;
     -fx-text-fill: #d1d5db;
     -fx-font-weight: 500;
     -fx-padding: 8px 10px;
@@ -323,13 +323,13 @@
 
 /* Session Dialog Styling */
 .session-dialog {
-    -fx-background-color: #374151;
+    -fx-background-color: #161b2a;
     -fx-spacing: 16px;
     -fx-padding: 20px;
 }
 
 .session-dialog-pane {
-    -fx-background-color: #374151;
+    -fx-background-color: #161b2a;
 }
 
 .session-dialog-label {
@@ -340,7 +340,7 @@
 }
 
 .session-dialog-field {
-    -fx-background-color: #4b5563;
+    -fx-background-color: #232b40;
     -fx-text-fill: #ffffff;
     -fx-border-color: #6b7280;
     -fx-border-radius: 6px;

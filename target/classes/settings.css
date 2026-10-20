@@ -1,6 +1,6 @@
 /* Modern Settings Styling - Based on j-ssh-client mockup */
 .settings-container {
-    -fx-background-color: #1f2937;
+    -fx-background-color: #0e121c;
     -fx-padding: 24px;
     -fx-spacing: 24px;
 }
@@ -14,8 +14,8 @@
 }
 
 .settings-section {
-    -fx-background-color: #374151;
-    -fx-border-color: #374151;
+    -fx-background-color: #161b2a;
+    -fx-border-color: #161b2a;
     -fx-border-radius: 12px;
     -fx-background-radius: 12px;
     -fx-padding: 24px;
@@ -52,9 +52,9 @@
 }
 
 .settings-input {
-    -fx-background-color: #374151;
+    -fx-background-color: #161b2a;
     -fx-text-fill: #ffffff;
-    -fx-border-color: #374151;
+    -fx-border-color: #161b2a;
     -fx-border-radius: 8px;
     -fx-background-radius: 8px;
     -fx-padding: 12px 16px;
@@ -67,12 +67,12 @@
 }
 
 .settings-input:hover {
-    -fx-border-color: #4b5563;
+    -fx-border-color: #232b40;
 }
 
 .settings-toggle {
-    -fx-background-color: #374151;
-    -fx-border-color: #374151;
+    -fx-background-color: #161b2a;
+    -fx-border-color: #161b2a;
     -fx-border-radius: 8px;
     -fx-background-radius: 8px;
     -fx-padding: 8px 12px;
@@ -85,7 +85,7 @@
 }
 
 .settings-toggle:hover {
-    -fx-background-color: #4b5563;
+    -fx-background-color: #232b40;
 }
 
 .settings-toggle:selected:hover {
@@ -216,9 +216,9 @@
 }
 
 .guide-section {
-    -fx-background-color: #111827;
+    -fx-background-color: #0a0d15;
     -fx-background-radius: 14;
-    -fx-border-color: #374151;
+    -fx-border-color: #161b2a;
     -fx-border-radius: 14;
     -fx-border-width: 1;
     -fx-padding: 18 20 18 20;
@@ -243,9 +243,9 @@
 }
 
 .stat-card {
-    -fx-background-color: #111827;
+    -fx-background-color: #0a0d15;
     -fx-background-radius: 14;
-    -fx-border-color: #374151;
+    -fx-border-color: #161b2a;
     -fx-border-radius: 14;
     -fx-border-width: 1;
     -fx-padding: 16 18 16 18;
@@ -266,7 +266,7 @@
     -fx-text-fill: #e5e7eb;
     -fx-font-family: Consolas, "Courier New", monospace;
     -fx-font-size: 12px;
-    -fx-background-color: #1f2937;
+    -fx-background-color: #0e121c;
     -fx-background-radius: 8;
     -fx-padding: 10 12 10 12;
 }
@@ -285,7 +285,7 @@
 }
 
 .settings-secondary-btn {
-    -fx-background-color: #374151;
+    -fx-background-color: #161b2a;
     -fx-text-fill: #f3f4f6;
     -fx-font-weight: 600;
     -fx-background-radius: 8;
@@ -294,5 +294,5 @@
 }
 
 .settings-secondary-btn:hover {
-    -fx-background-color: #4b5563;
+    -fx-background-color: #232b40;
 }
